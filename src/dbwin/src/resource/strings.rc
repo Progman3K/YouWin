@@ -1,0 +1,26 @@
+
+
+STRINGTABLE {
+
+ IDS_DBWIN_MSG, "DBWin Message"
+ IDS_EXIT, "Exit program"
+ IDS_SETTINGS_SECTION, "Settings"
+ IDS_ALWAYS_ON_TOP, "Always On Top"
+ IDS_SAVE_BUFFER_AS_TYPES, "Text Files (*.txt)|*.txt|All Files (*.*)|*.*|"
+ IDS_SAVE_BUFFER_AS, "Save Buffer As"
+ IDS_OUTPUT_TO, "Output To"
+ IDS_NONE, "None"
+ IDS_DISPLAY_FONT_NAME, "Font Name"
+ IDS_DISPLAY_FONT_POINT, "Font Point"
+ IDS_DISPLAY_FONT_WIDTH, "Font Width"
+ IDS_WORDWRAP, "Word Wrap"
+ IDS_ENABLE_UDP, "Enable UDP"
+ IDS_UDP_SETTINGS_SECTION, "UDP Config"
+ IDS_WINSOCK_PATH, "Winsock Path"
+ IDS_WINSOCK, IDSZ_WINSOCK
+ IDS_OUTPUT_LOGFILE, "Log Output To File"
+ IDS_LOG_FILE_TYPES, "Log Files (*.txt)|*.txt|All Files (*.*)|*.*|"
+ IDS_WINDOW, "Window"
+ IDS_MAX_TRACEFILESIZE, "Maximum Size of Trace File (in Kilobytes)"
+
+}

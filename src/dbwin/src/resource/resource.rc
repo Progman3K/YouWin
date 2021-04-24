@@ -1,0 +1,24 @@
+
+
+#include "../defines.h"
+
+
+#ifndef WORKSHOP_INVOKED
+#ifdef WIN32
+#include <windows.h>
+#include <winver.h>
+#else
+#include <twindows.h>
+#endif
+#endif
+
+
+#include "dialogs.rc"
+#include "strings.rc"
+#include "menus.rc"
+
+
+//#include "version.rc"
+
+
+IDI_MAIN ICON "dbwin.ico"

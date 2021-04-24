@@ -1,0 +1,110 @@
+IDD_OPENFILENAME_FOR_ANDROID_PORTRAIT DIALOG 0, 18, 240, 382
+STYLE DS_LOCALEDIT | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX
+CAPTION "Open File"
+{
+ CONTROL "File &name:",        IDST_FILENAME,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               7,   3,  50,  14
+ CONTROL "",                   IDE_FILENAME,           "EDIT",     ES_AUTOHSCROLL | ES_LEFT | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER,                    50,   3, 180,  14
+
+ CONTROL "Look &in:",          IDST_LOOKIN,            "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               7,  19,  42,  12
+ CONTROL "",                   IDST_FOLDER,            "STATIC",   SS_CENTER | SS_NOPREFIX | WS_CHILD | WS_VISIBLE,                                              50,  19, 143,  12
+ CONTROL "",                   IDLB_FOLDERS,           "LISTBOX",  LBS_STANDARD | LBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP,   7,  31, 166, 122
+
+ CONTROL "&Files:",            IDST_FILES,             "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               7, 158, 150,  50
+ CONTROL "",                   IDLB_FILES,             "LISTBOX",  LBS_STANDARD | LBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP,   7, 168, 186, 122
+
+ CONTROL "Files of &type:",    IDST_FILETYPE,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               7, 305,  80,  14
+ CONTROL "",                   IDCB_FILETYPES,         "COMBOBOX", CBS_SIMPLE | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP,                 70, 305, 160,  28
+
+ CONTROL "&Encoding:",         IDST_ENCODING,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               7, 318,  40,  14
+ CONTROL "",                   IDCB_ENCODINGS,         "COMBOBOX", CBS_SIMPLE | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP,                 70, 318, 160,  42
+
+ CONTROL "Open as &read-only", IDRB_OPEN_AS_READ_ONLY, "BUTTON",   BS_AUTOCHECKBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                        280, 140, 110,  28
+
+ CONTROL "&Open",              IDOK,                   "BUTTON",   BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_DISABLED | WS_TABSTOP,                         180,  31,  50,  28
+ CONTROL "Close",              IDCANCEL,               "BUTTON",   BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                          180,  74,  50,  28
+
+}
+
+
+IDD_OPENFILENAME_FOR_ANDROID_LANDSCAPE DIALOG 0, 18, 400, 222
+STYLE DS_LOCALEDIT | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX
+CAPTION "Open File"
+{
+ CONTROL "Look &in:",          IDST_LOOKIN,            "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               7,   3,  42,  12
+ CONTROL "",                   IDLB_FOLDERS,           "LISTBOX",  LBS_STANDARD | LBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP,   7,  15, 186, 122
+ CONTROL "",                   IDST_FOLDER,            "STATIC",   SS_CENTER | SS_NOPREFIX | WS_CHILD | WS_VISIBLE,                                              50,   3, 143,  12
+
+ CONTROL "&Files:",            IDST_FILES,             "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                             202,   3, 150,  50
+ CONTROL "",                   IDLB_FILES,             "LISTBOX",  LBS_STANDARD | LBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP, 202,  15, 186, 122
+
+ CONTROL "File &name:",        IDST_FILENAME,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               7, 140,  50,  14
+ CONTROL "",                   IDE_FILENAME,           "EDIT",     ES_AUTOHSCROLL | ES_LEFT | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER,                    70, 140, 200,  14
+
+ CONTROL "Files of &type:",    IDST_FILETYPE,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               7, 157,  80,  14
+ CONTROL "",                   IDCB_FILETYPES,         "COMBOBOX", CBS_SIMPLE | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP,                 70, 157, 200,  28
+
+ CONTROL "&Encoding:",         IDST_ENCODING,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               7, 170,  40,  14
+ CONTROL "",                   IDCB_ENCODINGS,         "COMBOBOX", CBS_SIMPLE | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP,                 70, 170, 200,  42
+
+ CONTROL "Open as &read-only", IDRB_OPEN_AS_READ_ONLY, "BUTTON",   BS_AUTOCHECKBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                        280, 140, 110,  28
+
+ CONTROL "&Open",              IDOK,                   "BUTTON",   BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_DISABLED | WS_TABSTOP,                         280, 174,  50,  28
+ CONTROL "Close",              IDCANCEL,               "BUTTON",   BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                          340, 174,  50,  28
+
+}
+
+
+IDD_OPENFILENAME_TEXT DIALOG 0, 0, 80, 22
+STYLE DS_LOCALEDIT | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | /* WS_THICKFRAME | */ WS_MINIMIZEBOX
+CAPTION "Open File"
+{
+ CONTROL "Look &in:",          IDST_LOOKIN,            "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               1,   1,   8,   1
+ CONTROL "",                   IDLB_FOLDERS,           "LISTBOX",  LBS_STANDARD | LBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP,   1,   2,  37,  12
+ CONTROL "",                   IDST_FOLDER,            "STATIC",   SS_LEFT | SS_BLACKFRAME | WS_CHILD | WS_VISIBLE,                                               9,   1,  70,   1
+
+ CONTROL "&Files:",            IDST_FILES,             "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                              39,   1,   6,   1
+ CONTROL "",                   IDLB_FILES,             "LISTBOX",  LBS_STANDARD | LBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP,  39,   2,  38,  12
+
+ CONTROL "File &name:",        IDST_FILENAME,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               1,  15,  10,   1
+ CONTROL "",                   IDE_FILENAME,           "EDIT",     ES_AUTOHSCROLL | ES_LEFT | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                15,  15,  51,   1
+
+ CONTROL "Files of &type:",    IDST_FILETYPE,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               1,  16,  15,   1
+ CONTROL "",                   IDCB_FILETYPES,         "COMBOBOX", CBS_SIMPLE | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                             15,  16,  51,   1
+
+ CONTROL "&Encoding:",         IDST_ENCODING,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               1,  17,   9,   1
+ CONTROL "",                   IDCB_ENCODINGS,         "COMBOBOX", CBS_SIMPLE | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                             15,  17,  51,   1
+
+ CONTROL "Open as &read-only", IDRB_OPEN_AS_READ_ONLY, "BUTTON",   BS_AUTOCHECKBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                         60,  12,   20,  1
+
+ CONTROL "&Open",              IDOK,                   "BUTTON",   BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_DISABLED | WS_TABSTOP,                          67,  16,   4,   1
+ CONTROL "Close",              IDCANCEL,               "BUTTON",   BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                           72,  16,   5,   1
+
+}
+
+
+IDD_OPENFILENAME_TEXT_PORTRAIT DIALOG 0, 0, 22, 80
+STYLE DS_LOCALEDIT | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | /* WS_THICKFRAME | */ WS_MINIMIZEBOX
+CAPTION "Open File"
+{
+ CONTROL "Look &in:",          IDST_LOOKIN,            "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               1,   1,   8,   1
+ CONTROL "",                   IDLB_FOLDERS,           "LISTBOX",  LBS_STANDARD | LBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP,   1,   2,  37,  12
+ CONTROL "",                   IDST_FOLDER,            "STATIC",   SS_LEFT | SS_BLACKFRAME | WS_CHILD | WS_VISIBLE,                                               9,   1,  70,   1
+
+ CONTROL "&Files:",            IDST_FILES,             "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                              39,   1,   6,   1
+ CONTROL "",                   IDLB_FILES,             "LISTBOX",  LBS_STANDARD | LBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_TABSTOP,  39,   2,  38,  12
+
+ CONTROL "File &name:",        IDST_FILENAME,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               1,  15,  10,   1
+ CONTROL "",                   IDE_FILENAME,           "EDIT",     ES_AUTOHSCROLL | ES_LEFT | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                15,  15,  51,   1
+
+ CONTROL "Files of &type:",    IDST_FILETYPE,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               1,  16,  15,   1
+ CONTROL "",                   IDCB_FILETYPES,         "COMBOBOX", CBS_SIMPLE | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                             15,  16,  51,   1
+
+ CONTROL "&Encoding:",         IDST_ENCODING,          "STATIC",   SS_LEFT | WS_CHILD | WS_VISIBLE,                                                               1,  17,   9,   1
+ CONTROL "",                   IDCB_ENCODINGS,         "COMBOBOX", CBS_SIMPLE | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                             15,  17,  51,   1
+
+ CONTROL "Open as &read-only", IDRB_OPEN_AS_READ_ONLY, "BUTTON",   BS_AUTOCHECKBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                         60,  12,   20,  1
+
+ CONTROL "&Open",              IDOK,                   "BUTTON",   BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_DISABLED | WS_TABSTOP,                          67,  16,   4,   1
+ CONTROL "Close",              IDCANCEL,               "BUTTON",   BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP,                                           72,  16,   5,   1
+
+}

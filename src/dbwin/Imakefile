@@ -1,0 +1,84 @@
+
+/*  #define IHaveSubdirs */
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+#ifdef BUILD_NATIVE
+
+           SUBDIRS += ../twindows
+
+#endif
+/*            SUBDIRS += ../dbgtrace  */
+
+            APPNAME = dbwin
+
+               SRCS = \
+                      src/dbwin.cpp \
+                      src/cleanup.cpp \
+                      src/do_about.cpp \
+                      src/do_find.cpp \
+                      src/ed_del.cpp \
+                      src/edit_ptr.cpp \
+                      src/find_wnd.cpp \
+                      src/gtselrng.cpp \
+                      src/inipopup.cpp \
+                      src/init.cpp \
+                      src/init_udp.cpp \
+                      src/initmenu.cpp \
+                      src/main_cmd.cpp \
+                      src/main_cpy.cpp \
+                      src/main_del.cpp \
+                      src/main_dlg.cpp \
+                      src/main_ini.cpp \
+                      src/main_siz.cpp \
+                      src/main_tim.cpp \
+                      src/main_wnd.cpp \
+                      src/makefont.cpp \
+                      src/onwsasel.cpp \
+                      src/regclass.cpp \
+                      src/savebuff.cpp \
+                      src/set_dlg.cpp \
+                      src/sure.cpp \
+                      src/twrdwrap.cpp
+
+               OBJS = $(SRCS:.cpp=.o)
+
+           INCLUDES = -I../include
+
+          CXXFLAGS += -Wall
+
+#ifdef BUILD_WIN32
+              OBJS += src/resource/resource.o
+
+            LDLIBS += -lws2_32 -lcomdlg32 -lgdi32
+
+src/resource/resource.o:: src/resource/resource.rc src/resource/strings.rc src/resource/dialogs.rc src/resource/menus.rc src/resource/version.rc src/resource/dbwin.ico
+
+#endif
+
+
+#ifdef BUILD_NATIVE
+
+            LDLIBS += ../twindows/libyouwin.so
+            LDLIBS += ../dbgtrace/libdbgtrace.so
+
+$(APPNAME): resource.res
+
+
+resource.res: resource.rc dialogs.rc strings.rc version.rc
+	windres --target=pe-i386 $(INCLUDES) -i resource.rc -o resource.res
+
+
+#endif
+
+
+/* This makes "all" in the subdirs.	*/
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))
+
+
+clean::
+	$(RM) $(OBJS) resource.res
+
+ComplexProgramTargetNoMan($(APPNAME))
+DependTarget()
+

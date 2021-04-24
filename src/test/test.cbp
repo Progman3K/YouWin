@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Test" />
+		<Option pch_mode="2" />
+		<Option compiler="null" />
+		<Build>
+			<Target title="youwin_debug">
+				<Option output="test" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/youwin_debug" />
+				<Option type="5" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-Og" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add directory="/opt/youwin/include" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add directory="../bin/Debug" />
+				</Linker>
+			</Target>
+			<Target title="youwin_release">
+				<Option output="test" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/youwin_release" />
+				<Option type="5" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="/opt/youwin/include" />
+				</Compiler>
+				<Linker>
+					<Add directory="../bin/youwin_text" />
+				</Linker>
+			</Target>
+			<Target title="win32_release">
+				<Option output="test" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/win32_release" />
+				<Option type="0" />
+				<Option compiler="mingw32" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-Wl,-subsystem,windows" />
+					<Add library="gdi32" />
+					<Add library="user32" />
+					<Add library="kernel32" />
+					<Add library="comctl32" />
+					<Add library="ws2_32" />
+					<Add library="comdlg32" />
+				</Linker>
+			</Target>
+			<Target title="win32_debug">
+				<Option output="test" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/win32_debug" />
+				<Option type="0" />
+				<Option compiler="mingw32" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-Og" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-Wl,-subsystem,windows" />
+					<Add library="gdi32" />
+					<Add library="user32" />
+					<Add library="kernel32" />
+					<Add library="comctl32" />
+					<Add library="ws2_32" />
+					<Add library="comdlg32" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="../../include" />
+		</Compiler>
+		<Unit filename="defines.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="resource.h" />
+		<Unit filename="resource.rc">
+			<Option link="0" />
+			<Option weight="0" />
+			<Option compiler="null" use="0" buildCommand="windres  -DDEBUG -I/opt/youwin/include -I../../include -I/opt/youwin/include -I/opt/youwin/include -i resource.rc -o resource.res" />
+			<Option compiler="gcc" use="1" buildCommand="windres  -I../../include -I/opt/youwin/include -i resource.rc -o resource.res" />
+		</Unit>
+		<Unit filename="resource.s" />
+		<Unit filename="src/strings.h" />
+		<Unit filename="test.h" />
+		<Extensions>
+			<debugger>
+				<search_path add="../src" />
+			</debugger>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

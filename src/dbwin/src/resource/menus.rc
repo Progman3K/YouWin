@@ -1,0 +1,53 @@
+
+
+IDM_MAIN MENU
+{
+
+	POPUP "&File"
+	{
+		MENUITEM "Save &Debug Settings",		IDM_SAVE_DEBUG_SETTINGS             GRAYED
+		MENUITEM "&Save Buffer As...",			IDM_SAVE_BUFFER_AS
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit",						IDM_EXIT
+	}
+     
+	POPUP "&Edit"
+	{
+		MENUITEM "&Copy\tCtrl+C",				IDM_COPY
+		MENUITEM SEPARATOR
+		MENUITEM "Cl&ear Buffer",				IDM_CLEAR_OUTPUT
+		MENUITEM "Select &All",					IDM_SELECT_ALL
+		MENUITEM SEPARATOR
+		MENUITEM "&Find...",					IDM_FIND
+	}
+     
+	POPUP "&Options"
+	{
+		MENUITEM "&Settings...",				IDM_SETTINGS
+		MENUITEM "&Alloc Break...",				IDM_ALLOC_BREAK				GRAYED
+#if 0		
+		MENUITEM "&Font...",					IDM_CHOOSE_FONT
+#endif
+		MENUITEM SEPARATOR
+		MENUITEM "Output to &Window",			IDM_OUTPUT_TO_WINDOW
+		MENUITEM "Output to &File...",			IDM_OUTPUT_TO_FILE
+		MENUITEM "Output to &Com1...",			IDM_OUTPUT_TO_COM1			GRAYED
+		MENUITEM "Output to &Com2..",			IDM_OUTPUT_TO_COM2			GRAYED
+		MENUITEM "Output to &Monochrome",		IDM_OUTPUT_TO_MONOCHROME	GRAYED
+		MENUITEM "&No Output",					IDM_OUTPUT_DISABLE
+		MENUITEM SEPARATOR
+#ifdef	_WIN32_WCE
+		MENUITEM "Always on &Top",				IDM_ALWAYS_ON_TOP_TOGGLE	GRAYED
+#else
+		MENUITEM "Always on &Top",				IDM_ALWAYS_ON_TOP_TOGGLE
+#endif	/* ! _WIN32_WCE */
+	}
+
+	MENUITEM "&Clear Buffer!",					IDM_CLEAR_OUTPUT
+
+	POPUP "&Help"
+	{
+		MENUITEM "&About DBWin...",				IDM_ABOUT
+	}
+
+}

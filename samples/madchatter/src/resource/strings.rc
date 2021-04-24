@@ -1,0 +1,38 @@
+
+
+STRINGTABLE {
+
+	IDS_APPERR_INIT								"Chatter Application Startup Error"
+	IDS_ERROR_OPENING_PORT						"Error opening requested port"
+	IDS_INITIALIZATION_SECTION					"Initialization"
+	IDS_TIMER_INTERVAL							"Timer Interval"
+	IDS_APPERR_INIT_MISSINGFILES				"Chatter Application Startup Error - Missing Inifile Entry"
+	IDS_APPERR_INIT_FILE_NOT_FOUND				"Chatter Application Startup Error - File not found"
+	IDS_HOST_NAME								"HostName"
+	IDS_UNKNOWN									"Unknown"
+	IDS_CLIENT_CONNECTION						"Client connection"
+	IDS_CLIENT_DISCONNECTED						"Client disconnected"
+	IDS_CONNECTION_ESTABLISHED					"Connection established - "
+	IDS_CONNECTION_FAILED						"Connection FAILED - "
+	IDS_SOCKET_CONNECTION_ATTEMPT				"Socket connection attempt"
+	IDS_CLOSESOCKET								"Socket closed"
+	IDS_ERROR_ALLOCATING_LIST					"Error allocating list"
+	IDS_SOCKET_SHUTDOWN							"Socket shutdown"
+	IDS_PROGRAM_TITLE							"Mad Chatter"
+	IDS_EXIT									"Exit program"
+	IDS_PICK_DESTINATION						"Pick a destination to send to first"
+	IDS_REGISTRATION							"Registration"
+	IDS_USERNAME								"User Name"
+	IDS_REGISTRATION_KEY						"Key"
+	IDS_HOST_SPEAK								"< "
+	IDS_REMOTE_HOST_SPEAK						"> "
+    IDS_SPACE_COLON_SPACE						" : "
+	IDS_CONNECTION_TO_SERVER_TERMINATED			"CONNECTION TERMINATED : "
+	IDS_INCOMING_MESSAGE						"Incoming Message Sound"
+	IDS_MUTE_SOUND								"Mute Sound"
+	IDS_TIME_CORRECTED							"Time corrected by %ld seconds."
+	IDS_TIME_SYNCH_CANCELLED					"Time Synch Cancelled."
+	IDS_TIME_SYNCH_FAILED						"Time Synch Failed."
+	IDS_UNKNOWN_TIMEPORTAL_RETURN_CODE			"Unknown TimePortal return code"
+
+}

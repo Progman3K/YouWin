@@ -1,0 +1,143 @@
+
+ DEPENDFLAGS = -I/opt/youwin/include
+
+#ifdef BUILD_YOU_WIN
+
+#define IHaveSubdirs
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+#ifndef BUILD_WIN32
+            SUBDIRS += /opt/youwin/src
+#endif
+
+#if defined( BUILD_ANDROID ) || ( defined( YOU_WIN_GRAPHICAL ) && defined( __APPLE_CC__ ) )
+#define DoNormalLib YES
+#undef BaseShLibReqs
+#define BaseShLibReqs
+#define LibName madchat
+#define SoRev VERSION
+
+             VERSION = 1
+
+#endif /* Build as a shared lib */
+
+#else /* Build with imake-only */
+
+# 32-bit compilation
+#                   WRC = i686-w64-mingw32-windres
+#                    CC = i686-w64-mingw32-g++
+# 64-bit compilation
+                WRC = x86_64-w64-mingw32-windres
+                CXX = x86_64-w64-mingw32-g++
+/*                CXXLINK = $(CXX) */
+             CCLINK = $(CXX)
+            INCROOT = .
+            DEFINES = -DWIN32 -D_WIN32
+          USRLIBDIR = .
+           INCLUDES =
+     CXXSTD_DEFINES =
+            LDLIBS += -static -Wl,-subsystem,windows -lgdi32 -luser32 -lkernel32 -lcomctl32 -lws2_32 -lcomdlg32
+#endif /* ! BUILD_YOU_WIN */
+
+
+            APPNAME = madchat
+
+            CPPSRCS = \
+                      src/chatter.cpp \
+                      src/asyncret.cpp \
+                      src/ccleanup.cpp \
+                      src/chatcmd.cpp \
+                      src/chatdlg.cpp \
+                      src/chtinit.cpp \
+                      src/chttimer.cpp \
+                      src/deleteitem.cpp \
+                      src/displaychange.cpp \
+                      src/disptxt.cpp \
+                      src/dlg_destroy.cpp \
+                      src/dlg_init.cpp \
+                      src/dlg_size.cpp \
+                      src/getwho.cpp \
+                      src/hostname.cpp \
+                      src/maperror.cpp \
+                      src/recvdata.cpp \
+                      src/tcpxfer.cpp \
+                      src/win32.cpp \
+                      src/xfer.cpp
+
+            ASMSRCS = \
+                      src/resource.s
+
+               OBJS = $(CPPSRCS:.cpp=.o)
+
+               SRCS = $(CPPSRCS)
+
+#ifdef BUILD_YOU_WIN
+              OBJS += $(ASMSRCS:.s=.o)
+              SRCS += $(ASMSRCS)
+#endif
+
+/*          INCLUDES += -I../include */
+
+          CXXFLAGS += -Wall -std=c++11
+
+
+src/resource/resource.rc: src/resource/dialogs.rc src/resource/strings.rc src/resource/version.rc
+
+#ifdef BUILD_YOU_WIN
+src/resource.s: resource.res
+
+
+resource.res: src/resource/resource.rc
+	windres $(WRCFLAGS) $(ALLDEFINES) $(INCLUDES) $(TOP_INCLUDES) -i src/resource/resource.rc -o resource.res
+
+#else
+               OBJS += src/resource/resource.res
+
+src/resource/resource.res: src/resource/resource.rc
+	$(WRC) -J rc -O coff          -i src/resource/resource.rc -o src/resource/resource.res
+
+cleandir::
+	$(RM) $(APPNAME).exe
+
+#endif
+
+cleandir::
+	$(RM) $(APPNAME)
+
+
+$(APPNAME): /* resource.res */
+
+
+#ifdef BUILD_YOU_WIN
+#ifndef BUILD_WIN32
+
+            /* Add Windows replacement */
+            LDLIBS += -L/opt/youwin/src -lyouwin
+
+#ifndef __DARWIN__
+            LDLIBS += -static-libgcc
+#endif
+
+            LDLIBS += YWLibs
+
+
+#endif /* ! BUILD_WIN32 */
+#endif /* BUILD_YOU_WIN */
+
+clean::
+	$(RM) $(OBJS) resource.res
+
+/* This makes "all" in the subdirs.	*/
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))
+
+
+#if defined( BUILD_ANDROID ) && defined( YOU_WIN_GRAPHICAL )
+            REQUIREDLIBS += -L/opt/youwin/src -lyouwin
+libmadchat.$(SHLIBFILTYP).: resource/resource.res
+#include <Library.tmpl>
+#else
+ComplexProgramTargetNoMan($(APPNAME))
+#endif
+
+DependTarget()

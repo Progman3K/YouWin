@@ -1,0 +1,42 @@
+#if HasSunC
+.SUFFIXES: .o .cpp
+.cpp.o:
+	$(RM) $@
+	$(CXX) -c $(CXXFLAGS) -std=c++11 $(INCLUDES) $(_NOOP_) $*.cpp
+
+
+      CFLAGS  = -features=zla -std=c++11
+     CXXFLAGS = -Wall -features=zla -std=c++11
+      LDOPTIONS = -features=zla -std=c++11
+      LDLIBS =
+      EXTRA_LOAD_FLAGS =
+
+#endif
+
+       APPNAME = dbglog
+
+          SRCS = \
+                 main.cpp
+
+          OBJS = \
+                 main.o
+
+      INCLUDES = -I../include
+
+     CXXFLAGS += -Wall
+
+            /* fix certain linker problems by using the same compiler (g++ hopefully) for everything. */
+            CC = CplusplusCmd
+           CXX = CplusplusCmd
+CXXSTD_DEFINES =
+
+#if ! defined( BUILD_WIN32 ) && ! defined( BUILD_ANDROID )
+            LDLIBS += -lrt
+#endif
+
+
+clean::
+	$(RM) $(OBJS)
+
+ComplexProgramTargetNoMan($(APPNAME))
+DependTarget()

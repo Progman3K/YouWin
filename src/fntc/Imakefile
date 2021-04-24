@@ -1,0 +1,48 @@
+#ifdef DefaultSunProCCompilerMajorVersion
+.SUFFIXES: .o .cpp
+.cpp.o:
+        $(RM) $@
+         $(CXX) -c $(CXXFLAGS) -std=c++11 $(INCLUDES) $(_NOOP_) $*.cpp
+
+
+      CFLAGS  = -features=zla -std=c++11
+     CXXFLAGS = -Wall -features=zla -std=c++11
+      LDOPTIONS = -features=zla -std=c++11
+      LDLIBS =
+      EXTRA_LOAD_FLAGS =
+
+#endif
+
+
+#ifndef BUILD_WIN32
+      INCLUDES += -I/opt/youwin/include
+#endif
+
+      INCLUDES += -I../include -I../src -I/opt/youwin/include
+
+       APPNAME = fntc
+
+          SRCS = \
+                 main.cpp \
+                 readfont.cpp \
+                 writefont.cpp
+
+          OBJS = $(SRCS:.cpp=.o)
+
+     CXXFLAGS += -Wall -std=c++11
+
+            /* fix certain linker problems by using the same compiler (c++ hopefully) for everything. */
+            CC = $(CXX) 
+
+#ifdef DefaultSunProCCompilerMajorVersion
+/*    LDOPTIONS += -lstdc++ */
+#else
+    LDOPTIONS += -lstdc++
+#endif
+
+
+clean::
+	$(RM) $(OBJS)
+
+ComplexProgramTargetNoMan($(APPNAME))
+DependTarget()

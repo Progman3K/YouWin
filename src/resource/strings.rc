@@ -1,0 +1,11 @@
+
+
+STRINGTABLE {
+
+    IDS_OK,     "OK"
+    IDS_YES,    "Yes"
+    IDS_NO,     "No"
+    IDS_CANCEL, "Cancel"
+    IDS_ABORT,  "Abort"
+
+}

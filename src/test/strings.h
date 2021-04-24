@@ -1,0 +1,34 @@
+
+
+#define	IDS_1   1
+#define	IDS_2   2
+#define IDS_3   3
+#define IDS_4   4
+#define IDS_5   5
+#define IDS_6   6
+#define IDS_7   7
+#define IDS_8   8
+#define IDS_9   9
+#define IDS_10  10
+#define IDS_11  11
+#define IDS_12  12
+#define IDS_13  13
+#define IDS_14  14
+#define IDS_15  15
+#define IDS_16  16
+#define IDS_17  17
+#define IDS_18  18
+#define IDS_19  19
+#define IDS_20  20
+#define IDS_21  21
+#define IDS_22  22
+#define IDS_23  23
+#define IDS_24  24
+#define IDS_25  25
+#define IDS_26  26
+#define IDS_27  27
+#define IDS_28  28
+#define IDS_29  29
+#define IDS_30  30
+#define IDS_31  31
+#define IDS_32  32

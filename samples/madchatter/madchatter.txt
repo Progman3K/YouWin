@@ -1,0 +1,16 @@
+MadChatter
+
+Peer to Peer chat and file-transfer application. Transfer over wifi to/from anything to anything.
+
+Example: You want to copy a document from your PC to your iPhone/Android.
+
+As long as you are both on the same local network, you can exchange files.
+
+How to use:
+
+When the application is started, it will broadcast its presence and listen for other MadChatter peers.
+
+Select a peer from the list to send him a message/file.
+
+When in broadcast-mode, you can offer a file to multiple madchatters simultaneously.
+

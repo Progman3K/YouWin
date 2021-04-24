@@ -1,0 +1,97 @@
+/*
+
+How to run:
+
+LD_LIBRARY_PATH=..:$LD_LIBRARY_PATH ./test
+
+*/
+
+         DEPENDFLAGS = -I/opt/youwin/include
+
+#ifdef BUILD_YOU_WIN
+
+#define IHaveSubdirs
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+            SUBDIRS += ../
+
+             LDLIBS += -static-libgcc -L../ -lyouwin
+
+#else /* Build with imake-only */
+
+/* 32-bit compilation
+                   WRC = i686-w64-mingw32-windres
+                    CC = i686-w64-mingw32-g++
+*/
+/* 64-bit compilation */
+                 WRC = x86_64-w64-mingw32-windres
+                  CC = x86_64-w64-mingw32-g++
+                 CXX = $(CC)
+             INCROOT = .
+           USRLIBDIR = .
+             LDLIBS += -static -Wl,-subsystem,windows -lgdi32 -luser32 -lkernel32 -lcomctl32 -lws2_32 -lcomdlg32
+#endif /* ! BUILD_YOU_WIN */
+
+            APPNAME = test
+
+            CPPSRCS = \
+                      main.cpp
+
+            ASMSRCS = \
+                      resource.s
+
+               OBJS = $(CPPSRCS:.cpp=.o)
+
+               SRCS = $(CPPSRCS)
+
+#ifdef BUILD_YOU_WIN
+               OBJS += $(ASMSRCS:.s=.o)
+               SRCS += $(ASMSRCS)
+#else
+               OBJS += resource.res
+#endif
+
+           INCLUDES += -I../include
+
+          CXXFLAGS += -Wall
+     CXXSTD_DEFINES =
+
+
+resource.rc: strings.rc test.ico
+
+#ifdef BUILD_YOU_WIN
+resource.s: resource.res
+
+
+resource.res: resource.rc strings.rc test.ico
+	windres $(WRCFLAGS) $(DEFINES) $(INCLUDES) $(TOP_INCLUDES) -i resource.rc -o resource.res
+
+cleandir::
+	$(RM) $(APPNAME)
+
+
+            LDLIBS += YWLibs
+
+
+#else
+
+resource.res: resource.rc
+	$(WRC) -J rc -O coff -i resource.rc -o resource.res
+
+cleandir::
+	$(RM) $(APPNAME).exe
+
+#endif
+
+$(APPNAME): resource.res
+
+
+clean::
+	$(RM) $(OBJS) resource.res
+
+/* This makes "all" in the subdirs. */
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))
+
+ComplexProgramTargetNoMan($(APPNAME))
+DependTarget()

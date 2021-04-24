@@ -1,0 +1,152 @@
+# This script requires bash 5 or greater
+
+if [ $# -lt 1 ]
+then
+    echo "Specify target:"
+    echo "ywconfigure android|ios|opengl|text|xwin [debug/release]"
+    exit 1
+fi
+
+variant=$1
+bldtype=$2
+
+if [ "$bldtype" = "" ] || [ "$bldtype" = "debug" ]
+then
+    echo debug;
+    ndk_debug_enable=1
+    build_options=-g\ -O0
+    configurevars=-DDEBUG\ -UNDEBUG
+elif [ "$bldtype" = "release" ]
+then
+    echo release;
+    ndk_debug_enable=0
+    build_options=-O2
+    configurevars=-DNDEBUG\ -UDEBUG
+else
+    echo if specified, buildtype must be either debug or release, if not specified, it is debug.
+    exit 1
+fi
+
+echo ndk debug set to $ndk_debug_enable
+echo config variables set to $configurevars
+
+if [[ "$variant" == "android" ]]
+then
+    echo android $bldtype;
+
+if [ "$bldtype" = "debug" ]
+then    
+    opfname=unaligned
+else
+    opfname=unsigned
+fi
+    ndk-build -j8 NDK_DEBUG=$ndk_debug_enable V=1 &&
+    android update project -p . --target 1 --subprojects &&
+    ant $bldtype &&
+    zipalign -v 4 bin/*-$bldtype-$opfname.apk bin/$bldtype-output.apk
+
+elif [[ "$variant" == "ios" ]]
+then
+    #
+    echo OSX;
+elif [[ "$variant" == "opengl" ]]
+then
+
+    echo opengl;
+
+    need_libs="-lpthread -lglut -lGL -lglapi -L/opt/X11/lib"
+    need_defines="-DYOU_WIN_GRAPHICAL_OPENGL -DYOU_WIN_GRAPHICAL"
+
+    imake_cmd=( \
+    imake -v \
+    -DYWDefines="$need_defines" \
+    -DYWLibs="$need_libs" \
+    -DStandardIncludes=-I/opt/youwin/include \
+    -DIncRoot="/opt/X11/include -I/opt/youwin/include" \
+    -DUseInstalled \
+    -DCcCmd=CplusplusCmd \
+    -DUsrLibDirPath=/opt/youwin/src \
+    -DDefaultCDebugFlags="$build_options" \
+    -DDefaultCplusplusDebugFlags="$build_options" \
+    -DCplusplusExtraDefines="$configurevars" \
+    -DBUILD_YOU_WIN \
+    -DDEBUG \
+    -I/usr/lib64/X11/config \
+    -I/usr/lib/X11/config \
+    -I/opt/local/lib/X11/config \
+    )
+
+    imake_cmd+=( -DImakeCmd="${imake_cmd[*]@Q}" )
+
+    "${imake_cmd[@]}" && make Makefiles
+
+elif [[ "$variant" == "text" ]]
+then
+    #
+    # -DExtraLibraries= \
+
+    echo text;
+
+    need_libs=-lpthread
+    need_defines=-DYOU_WIN_TXT
+
+   imake_cmd=( \
+    imake -v \
+    -DYWDefines="$need_defines" \
+    -DYWLibs="$need_libs" \
+    -DExtraLibraries="$need_libs" \
+    -DStandardIncludes=-I/opt/youwin/include \
+    -DIncRoot=/opt/youwin/include \
+    -DUseInstalled \
+    -DCcCmd=CplusplusCmd \
+    -DUsrLibDirPath=/opt/youwin/src \
+    -DDefaultCDebugFlags="$build_options" \
+    -DDefaultCplusplusDebugFlags="$build_options" \
+    -DCplusplusExtraDefines="$configurevars" \
+    -DBUILD_YOU_WIN \
+    -DDEBUG \
+    -I/usr/lib64/X11/config \
+    -I/usr/lib/X11/config \
+    -I/opt/local/lib/X11/config \
+    )
+
+    imake_cmd+=( -DImakeCmd="${imake_cmd[*]@Q}" )
+
+    "${imake_cmd[@]}" && make Makefiles
+
+elif [[ "$variant" == "xwin" ]]
+then
+
+    echo xwin;
+
+    need_libs=-lpthread\ -lX11
+    need_defines="-DYOU_WIN_GRAPHICAL_XWIN -DYOU_WIN_GRAPHICAL"
+
+   imake_cmd=( \
+    imake -v \
+    -DYWDefines="$need_defines" \
+    -DYWLibs="$need_libs" \
+    -DExtraLibraries="$need_libs" \
+    -DStandardIncludes=-I/opt/youwin/include \
+    -DIncRoot="/opt/local/include -I/opt/youwin/include" \
+    -DUseInstalled \
+    -DCcCmd=CplusplusCmd \
+    -DUsrLibDirPath=/opt/youwin/src \
+    -DDefaultCDebugFlags="$build_options" \
+    -DDefaultCplusplusDebugFlags="$build_options" \
+    -DCplusplusExtraDefines="$configurevars" \
+    -DBUILD_YOU_WIN \
+    -DDEBUG \
+    -I/usr/lib64/X11/config \
+    -I/usr/lib/X11/config \
+    -I/opt/local/lib/X11/config \
+    )
+
+    imake_cmd+=( -DImakeCmd="${imake_cmd[*]@Q}" )
+
+    "${imake_cmd[@]}" && make Makefiles
+
+else
+    # Unknown.
+    echo no idea;
+fi

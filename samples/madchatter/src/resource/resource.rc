@@ -1,0 +1,23 @@
+
+
+#include "../defines.h"
+
+
+#ifndef WORKSHOP_INVOKED
+#include <windows.h>
+//#include <winver.h>
+#endif
+
+
+#include "dialogs.rc"
+#include "strings.rc"
+#include "version.rc"
+
+
+IDI_MAIN	ICON	mchatter.ico
+
+IDI_BLINK1 ICON "mchatt2.ico"
+IDI_BLINK2 ICON "mchatt3.ico"
+IDI_BLINK3 ICON "mchatt4.ico"
+IDI_BLINK4 ICON "mchatt5.ico"
+

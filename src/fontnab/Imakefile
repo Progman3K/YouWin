@@ -1,0 +1,30 @@
+
+# /* Build with imake-only */
+
+# 32-bit compilation
+#                   WRC = i686-w64-mingw32-windres
+#                    CC = i686-w64-mingw32-g++
+# 64-bit compilation
+                WRC = x86_64-w64-mingw32-windres
+                CXX = x86_64-w64-mingw32-g++
+/*                CXXLINK = $(CXX) */
+             CCLINK = $(CXX)
+            INCROOT = .
+            DEFINES =
+          USRLIBDIR = .
+            LDLIBS  = -static-libstdc++ -static-libgcc -Wl,-subsystem,windows -luser32 -lgdi32 -lws2_32
+
+
+       APPNAME = fontnab
+
+          SRCS = \
+                 main.cpp
+
+          OBJS = $(SRCS:.cpp=.o)
+
+      INCLUDES += -I../include -I../src
+
+     CXXFLAGS += -Wall
+
+ComplexProgramTargetNoMan($(APPNAME))
+DependTarget()

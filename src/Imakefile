@@ -1,0 +1,184 @@
+
+.SUFFIXES: .fnt .tfnt
+.tfnt.fnt:
+	fntc/fntc $<
+
+
+/*                 CXX  = $(CC) */
+
+/*
+
+    Verson usable from a *nix, Windows or Android app or library
+
+
+*/
+
+#define IHaveSubdirs
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+            SUBDIRS  += fntc
+
+/*                CC  = CplusplusCmd */
+/*               CXX  = CplusplusCmd */
+
+#if defined( BUILD_YOU_WIN_SHARED )
+#define DoSharedLib YES
+#undef BaseShLibReqs
+#define BaseShLibReqs
+#else
+#define DoNormalLib YES
+#endif
+
+
+#define	LibName youwin
+
+#define SoRev VERSION
+
+              VERSION = 1
+
+            INCLUDES += -I/opt/youwin/include -Isrc -Iinclude
+
+         DEPENDFLAGS += -I/opt/youwin/include
+
+             DEFINES += YWDefines
+
+              DESTDIR = /opt/youwin
+
+                 SRCS = src/ywresource.s \
+                        src/addtext.cpp \
+                        src/android.cpp \
+                        src/atom.cpp \
+                        src/bitblt.cpp \
+                        src/bitmap.cpp \
+                        src/buttonwndproc.cpp \
+                        src/caret.cpp \
+                        src/classlong.cpp \
+                        src/close.cpp \
+                        src/closew.cpp \
+                        src/com.cpp \
+                        src/comboboxwndproc.cpp \
+                        src/console.cpp \
+                        src/dc.cpp \
+                        src/defdlgproc.cpp \
+                        src/defwndproc.cpp \
+                        src/desktopwndproc.cpp \
+                        src/dlgres.cpp \
+                        src/draw.cpp \
+                        src/drawtext.cpp \
+                        src/editwndproc.cpp \
+                        src/enumw.cpp \
+                        src/event.cpp \
+                        src/eventq.cpp \
+                        src/fillrect.cpp \
+                        src/findfile.cpp \
+                        src/font.cpp \
+                        src/get_topw.cpp \
+                        src/getdcex.cpp \
+                        src/getmessage.cpp \
+                        src/getopenfilename.cpp \
+                        src/getsyscolor.cpp \
+                        src/gettextextentpoint.cpp \
+                        src/getwtxt.cpp \
+                        src/gl.cpp \
+                        src/guid.cpp \
+                        src/handler.cpp \
+                        src/icon.cpp \
+                        src/is_in.cpp \
+                        src/isdialogmsg.cpp \
+                        src/iswnd.cpp \
+                        src/ldcursor.cpp \
+                        src/ldicon.cpp \
+                        src/ldmenu.cpp \
+                        src/ldstring.cpp \
+                        src/listboxwndproc.cpp \
+                        src/messagebox.cpp \
+                        src/object.cpp \
+                        src/open.cpp \
+                        src/openw.cpp \
+                        src/osx.cpp \
+                        src/pen.cpp \
+                        src/posix.cpp \
+                        src/postmessage.cpp \
+                        src/progressbarwndproc.cpp \
+                        src/redrawwindow.cpp \
+                        src/regions.cpp \
+                        src/registerclass.cpp \
+                        src/sendmessage.cpp \
+                        src/setcolour.cpp \
+                        src/setwtxt.cpp \
+                        src/show_win.cpp \
+                        src/staticwndproc.cpp \
+                        src/textout.cpp \
+                        src/universe.cpp \
+                        src/unregisterclass.cpp \
+                        src/winapi.cpp \
+                        src/windowlong.cpp \
+                        src/wsapi.cpp \
+                        src/xwin.cpp
+
+#if defined( __APPLE_CC__ )
+                SRCS += src/shgetfolderpath.mm
+#else
+                SRCS += src/shgetfolderpath.cpp
+#endif
+
+                 OBJS = $(patsubst %.s,%.o,$(patsubst %.cpp,%.o,$(patsubst %.mm,%.o,$(SRCS))))
+
+
+            BIN_FONTS = \
+               resource/fonts/System.fnt \
+               resource/fonts/Courier.fnt \
+               resource/fonts/Fixedsys.fnt \
+               resource/fonts/MS_Sans_Serif.fnt \
+               resource/fonts/Small_Fonts.fnt
+
+resource/resource.rc: \
+               resource/dialogs.rc \
+               resource/strings.rc \
+               $(BIN_FONTS)
+
+
+ywresource.res: resource/resource.rc
+	windres --target=pe-i386 $(ALLINCLUDES) $(ALLDEFINES) -i $< -o yw$(basename $(notdir $<)).res
+
+
+src/ywresource.s: ywresource.res
+
+
+
+            CXXFLAGS += -Wall -std=c++11
+#ifndef BUILD_WIN32
+            /* The compiler warns that all code is relocatable anyway. */
+            CXXFLAGS += -fPIC
+#endif
+
+#if defined( __APPLE_CC__ )
+        SHLIBLDFLAGS += -undefined dynamic_lookup
+#endif
+
+/*      DEPEND_DEFINES += -DYOU_WIN_GRAPHICAL */
+
+            SOSYMLINK = true
+
+#if ! defined( BUILD_WIN32 ) && ! defined( BUILD_ANDROID ) && ! defined( __APPLE_CC__ )
+/*    REQUIREDLIBS += -lrt -lX11        */
+/*      REQUIREDLIBS += -lglapi -lglut  */
+#endif
+
+#ifndef __APPLE_CC__
+        REQUIREDLIBS += -Wl,-soname,libyouwin.so
+#endif
+
+clean::
+	$(RM) ywresource.res $(BIN_FONTS) $(OBJS)
+
+/* This makes "all" in the subdirs.	*/
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))
+
+
+#include <Library.tmpl>
+
+                 CXX  = $(CC) 
+
+DependTarget()
