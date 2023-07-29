@@ -18,8 +18,9 @@ class CFindFirst : public Object {
 
         WIN32_FIND_DATA fdata;
 
-        CFindFirst() : Object( OBJECT_TYPE_FF ) {
+        CFindFirst() {
 
+            setType( OBJECT_TYPE_FF );
             pDir   = 0;
             pEntry = 0;
             ZeroMemory( szDir, sizeof( szDir ) );

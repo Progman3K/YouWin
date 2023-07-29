@@ -16,8 +16,8 @@ GLOBALS g = {
     ,480
     ,800
 #else
-    ,800
-    ,600
+    ,1920
+    ,1080
 #endif
 #endif
 
@@ -67,15 +67,17 @@ ResourceList systemresources;
 
 FontList fonts;
 IconList icons;
+MenuList menus;
+BmpList  bitmaps;
 
 
 #ifdef YOU_WIN_TXT
 static union tagTextFont {
 
     Font_Header font;
-    
+
     char cData[ sizeof( Font_Header ) + sizeof( IDSZ_SYSTEM ) ];
-    
+
     tagTextFont() {
 
         font.uWeight        = 0;
@@ -281,6 +283,11 @@ static void recordresource( const RES_HEADER * pHeader, ResourceList & Resources
             case RT_ICON_VAL:
 
                 DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Icon" ) );
+                break;
+
+            case RT_MENU_VAL:
+
+                DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Menu" ) );
                 break;
 
             case RT_STRING_VAL:

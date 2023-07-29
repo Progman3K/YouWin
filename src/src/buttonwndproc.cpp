@@ -301,6 +301,39 @@ void Button::DrawBitmap( HWND hWnd, RECT * pr, PAINTSTRUCT * pPS ) {
 }
 
 
+void Button::DrawOwnerDraw( HWND hWnd, RECT * pr, PAINTSTRUCT * pPS ) {
+
+    DRAWITEMSTRUCT di;
+
+    HWND hParentWnd = GetParent( hWnd );
+    RECT rcItem;
+    rcItem( 0, 0, 0, 0 );
+
+    GetClientRect( hWnd, &rcItem );
+
+    di.CtlType    = ODT_BUTTON;
+    di.CtlID      = GetDlgCtrlID( hWnd );
+    di.itemID     = 0;
+
+    di.itemAction = ODA_DRAWENTIRE;
+
+    if ( GetFocus() == hWnd ) {
+
+        di.itemAction |= ODA_FOCUS;
+
+    }
+
+    di.itemState  = 0;
+    di.hwndItem   = hWnd;
+    di.hDC        = pPS->hdc;
+    di.rcItem     = rcItem;
+    di.itemData   = 0;
+
+    FORWARD_WM_DRAWITEM( hParentWnd, &di, SendMessage );
+
+}
+
+
 void Button::OnPaint( HWND hWnd, PAINTSTRUCT * pPS ) {
 
     COLORREF oldbkcr = GetBkColor( pPS->hdc );
@@ -324,74 +357,190 @@ void Button::OnPaint( HWND hWnd, PAINTSTRUCT * pPS ) {
 
     SetBkColor( pPS->hdc, bkcr );
 
-    if ( ( BS_BITMAP & dwStyle ) == BS_BITMAP ) {
+    /* Types of buttons */
+    switch( 0xFF & dwStyle ) {
 
-        DrawBitmap( hWnd, &r, pPS );
-        return;
+        case BS_CHECKBOX:
+
+            DrawCheckBox( hWnd, &r, pPS );
+            return;
+
+        case BS_AUTOCHECKBOX:
+
+            DrawCheckBox( hWnd, &r, pPS );
+            return;
+
+        case BS_3STATE:
+
+            DrawCheckBox( hWnd, &r, pPS );
+            return;
+
+        case BS_AUTO3STATE:
+
+            DrawCheckBox( hWnd, &r, pPS );
+            return;
+
+        case BS_GROUPBOX:
+
+            DrawGroupBox( hWnd, &r, pPS );
+            return;
+
+        case BS_USERBUTTON:
+
+            return;
+
+        case BS_OWNERDRAW:
+
+            DrawOwnerDraw( hWnd, &r, pPS );
+            return;
+
+        case BS_ICON:
+
+            DrawIcon( hWnd, &r, pPS );
+            return;
+
+        case BS_BITMAP:
+
+            DrawBitmap( hWnd, &r, pPS );
+            return;
+
+        default:
+
+            /* By process of elimination, all that is left is a normal button */
+            DrawText( pPS->hdc, Text.c_str(), Text.size(), &r, DT_CENTER | DT_SINGLELINE | DT_VCENTER );
+
+            SetBkMode( pPS->hdc, iOldBkMode );
+            SetBkColor( pPS->hdc, oldbkcr );
+            SetTextColor( pPS->hdc, oldfgcr );
+            break;
 
     }
 
-    if ( ( BS_GROUPBOX & dwStyle ) == BS_GROUPBOX ) {
+    /* Formatting styles */
+    switch( 0xFF00 & dwStyle ) {
 
-        DrawGroupBox( hWnd, &r, pPS );
-        return;
+        case BS_LEFT:
 
-    }
+            break;
 
-    if ( ( ( BS_3STATE & dwStyle ) == BS_3STATE ) || ( ( BS_AUTO3STATE & dwStyle ) == BS_AUTO3STATE ) || ( ( BS_AUTOCHECKBOX & dwStyle ) == BS_AUTOCHECKBOX ) || ( ( BS_CHECKBOX & dwStyle ) == BS_CHECKBOX ) ) {
+        case BS_CENTER:
 
-        DrawCheckBox( hWnd, &r, pPS );
-        return;
+            break;
 
-    }
+        case BS_VCENTER:
 
-    if ( ( BS_BITMAP & dwStyle ) == BS_BITMAP ) {
+            break;
 
-        DrawBitmap( hWnd, &r, pPS );
-        return;
+        case BS_MULTILINE:
 
-    }
+            break;
 
-    if ( ( BS_ICON & dwStyle ) == BS_ICON ) {
+        case BS_FLAT:
 
-        DrawIcon( hWnd, &r, pPS );
-        return;
+            DrawEdge( pPS->hdc, &r, BDR_SUNKENINNER, BF_RECT | BF_FLAT );
+            break;
 
-    }
+        default:
 
-    if ( ( ( BS_OWNERDRAW & dwStyle ) == BS_OWNERDRAW ) || ( BS_USERBUTTON & dwStyle ) == BS_USERBUTTON ) {
-
-        // wm DrawItem ;
-        return;
+            DrawEdge( pPS->hdc, &r, BDR_RAISEDOUTER, BF_RECT );
+            break;
 
     }
-
-    /* By process of elimination, all that is left is a normal button */
-
-    DrawText( pPS->hdc, Text.c_str(), Text.size(), &r, DT_CENTER | DT_SINGLELINE | DT_VCENTER );
-
-    SetBkMode( pPS->hdc, iOldBkMode );
-    SetBkColor( pPS->hdc, oldbkcr );
-    SetTextColor( pPS->hdc, oldfgcr );
 
 #ifdef YOU_WIN_GRAPHICAL
-
-    if ( BS_FLAT & dwStyle ) {
-
-        DrawEdge( pPS->hdc, &r, BDR_SUNKENINNER, BF_RECT | BF_FLAT );
-
-    } else {
-
-        DrawEdge( pPS->hdc, &r, BDR_RAISEDOUTER, BF_RECT );
-
-    }
 
     if ( GetFocus() == hWnd ) {
 
         DrawFocusRect( pPS->hdc, &r );
 
     }
+
 #endif
+
+}
+
+
+void staticstyles( DWORD dwStyle, TSTRING & styles ) {
+
+    /* Types of buttons */
+    switch( 0xFF & dwStyle ) {
+
+        case BS_CHECKBOX:
+
+            styles += TEXT( " BS_CHECKBOX" );
+            break;
+
+        case BS_AUTOCHECKBOX:
+
+            styles += TEXT( " BS_AUTOCHECKBOX" );
+            break;
+
+        case BS_3STATE:
+
+            styles += TEXT( " BS_3STATE" );
+            break;
+
+        case BS_AUTO3STATE:
+
+            styles += TEXT( " BS_AUTO3STATE" );
+            break;
+
+        case BS_GROUPBOX:
+
+            styles += TEXT( " BS_GROUPBOX" );
+            break;
+
+        case BS_USERBUTTON:
+
+            styles += TEXT( " BS_USERBUTTON" );
+            break;
+
+        case BS_OWNERDRAW:
+
+            styles += TEXT( " BS_OWNERDRAW" );
+            break;
+
+        case BS_ICON:
+
+            styles += TEXT( " BS_ICON" );
+            break;
+
+        case BS_BITMAP:
+
+            styles += TEXT( " BS_BITMAP" );
+            break;
+
+    }
+
+    /* Formatting styles */
+    switch( 0xFF00 & dwStyle ) {
+
+        case BS_LEFT:
+
+            styles += TEXT( " BS_LEFT" );
+            break;
+
+        case BS_CENTER:
+
+            styles += TEXT( " BS_CENTER" );
+            break;
+
+        case BS_VCENTER:
+
+            styles += TEXT( " BS_VCENTER" );
+            break;
+
+        case BS_MULTILINE:
+
+            styles += TEXT( " BS_MULTILINE" );
+            break;
+
+        case BS_FLAT:
+
+            styles += TEXT( " BS_FLAT" );
+            break;
+
+    }
 
 }
 
@@ -405,6 +554,15 @@ LRESULT Button::WndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
         case BM_GETCHECK:
 
             return HANDLE_BM_GETCHECK( hWnd, wParam, lParam, pWnd->OnGetCheck );
+
+        case WM_CREATE: {
+
+                TSTRING styles;
+                staticstyles( pWnd->dwStyle, styles );
+                DBG_MSG( DBG_WINDOW_MESSAGES, TEXT( "BUTTON - WM_CREATE:%s" ), styles.c_str() );
+
+            }
+            break;
 
         case WM_KEYDOWN:
 
@@ -428,6 +586,12 @@ LRESULT Button::WndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
             break;
 
         case WM_PAINT: {
+
+                if ( ! IsWindowVisible( hWnd ) ) {
+
+                    return true;
+
+                }
 
                 PAINTSTRUCT ps;
 

@@ -160,6 +160,14 @@ BOOL DeleteDC( HDC hDC ) {
 
     }
 
+    /* If it's a memory DC, discard the selected bitmap, if any */
+    if ( pDC->pPixels ) {
+
+        DeleteObject( (HGDIOBJ)pDC->pPixels );
+        pDC->pPixels = 0;
+
+    }
+
     delete pDC;
 
     return true;

@@ -12,7 +12,12 @@ class Cursor : public Object {
 
     public:
 
-        Cursor() : Object( OBJECT_TYPE_CURSOR ) {}
+        Cursor() {
+
+            setType( OBJECT_TYPE_CURSOR );
+
+        }
+
         virtual ~Cursor() override {}
 
 };

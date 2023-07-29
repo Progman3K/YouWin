@@ -7,6 +7,9 @@
 #include <vector>
 
 
+#include <gdi.h>
+
+
 #include "resource.h"
 
 
@@ -48,7 +51,7 @@ class bitmap {
 };
 
 
-class IBitmap /* : public Object */ {
+class IBitmap : public Object {
 
     /* After the bitmap has been created,
      * you can change its size,
@@ -58,11 +61,22 @@ class IBitmap /* : public Object */ {
 
     public:
 
+        typedef enum {
+
+            BITMAP_FMT_NONE,
+            BITMAP_FMT_FONT,
+            BITMAP_FMT_V3,
+            BITMAP_FMT_V4,
+            BITMAP_FMT_V5
+
+        } BITMAP_FMT;
+
 //        IBitmap() : Object( OBJECT_TYPE_BITMAP ) {}
 
 
 //        unsigned bpp;
 
+        virtual BITMAP_FMT getfmt( void ) const = 0;
 
         virtual unsigned getbpp( void ) const = 0;
 
@@ -97,7 +111,7 @@ class IBitmap /* : public Object */ {
 };
 
 
-template <class T> class protoBitmap : public bitmap, public IBitmap {
+template <class T> class protoBitmap : /* public Object, */ public bitmap, public IBitmap {
 
     /* After the bitmap has been created,
      * you can change its size,
@@ -107,9 +121,22 @@ template <class T> class protoBitmap : public bitmap, public IBitmap {
 
     public:
 
+        protoBitmap() {
+
+            setType( OBJECT_TYPE_USERBITMAP );
+
+        }
+
         virtual ~protoBitmap() {}
 
         std::vector<T> pixels;
+
+
+        BITMAP_FMT getfmt( void ) const override {
+
+            return BITMAP_FMT_NONE;
+
+        }
 
 
         unsigned getbpp( void ) const override { return bpp; }
@@ -257,6 +284,184 @@ class Bitmap {
 
 
 };
+
+
+/* This is what a HBITMAP can map to directly */
+class UserBitmap : public IBitmap /* , public Object */ {
+
+    public:
+
+        BITMAP_FMT fmt;
+
+
+        BITMAP_FMT getfmt( void ) const override {
+
+            return fmt;
+
+        }
+
+
+        UserBitmap( const BITMAPINFOHEADER * pBitmap ) {
+
+            setType( OBJECT_TYPE_RESOURCEBITMAP );
+
+            pInternalBitmap = (VOID *)pBitmap;
+
+            const TCHAR * bmptype;
+
+            switch( pBitmap->biSize ) {
+
+                case sizeof( BITMAPINFOHEADER ):
+
+                    fmt = BITMAP_FMT_V3;
+                    bmptype = TEXT( "v3" );
+                    break;
+
+                case sizeof( BITMAPV4HEADER ):
+
+                    fmt = BITMAP_FMT_V4;
+                    bmptype = TEXT( "v4" );
+                    break;
+
+                case sizeof( BITMAPV5HEADER ):
+
+                    fmt = BITMAP_FMT_V5;
+                    bmptype = TEXT( "v5" );
+                    break;
+
+                default:
+
+                    fmt = BITMAP_FMT_NONE;
+                    bmptype = TEXT( "UNKNOWN" );
+                    break;
+
+            }
+
+            DBG_MSG( DBG_DATA_DUMPS, TEXT( 
+                     "Windows bitmap %s loaded:\n"
+                     "Size of header: in code %u, on disk: %u\n"
+                     "Dimensions: %ux%u\n"
+                     "planes: %u\n"
+                     "bits per pixel: %u\n"
+                     "compression: %u\n"
+                     "size in bytes: %u\n"
+                     "colors used: %u\n"
+                     "color important: %u\n"
+                    ),
+                     bmptype,
+                     (unsigned)sizeof( BITMAPINFOHEADER ),
+                     (unsigned)pBitmap->biSize,
+                     (unsigned)pBitmap->biWidth,
+                     (unsigned)pBitmap->biHeight,
+                     (unsigned)pBitmap->biPlanes,
+                     (unsigned)pBitmap->biBitCount,
+                     (unsigned)pBitmap->biCompression,
+                     (unsigned)pBitmap->biSizeImage,
+                     (unsigned)pBitmap->biClrUsed,
+                     (unsigned)pBitmap->biClrImportant
+            );
+
+        }
+
+        VOID * pInternalBitmap; /* This might point to storage of BITMAP_FMT type */
+
+        /* IBitmap API */
+        unsigned getbpp( void ) const override;
+        long Width( void ) const override;
+        long Height( void ) const override;
+        size_t size( void ) const override;
+        const void * data( void ) const override;
+        bool GetPixel( const POINT & pt, COLORREF & c ) const override;
+
+};
+
+
+typedef std::pair <const Resource *, UserBitmap> BmpPair;
+
+
+class BmpList : public std::map <const Resource *, UserBitmap> {
+
+    public:
+
+        const UserBitmap * open( const ResourceList * resources, LPCTSTR resname ) {
+
+            HINSTANCE hInst = (HINSTANCE)resources;
+            HRSRC hRes = FindResource( hInst, resname, RT_BITMAP );
+
+            if ( 0 == hRes ) {
+
+                DBG_MSG( DBG_ERROR, TEXT( "Could not load bitmap resource %lX from %lX" ), resname, hInst );
+                return NULL;
+
+            }
+
+            HGLOBAL h = LoadResource( hInst, hRes );
+
+            const BITMAPINFOHEADER * pBitmap = (const BITMAPINFOHEADER *)LockResource( h );
+
+            DBG_MSG( DBG_GRAPHICAL, TEXT( "Loaded bitmap resource %lX from %lX: %lX" ), resname, hInst, pBitmap );
+
+            UserBitmap bitmap( pBitmap );
+
+            auto f = emplace( (const Resource *)hRes, bitmap );
+
+            DBG_MSG( DBG_ERROR, TEXT( "Make bitmap: %s" ), f.second ? "Success" : "Failed" );
+
+            if ( false == f.second ) {
+
+                return 0;
+
+            }
+
+            return &f.first->second;
+
+        }
+
+        const UserBitmap * Find( const ResourceList * resources, LPCTSTR resname ) {
+
+            /*
+             * Perform a for over the list and check each bitmap resource record for a matching name.
+             * If found, return the record, otherwise scan the resources for a matching bitmap.
+             * If found, create a UserBitmap object wrapping the bitmap resource, insert it in the list, and then return its pointer
+             * Otherwise return NULL.
+             */
+
+            for ( auto const & [resource,bmp] : *this ) {
+
+//                if ( resources != resource )
+
+                if ( 0 == HIWORD( resname ) ) {
+
+                    // Name must be numerical
+                    if ( 0 == resource->Id.uName ) continue; // Name not numerical
+
+                    if ( LOWORD( resname ) != resource->Id.uName ) continue; // Not right name
+
+                } else {
+
+                    // Name must be alphanumerical
+                    if ( 0 != resource->Id.uName ) continue; // Name not alphanumerical
+
+                    TSTRING tName( resource->Id.pszName );
+
+//                    if ( 0 != _tcscmp( resname, resource.Id.pszName ) ) continue; // Not right name
+                    if ( 0 != tName.comparei( resname ) ) continue; // Not right name
+
+                }
+
+                return &bmp;
+
+            }
+
+            return NULL;
+
+        }
+
+
+};
+
+
+extern  BmpList bitmaps;
 
 
 #endif /* YW_BITMAP_H */

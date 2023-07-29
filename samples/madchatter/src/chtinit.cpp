@@ -71,7 +71,7 @@ int iInit( CWho & me ) {
         return -1;
 
     }
-
+#if 0
     union {
 
         in_addr     sin_addr;
@@ -94,7 +94,7 @@ int iInit( CWho & me ) {
         return -1;
 
     }
-
+#endif
     if ( ! me.SetSocket( s ) ) {
 
         closesocket( s );

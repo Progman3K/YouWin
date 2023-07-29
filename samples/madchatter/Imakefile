@@ -78,7 +78,7 @@
 
 /*          INCLUDES += -I../include */
 
-          CXXFLAGS += -Wall -std=c++11
+          CXXFLAGS += -Wall -std=c++20
 
 
 src/resource/resource.rc: src/resource/dialogs.rc src/resource/strings.rc src/resource/version.rc
@@ -112,7 +112,7 @@ $(APPNAME): /* resource.res */
 #ifndef BUILD_WIN32
 
             /* Add Windows replacement */
-            LDLIBS += -L/opt/youwin/src -lyouwin
+            LDLIBS += -L/opt/youwin/src -lyouwin -z noexecstack
 
 #ifndef __DARWIN__
             LDLIBS += -static-libgcc

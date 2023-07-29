@@ -334,6 +334,7 @@ extern "C" void DBGTRACE_API traceMSG( unsigned long dwDebugChannelsBitmap, unsi
         case WM_DESTROY:           _tcsncpy( szMsg, TEXT( "WM_DESTROY" ),         Dim( szMsg ) - 1 ); break;
         case WM_DEVICECHANGE:      _tcsncpy( szMsg, TEXT( "WM_DEVICECHANGE" ),    Dim( szMsg ) - 1 ); break;
         case WM_DISPLAYCHANGE:     _tcsncpy( szMsg, TEXT( "WM_DISPLAYCHANGE" ),   Dim( szMsg ) - 1 ); break;
+        case WM_DRAWITEM:          _tcsncpy( szMsg, TEXT( "WM_DRAWITEM" ),        Dim( szMsg ) - 1 ); break;
         case WM_ENABLE:            _tcsncpy( szMsg, TEXT( "WM_ENABLE" ),          Dim( szMsg ) - 1 ); break;
         case WM_ERASEBKGND:        _tcsncpy( szMsg, TEXT( "WM_ERASEBKGND" ),      Dim( szMsg ) - 1 ); break;
         case WM_GETICON:           _tcsncpy( szMsg, TEXT( "WM_GETICON" ),         Dim( szMsg ) - 1 ); break;
@@ -528,7 +529,6 @@ extern "C" void DBGTRACE_API traceMSG( unsigned long dwDebugChannelsBitmap, unsi
 
         case WM_SETFONT:           _tcsncpy( szMsg, TEXT( "WM_SETFONT" ), Dim( szMsg ) - 1 ); break;
         case WM_GETFONT:           _tcsncpy( szMsg, TEXT( "WM_GETFONT" ), Dim( szMsg ) - 1 ); break;
-        case WM_DRAWITEM:          _tcsncpy( szMsg, TEXT( "WM_DRAWITEM" ), Dim( szMsg ) - 1 ); break;
         case WM_MEASUREITEM:       _tcsncpy( szMsg, TEXT( "WM_MEASUREITEM" ), Dim( szMsg ) - 1 ); break;
         case WM_VKEYTOITEM:        _tcsncpy( szMsg, TEXT( "WM_VKEYTOITEM" ), Dim( szMsg ) - 1 ); break;
         case WM_CHARTOITEM:        _tcsncpy( szMsg, TEXT( "WM_CHARTOITEM" ), Dim( szMsg ) - 1 ); break;

@@ -3,30 +3,18 @@
 #include "ywin.h"
 
 
-HMENU LoadMenu( HINSTANCE hInst, LPCTSTR lpszName ) {
+HMENU LoadMenu( HINSTANCE hInst, LPCTSTR resname ) {
 
-    if ( ( NULL == hInst ) && ( 0 == HIWORD( lpszName ) ) ) {
+    if ( NULL == hInst ) {
 
-        // return code as actual stock object for now
-        return (HMENU)(unsigned long)LOWORD( lpszName );
+        /* As commonly-understood, this means to load the menu from the application's default resources */
+        hInst = GetModuleHandle( NULL );
 
     }
 
-//    Resource * h;
-// = new Object( OBJECT_TYPE_MENU );
-// TODO: CONNECT MENU RESOURCE
-//    BOOL bLoaded = Resource::bLoad( hInst, RT_MENU, lpszName, h );
+    HMENU hMenu = (HMENU)menus.open( hInst, resname );
 
-//    if ( ! bLoaded ) {
-
-//        delete h;
-//        return NULL;
-
-//    }
-
-//    MENU_RESOURCE * pMenu = (MENU_RESOURCE *)h->data();
-
-    return 0;
+    return hMenu;
 
 }
 

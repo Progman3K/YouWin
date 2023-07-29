@@ -287,6 +287,8 @@ Window * CreateDialogObject( HINSTANCE hInst, LPCTSTR resname, HWND hParentWnd, 
 
         }
 
+        r.bottom += GetSystemMetrics( SM_CYMENU );
+
     }
 
     utf16string classname;
@@ -513,7 +515,7 @@ HWND CreateDialogIndirectParam( HINSTANCE hInst, const DLGTEMPLATE * pDlgHeader,
 
     if ( ( WS_CAPTION & pDlgHeader->style ) == WS_CAPTION ) {
 
-        r.bottom += GetSystemMetrics( SM_CYCAPTION );;
+        r.bottom += GetSystemMetrics( SM_CYCAPTION );
 
     }
 
@@ -563,6 +565,8 @@ HWND CreateDialogIndirectParam( HINSTANCE hInst, const DLGTEMPLATE * pDlgHeader,
             }
 
         }
+
+        r.bottom += GetSystemMetrics( SM_CYMENU );
 
     }
 

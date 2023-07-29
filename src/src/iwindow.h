@@ -19,6 +19,12 @@ class WindowArea : public IBitmap {
 
     public:
 
+        BITMAP_FMT getfmt( void ) const override {
+
+            return BITMAP_FMT_NONE;
+
+        }
+
         unsigned getbpp( void ) const override { return 24; }
 
         bool GetPixel( const POINT & /* pt */, COLORREF & /* c */ ) const override { return false; }

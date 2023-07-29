@@ -9,6 +9,9 @@
 #include <basetsd.h>
 
 
+#include <gdi.h>
+
+
 #define ANTIALIASED_QUALITY               4
 
 #define BF_LEFT                           1
@@ -329,6 +332,7 @@
 #define GWL_USERDATA                      (-21)
 #define GWL_WNDPROC                       (-4)
 #define GWLP_HINSTANCE                    (-6)
+#define GWLP_USERDATA                     (-21)
 
 #define HGDI_ERROR                        ((HANDLE)GDI_ERROR)
 
@@ -554,9 +558,6 @@
 
 #define REFERENCE                         *
 
-#define RGB(r,g,b)                        ((COLORREF)((BYTE)(r)|((BYTE)(g) << 8)|((BYTE)(b) << 16)))
-#define RGBA(r,g,b,a)                     ((COLORREF)( (((DWORD)(BYTE)(a))<<24) | RGB(r,g,b) ))
-
 #define RT_CURSOR_VAL                     1
 #define RT_CURSOR                         MAKEINTRESOURCE(RT_CURSOR_VAL)
 
@@ -600,7 +601,7 @@
 #define RT_ANIICON                        MAKEINTRESOURCE(22)
 #define RT_HTML                           MAKEINTRESOURCE(23)
 
-#define RT_REGION_VAL                     25
+// #define RT_REGION_VAL                     25
 
 #define S_OK                              ((HRESULT)0L)
 
@@ -711,11 +712,11 @@
 
 #ifdef UNICODE
 #ifndef TEXT
-#define TEXT(s)                           L##s
+#define TEXT(string)                      L##string
 #endif
 #else
 #ifndef TEXT
-#define TEXT(s)                           s
+#define TEXT(string)                      string
 #endif
 #endif
 #define _T(x)                             TEXT(x)
@@ -1112,7 +1113,6 @@ typedef TCHAR * LPTSTR;
 typedef const TCHAR * LPCTSTR;
 typedef unsigned long DWORD;
 typedef DWORD * LPDWORD;
-typedef unsigned COLORREF;
 typedef int WINBOOL;
 
 #ifndef _OBJC_OBJC_H_
@@ -1537,6 +1537,37 @@ typedef struct _GUID {
 #if defined(__cplusplus) || defined(__OBJC__)
     bool equals( const _GUID & guid ) const {
 
+        if ( Data1 == guid.Data1 ) {
+
+            return false;
+
+        }
+
+        if ( Data2 == guid.Data2 ) {
+
+            return false;
+
+        }
+
+        if ( Data3 == guid.Data3 ) {
+
+            return false;
+
+        }
+
+        for ( unsigned u = 0; u < ( sizeof( Data4 ) / sizeof( Data4[0] ) ); u++ ) {
+
+            if ( Data4[u] != guid.Data4[u] ) {
+
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+#if 0
         return (
             ( Data1 == guid.Data1 )
             &&
@@ -1546,8 +1577,10 @@ typedef struct _GUID {
             &&
             ( Data4 == guid.Data4 )
         );
+#endif
 
     }
+#if 0
     bool equals( const _GUID * guid ) const {
 
         return (
@@ -1561,7 +1594,8 @@ typedef struct _GUID {
         );
 
     }
-#endif
+#endif /* Disabled, remove */
+#endif /* __cplusplus || __OBJC__ */
 
 } GUID;
 typedef GUID KNOWNFOLDERID;
@@ -1702,41 +1736,6 @@ typedef struct {
     LPCTSTR      lpTemplateName;
 
 } FINDREPLACE, *LPFINDREPLACE;
-
-
-typedef struct tagBITMAPINFOHEADER {
-
-    unsigned int biSize;
-    int          biWidth;
-    int          biHeight;  /* Divide by 2 */
-    WORD         biPlanes;
-    WORD         biBitCount;
-    unsigned int biCompression;
-    unsigned int biSizeImage;
-    int          biXPelsPerMeter;
-    int          biYPelsPerMeter;
-    unsigned int biClrUsed;
-    unsigned int biClrImportant;
-
-} BITMAPINFOHEADER, *PBITMAPINFOHEADER;
-
-
-typedef struct tagRGBQUAD {
-
-    BYTE rgbBlue;
-    BYTE rgbGreen;
-    BYTE rgbRed;
-    BYTE rgbReserved;
-
-} RGBQUAD;
-
-
-typedef struct tagBITMAPINFO {
-
-    BITMAPINFOHEADER bmiHeader;
-    RGBQUAD          bmiColors[1];
-
-} BITMAPINFO, *PBITMAPINFO;
 
 
 typedef struct tagTPMPARAMS {
@@ -1925,6 +1924,8 @@ HMODULE GetModuleHandle( LPCTSTR pModuleName );
 
 HWND GetNextDlgTabItem( HWND hDlg, HWND hCtlWnd, BOOL bPrevious );
 
+int GetObject( HANDLE h, int c, LPVOID pv );
+
 BOOL GetOpenFileName( LPOPENFILENAME lpofn );
 
 HWND GetParent( HWND hWnd );
@@ -1992,6 +1993,8 @@ BOOL InvertRect( HDC hDC, const RECT * pr );
 BOOL KillTimer( HWND hWnd, UINT_PTR uIDEvent );
 
 BOOL LineTo( HDC hDC, int x, int y );
+
+HBITMAP LoadBitmap( HINSTANCE hInst, LPCTSTR ID );
 
 HCURSOR LoadCursor( HINSTANCE hInst, LPCTSTR ID );
 
@@ -2101,6 +2104,8 @@ BOOL ShowScrollBar( HWND hWnd, int wBar, BOOL bShow );
 BOOL ShowWindow( HWND hWnd, int iShow );
 
 DWORD SizeofResource( HMODULE hModule, HRSRC hResInfo );
+
+BOOL StretchBlt( HDC hdcDest, int xDest, int yDest, int wDest, int hDest, HDC hdcSrc, int xSrc, int ySrc, int wSrc, int hSrc, DWORD rop );
 
 BOOL TextOut( HDC hDC, int x, int y, LPCTSTR pString, int cchString );
 

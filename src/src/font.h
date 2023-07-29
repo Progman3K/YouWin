@@ -52,6 +52,12 @@ class glyph : /* public chardef, */ public IBitmap {
 
         virtual ~glyph( void ) {}
 
+        BITMAP_FMT getfmt( void ) const override {
+
+            return BITMAP_FMT_FONT;
+
+        }
+
         void setdef( const chardef * pcd ) { pChardef = pcd; }
 
         /* IBitmap interface here */
@@ -130,8 +136,9 @@ class Font : public Object {
         Faces       glyphs;
         const Font_Header * pHdr;
 
-        Font( const Font_Header * pFontHdr ) : Object( OBJECT_TYPE_FONT ) {
+        Font( const Font_Header * pFontHdr ) {
 
+            setType( OBJECT_TYPE_FONT );
             pHdr = pFontHdr;
 
 #ifdef YOU_WIN_TXT

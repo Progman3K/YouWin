@@ -55,7 +55,11 @@ class Resource : public Object {
 
         virtual ~Resource() override {}
 
-        Resource() : Object( OBJECT_TYPE_RESOURCE ) {}
+        Resource() {
+
+            setType( OBJECT_TYPE_RESOURCE );
+
+        }
 
 //        static BOOL bLoad( HINSTANCE hInst, const TCHAR * Type, const TCHAR * ResID, byte_array * buffer );
 

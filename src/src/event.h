@@ -17,7 +17,9 @@ class CEvent : public Object {
         semaphore;
 
 
-        CEvent() : Object( OBJECT_TYPE_EVENT ) {
+        CEvent() {
+
+            setType( OBJECT_TYPE_EVENT );
 
 #ifdef __MACH__
             semaphore = dispatch_semaphore_create( 0 );

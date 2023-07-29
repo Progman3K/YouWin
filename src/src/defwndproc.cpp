@@ -34,9 +34,12 @@ static BOOLEAN EnumChildren( IWindow * pWnd, LPARAM lParam ) {
 
 static void RemoveNode( Window * pWnd ) {
 
+    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Removing window %lX from linked-list" ), pWnd );
+
     if ( pWnd->pPrevSiblingWnd ) {
 
         // NOT the topmost window. Change IT'S next pointer to MY next pointer.
+        DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "NOT the topmost window. Change IT'S next pointer to MY next pointer %lX" ), pWnd->pNextSiblingWnd );
         pWnd->pPrevSiblingWnd->pNextSiblingWnd = pWnd->pNextSiblingWnd;
 
     }
@@ -44,6 +47,7 @@ static void RemoveNode( Window * pWnd ) {
     if ( pWnd->pNextSiblingWnd ) {
 
         // NOT the bottommost window. Change IT'S previous pointer to MY previous pointer.
+        DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "NOT the bottommost window. Change IT'S previous pointer to MY previous pointer %lX" ), pWnd->pPrevSiblingWnd );
         pWnd->pNextSiblingWnd->pPrevSiblingWnd = pWnd->pPrevSiblingWnd;
 
     }
@@ -62,6 +66,9 @@ void Window::OnDestroy( HWND hWnd ) {
     NextChild   Child;
 
     Child.pParentWnd = reinterpret_cast<LPWindow>( hWnd );
+
+    // Remove it from the linked list.
+    RemoveNode( this );
 
     for ( ;; ) {
 
@@ -86,8 +93,6 @@ void Window::OnDestroy( HWND hWnd ) {
 
 //    ShowWindow( hWnd, SW_HIDE );
 
-    // Remove it from the linked list.
-    RemoveNode( this );
 
     if ( GetFocus() == this ) {
 

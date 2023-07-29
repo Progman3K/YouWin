@@ -43,7 +43,11 @@ ATOM RegisterClass( const WNDCLASS * pWndClass ) {
 
     ClassList::iterator ii = classes.insert( classes.end(), pair );
 
-    return std::distance( classes.begin(), ii );
+    ATOM wndclass = std::distance( classes.begin(), ii );
+
+    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "RegisterClass: class '%s' registered" ), pClass->GetClassName() );
+
+    return wndclass;
 
 #if 0
     // Not processed

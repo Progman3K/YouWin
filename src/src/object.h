@@ -39,13 +39,14 @@ typedef enum {
     OBJECT_TYPE_FF,
     OBJECT_TYPE_MODULE,
 
-    OBJECT_TYPE_GDI    = RT_GDI_VAL,
-    OBJECT_TYPE_BITMAP = RT_BITMAP_VAL,
-    OBJECT_TYPE_CURSOR = RT_CURSOR_VAL,
-    OBJECT_TYPE_FONT   = RT_FONT_VAL,
-    OBJECT_TYPE_ICON   = RT_ICON_VAL,
-    OBJECT_TYPE_MENU   = RT_MENU_VAL,
-    OBJECT_TYPE_REGION = RT_REGION_VAL,
+    OBJECT_TYPE_GDI            /* = RT_GDI_VAL */,
+    OBJECT_TYPE_USERBITMAP     /* = RT_BITMAP_VAL */,
+    OBJECT_TYPE_RESOURCEBITMAP /* = RT_BITMAP_VAL */,
+    OBJECT_TYPE_CURSOR         /* = RT_CURSOR_VAL */,
+    OBJECT_TYPE_FONT           /* = RT_FONT_VAL */,
+    OBJECT_TYPE_ICON           /* = RT_ICON_VAL */,
+    OBJECT_TYPE_MENU           /* = RT_MENU_VAL */,
+    OBJECT_TYPE_REGION         /* = RT_REGION_VAL */,
 
     OBJECT_TYPE_RESOURCE
 
@@ -69,15 +70,24 @@ class Object : public IObject {
 
     public:
 
-        Object( ObjectType uTyp ) {
+        unsigned uLockingCount;
 
-            uType = uTyp;
+
+        Object( void ) {
+
+            uLockingCount = 0;
 
         }
 
-        ObjectType type( void ) override {
+        ObjectType type( void ) /* override */ {
 
             return uType;
+
+        }
+
+        void setType( ObjectType typ ) {
+
+            uType = typ;
 
         }
 

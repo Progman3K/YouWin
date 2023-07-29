@@ -11,6 +11,7 @@ BOOL PostMessage( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
     if ( HWND_BROADCAST == hWnd ) {
 
         /* TODO Add proper support for broadcast */
+        DBG_MSG( DBG_ERROR, TEXT( "Broadcast post failed" ) );
         return false;
 
     }
@@ -18,6 +19,7 @@ BOOL PostMessage( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
     if ( NULL == hWnd ) {
 
         /* TODO Implement proper thread-posting */
+        DBG_MSG( DBG_ERROR, TEXT( "Thread post failed" ) );
         return false;
 
     }
@@ -27,6 +29,7 @@ BOOL PostMessage( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
     if ( 0 == pWnd ) {
 
         /* Invalid handle TODO set error code */
+        DBG_MSG( DBG_ERROR, TEXT( "Post failed: Bad window" ) );
         return false;
 
     }
@@ -97,6 +100,7 @@ BOOL PostMessage( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 
     }
 
+    DBG_MSG( DBG_ERROR, TEXT( "Post message %u to loop" ), Msg.Msg.message );
     return g.Q.PostToQ( g.Q.MsgQ, &Msg );
 
 }

@@ -17,7 +17,7 @@
 
 
 #include <stdio.h>
-#include <string>
+#include <cstring>
 #include <stdlib.h>
 
 

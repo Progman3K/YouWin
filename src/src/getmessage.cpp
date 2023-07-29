@@ -359,6 +359,12 @@ LRESULT DispatchMessage( const MSG * pMsg ) {
 
 int GetMessage( MSG * pMsg, HWND hWnd, UINT uMsgFilterMin, UINT uMsgFilterMax ) {
 
+    if ( g.Q.Quit() ) {
+
+        return 0;
+
+    }
+
     if ( ( 0 != hWnd ) && ( NULL == IsWnd( hWnd ) ) ) {
 
         return -1;

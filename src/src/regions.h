@@ -18,8 +18,9 @@ class Region : public std::vector<RECT>, public Object {
         unsigned cy;
 
 
-        Region() : Object( OBJECT_TYPE_REGION ) {
+        Region() /* : Object( OBJECT_TYPE_REGION ) */ {
 
+            setType( OBJECT_TYPE_REGION );
             reset();
 
         }
@@ -28,8 +29,9 @@ class Region : public std::vector<RECT>, public Object {
         virtual ~Region() override {}
 
 
-        Region( int X, int Y, unsigned CX, unsigned CY ) : Object( OBJECT_TYPE_REGION ) {
+        Region( int X, int Y, unsigned CX, unsigned CY ) /* : Object( OBJECT_TYPE_REGION ) */ {
 
+            setType( OBJECT_TYPE_REGION );
             x  = X;
             y  = Y;
             cx = CX;

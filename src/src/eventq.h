@@ -15,7 +15,24 @@
 
 class EventQ {
 
+    /* If the queue retrieves a WM_QUIT, this message will then be set true, and all further calls to GetMessage will return 0 */
+    bool bQuit;
+
+
     public:
+
+
+        EventQ( void ) {
+
+            bQuit = false;
+
+        }
+
+        bool Quit( void ) {
+
+            return bQuit;
+
+        }
 
 
         int Read( MSG * pMsg );

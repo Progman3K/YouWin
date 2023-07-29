@@ -122,7 +122,7 @@ extern "C" inline void DBGTRACE_API DBG_TRACE( unsigned uLineNo, const char * ps
 #else
     fprintf( stderr, "%s", szMsg );
 #endif
-    
+
 }
 
 

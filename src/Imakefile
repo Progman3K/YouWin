@@ -86,11 +86,13 @@
                         src/is_in.cpp \
                         src/isdialogmsg.cpp \
                         src/iswnd.cpp \
+                        src/ldbitmap.cpp \
                         src/ldcursor.cpp \
                         src/ldicon.cpp \
                         src/ldmenu.cpp \
                         src/ldstring.cpp \
                         src/listboxwndproc.cpp \
+                        src/menu.cpp \
                         src/messagebox.cpp \
                         src/object.cpp \
                         src/open.cpp \
@@ -108,6 +110,7 @@
                         src/setwtxt.cpp \
                         src/show_win.cpp \
                         src/staticwndproc.cpp \
+                        src/stretchblt.cpp \
                         src/textout.cpp \
                         src/universe.cpp \
                         src/unregisterclass.cpp \
@@ -146,7 +149,7 @@ src/ywresource.s: ywresource.res
 
 
 
-            CXXFLAGS += -Wall -std=c++11
+            CXXFLAGS += -Wall -std=c++20
 #ifndef BUILD_WIN32
             /* The compiler warns that all code is relocatable anyway. */
             CXXFLAGS += -fPIC

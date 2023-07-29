@@ -128,7 +128,7 @@ int ReadCharset( FILE * pFile, Font * pFont ) {
             if ( Font_Header::monochrome == pFont->pHdr->flags ) {
 
                 for ( pFace->cx = 0; *psz && ( ( '0' == *psz ) || ( '1' == *psz ) ); pFace->cx++, psz++ ) {
-                    
+
                     COLORREF c = ( '1' == *psz ) ? RGB( 255, 255, 255 ) : 0;
 
                     pFace = (chardef *)realloc( pFace, sizeof( chardef ) + pixels + 1 );
@@ -189,7 +189,7 @@ int ReadCharset( FILE * pFile, Font * pFont ) {
                         pszDigit++;
 
                     }
-                    
+
                     pFace = (chardef *)realloc( pFace, sizeof( chardef ) + ( ( pixels + 1 ) * sizeof( COLORREF ) ) );
                     COLORREF * pPixels = (COLORREF *)pFace->uscanlines;
 

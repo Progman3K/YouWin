@@ -36,6 +36,7 @@ class Button : public Window {
         void     DrawCheckBox( HWND hWnd, RECT * pr, PAINTSTRUCT * pPS );
         void     DrawBitmap( HWND hWnd, RECT * pr, PAINTSTRUCT * pPS );
         void     DrawIcon( HWND hWnd, RECT * pr, PAINTSTRUCT * pPS );
+        void     DrawOwnerDraw( HWND hWnd, RECT * pr, PAINTSTRUCT * pPS );
 
 };
 

@@ -97,7 +97,7 @@ void Dialog::OnKeydown( HWND hDlg, UINT vk, BOOL fDown, int cRepeat, UINT flags 
 
             /* Not a special key */
 
-            if ( NULL != g.pFocusWnd ) {
+            if ( ( NULL != g.pFocusWnd ) && ( hDlg != g.pFocusWnd ) ) {
 
                 FORWARD_WM_KEYDOWN( (HWND)g.pFocusWnd, vk, cRepeat, flags, SendMessage );
 

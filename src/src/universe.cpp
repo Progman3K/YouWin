@@ -165,7 +165,7 @@ int GetSystemMetrics( int nIndex ) {
         case SM_CYMENU:       return 19;
 
         case SM_CYMENUSIZE:   return 18;
-        
+
         case SM_CYSCREEN:     return g.iCY;
 
         case SM_CYSIZEFRAME:  return 4; // SM_CYFRAME:

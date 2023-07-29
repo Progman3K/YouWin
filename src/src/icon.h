@@ -163,14 +163,13 @@ class ResIcon : public IBitmap {
         ResIcon( const BITMAPINFO * p );
         virtual ~ResIcon( void ) {}
 
+        /* IBitmap API */
         const void * data( void ) const override { return pBI; }
-
         long Width( void ) const override { return I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ); }
         long Height( void ) const override { return I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2; }
         unsigned getbpp( void ) const override { return I386PE_INT16_TO_HOST( &pBI->bmiHeader.biBitCount ); }
-
+        BITMAP_FMT getfmt( void ) const override { return BITMAP_FMT_NONE; }
         size_t size( void ) const override { return ( getbpp() * ( (size_t)Width() * (size_t)Height() ) ) / (size_t)8; }
-
         bool GetPixel( const POINT &, COLORREF & ) const override;
 
 };
@@ -191,8 +190,9 @@ class Icon : public Object {
 
         const IBitmap * GetBmp( void ) const;
 
-        Icon( const ResourceList * pResList, const Resource * pRes ) : Object( OBJECT_TYPE_ICON ) {
+        Icon( const ResourceList * pResList, const Resource * pRes ) {
 
+            setType( OBJECT_TYPE_ICON );
             _create( pResList, pRes );
 
         }

@@ -39,31 +39,40 @@ BOOL CloseHandle( HANDLE h ) {
 }
 
 
-BOOL DeleteObject( HGDIOBJ hObj ) {
+BOOL DeleteObject( HGDIOBJ h ) {
 
-    if ( NULL == hObj ) {
+    if ( NULL == h ) {
 
+        DBG_MSG( DBG_ERROR, TEXT( "DeleteObject NULL OBJECT %u" ), h );
         return false;
 
     }
 
-    IObject * pObject = reinterpret_cast<IObject *>( hObj );
+    IObject * pObject = reinterpret_cast<IObject *>( h );
 
     GDIObject * pObj;
 
     switch( pObject->type() ) {
 
-        case RT_BITMAP_VAL:
+        case OBJECT_TYPE_USERBITMAP:
 
+            DBG_MSG( DBG_WIN32API, TEXT( "Deleting USERBITMAP handle %lX\n" ), h );
+            Bitmap::discard( (IBitmap *)pObj );
             break;
 
-        case RT_FONT_VAL:
+        case OBJECT_TYPE_RESOURCEBITMAP:
 
+            DBG_MSG( DBG_WIN32API, TEXT( "Deleting RESOURCEBITMAP handle %lX\n" ), h );
             break;
 
-        case RT_GDI_VAL:
+        case OBJECT_TYPE_FONT:
 
-            pObj = reinterpret_cast<GDIObject *>( hObj );
+            DBG_MSG( DBG_WIN32API, TEXT( "Deleting FONT handle %lX\n" ), h );
+            break;
+
+        case OBJECT_TYPE_GDI:
+
+            pObj = reinterpret_cast<GDIObject *>( h );
 
             if ( pObj->bStatic ) {
 
@@ -92,14 +101,14 @@ BOOL DeleteObject( HGDIOBJ hObj ) {
 
             return false;
 
-        case RT_ICON_VAL:
+        case OBJECT_TYPE_ICON:
 
-            delete reinterpret_cast<Resource *>( hObj );
+            delete reinterpret_cast<Resource *>( h );
             break;
 
-        case RT_REGION_VAL:
+        case OBJECT_TYPE_REGION:
 
-            delete reinterpret_cast<Region *>( hObj );
+            delete reinterpret_cast<Region *>( h );
             return true;
 
         default:
@@ -116,12 +125,22 @@ BOOL DeleteObject( HGDIOBJ hObj ) {
 
 HGDIOBJ SelectObject( HDC hDC, HGDIOBJ hObj ) {
 
+    DBG_MSG( DBG_GRAPHICAL, TEXT( "SelectObject( HDC %lX Object %lX )" ), hDC, hObj );
+
     DC * pDC = reinterpret_cast<DC *>( hDC );
+
+    if ( NULL == pDC ) {
+
+        DBG_MSG( DBG_ERROR, TEXT( "SelectObject - INVALID DC %lX" ), pDC );
+        return HGDI_ERROR;
+
+    }
 
     IObject * pObject = reinterpret_cast<IObject *>( hObj );
 
-    if ( ( NULL == pDC ) || ( NULL == pObject ) ) {
+    if ( NULL == pObject ) {
 
+        DBG_MSG( DBG_ERROR, TEXT( "SelectObject - INVALID OBJECT %lX" ), pObject );
         return HGDI_ERROR;
 
     }
@@ -130,7 +149,8 @@ HGDIOBJ SelectObject( HDC hDC, HGDIOBJ hObj ) {
 
     switch( pObject->type() ) {
 
-        case RT_BITMAP_VAL:
+        case OBJECT_TYPE_USERBITMAP:
+        case OBJECT_TYPE_RESOURCEBITMAP:
 
             hOldObj = pDC->pPixels;
 
@@ -138,7 +158,7 @@ HGDIOBJ SelectObject( HDC hDC, HGDIOBJ hObj ) {
 
             return hOldObj;
 
-        case RT_FONT_VAL:
+        case OBJECT_TYPE_FONT:
 
             hOldObj = pDC->hFont;
 
@@ -146,11 +166,11 @@ HGDIOBJ SelectObject( HDC hDC, HGDIOBJ hObj ) {
 
             return hOldObj;
 
-        case RT_GDI_VAL:
+        case OBJECT_TYPE_GDI:
 
             break;
 
-        case RT_REGION_VAL: {
+        case OBJECT_TYPE_REGION: {
 
             int iRet = pDC->AddExclusion( reinterpret_cast<Region *>( hObj ) );
 
@@ -164,5 +184,12 @@ HGDIOBJ SelectObject( HDC hDC, HGDIOBJ hObj ) {
     }
 
     return NULL;
+
+}
+
+
+int GetObject( HANDLE h, int c, LPVOID pv ) {
+
+    return 0;
 
 }

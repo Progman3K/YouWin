@@ -61,6 +61,12 @@ class Edit : public Window {
 };
 
 
+template <class WC> class n : public WindowClass {
+
+
+};
+
+
 class EditClass : public WindowClass {
 
     public:

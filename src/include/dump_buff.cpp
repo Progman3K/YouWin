@@ -107,7 +107,7 @@ static bool InternalDumpBuffer( TSTRING /* dumpbuffer */ & sDumpBuffer, unsigned
 
         A line has the following format (assuming 2 segment per line and a segment lenght of 8):
 
-        BF2A5:0000  05 08 09 23 F1 27 32 FF-05 08 09 23 F1 27 32 FF   ....é..|@....é..|@
+        BF2A5:0000  05 08 09 23 F1 27 32 FF-05 08 09 23 F1 27 32 FF   ....ï¿½..|@....ï¿½..|@
 
         Segment:Offset, Hex Paragraph Dump, Dash, Hex Paragraph Dump, ASCII Dump, newline, nul character (last line only).
 
@@ -118,7 +118,7 @@ static bool InternalDumpBuffer( TSTRING /* dumpbuffer */ & sDumpBuffer, unsigned
                         + ( ulNumberOfSegmentsPerLine * ( ( sizeof( TCHAR ) * ( ulSegmentLength * 2 ) ) + ( sizeof( TCHAR ) * ( ulSegmentLength - 1 ) ) ) ) // "05 08 09 23 F1 27 32 FF"
                         + ( ( ulNumberOfSegmentsPerLine - 1 ) * sizeof( szDash ) )                                                                        // "-"
                         + sizeof( szSpacer )                                                                                                              // "   "
-                        + ( ulNumberOfSegmentsPerLine * ( sizeof( TCHAR ) * ulSegmentLength ) )                                                            // "....é..|@....é..|@"
+                        + ( ulNumberOfSegmentsPerLine * ( sizeof( TCHAR ) * ulSegmentLength ) )                                                            // "....ï¿½..|@....ï¿½..|@"
                         + sizeof( szEOL ) + sizeof( szNul );                                                                                              // "\n"
 
     /* Calculate how many lines. */

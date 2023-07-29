@@ -14,7 +14,7 @@ Supported: OS/X, iOS, Android, Linux, additional platforms.
 
 ### Prerequisites
 
-* bash - Attention OSX users, you must upgrade bash v3.x to v5.x 
+* bash - Attention OSX users, you must upgrade bash v3.x to v5.x
 * gnu make
 * imake
 * makedepend (optional)
@@ -27,31 +27,31 @@ Target dependencies
 Android
 
 	* android-ndk
-	
-iOS	
+
+iOS
 
 	* iOS Frameworks (xcode)
 
 OpenGL
 
 	* Freeglut/glapi
-	
+
 X11
 
 	* libX11
-	
+
 Text
 
 	* a 24 bit colour capable VT100 terminal program
-	
+
 	Note:
 	When running a debug text-mode app,
 	you must redirect stderr to a file,
 	otherwise it will interfere with rendering the app.
 	Redirect stderr like so:
-	
+
 	./app 2>debug_output.txt
-	
+
 	You can
 	tail -f debug_output.txt
 	in another terminal to watch the debug info live.
@@ -60,15 +60,15 @@ Text
 ---
 ***
 
-Recommended development strategy:  
+Recommended development strategy:
 
 
 go to whichever folder you wish to work in (home is used here), retrieve the repository, and link it to /opt/youwin
 
-``` 
+```
 cd ~
 git get youwin
-sudo ln ~/youwin /opt/youwin
+sudo ln -s ~/youwin /opt/youwin
 cd youwin/samples/madchatter
 ../../ywconfigure android|ios|opengl|text|xwin [debug/release]
 make depend (optional)
@@ -90,7 +90,7 @@ Tools:
     The situation with fonts:
 
     The fonts included were captured from a Linux distro and are thought to be copyright-free.
-    
+
     - Courier
     - Fixedsys
     - MS Sans Serif
@@ -98,7 +98,7 @@ Tools:
     - System
 
     However, any font you have the legal right to can be used:
-    
+
     *fontnab -f fontname ...*
 
     Permits you to extract installed font definitions and convert them into a text format that can be read by **fntc**.

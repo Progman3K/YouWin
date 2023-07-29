@@ -2,11 +2,11 @@
 #define YOUWIN_TCHAR_H
 
 
-#include <string.h>
+//#include <string.h>
 
 
 #ifdef UNICODE
-#include <wctype.h>
+//#include <wctype.h>
 
 //#define _tWinMain   wWinMain
 //typedef unsigned short TCHAR;
@@ -34,7 +34,7 @@ typedef wchar_t TCHAR;
 #define _vsntprintf  vswprintf
 #define _totupper    towupper
 #else
-#include <ctype.h>
+//#include <ctype.h>
 //#define _tWinMain   WinMain
 typedef char TCHAR;
 #define _fgetts      fgets

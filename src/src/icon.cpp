@@ -258,7 +258,7 @@ void Icon::_create( const ResourceList * pResList, const Resource * pRes ) {
             (unsigned)I386PE_INT32_TO_HOST( &pBI->bmiHeader.biClrImportant )
             );
 
-            DBG_DMP( DBG_DATA_DUMPS, pIcon->Id.pData + sizeof( BITMAPINFOHEADER ), I386PE_INT32_TO_HOST( &pIcon->Id.pHeader->uiSize ) - sizeof( BITMAPINFOHEADER ) );
+//            DBG_DMP( DBG_DATA_DUMPS, pIcon->Id.pData + sizeof( BITMAPINFOHEADER ), I386PE_INT32_TO_HOST( &pIcon->Id.pHeader->uiSize ) - sizeof( BITMAPINFOHEADER ) );
 
             switch( I386PE_INT16_TO_HOST( &pBI->bmiHeader.biBitCount ) ) {
 

@@ -105,6 +105,12 @@ int EventQ::Read( MSG * pMsg ) {
 
         if ( MsgQ.RemoveMessage( pMsg ) ) {
 
+            if ( WM_QUIT == pMsg->message ) {
+
+                bQuit = true;
+
+            }
+
             return 1;
 
         }

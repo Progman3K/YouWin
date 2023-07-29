@@ -68,15 +68,15 @@ the item with the ENDMENU flag set.
 */
 
 
-#define    GRAYED         0x0001   // 'GRAYED' keyword
-#define    INACTIVE       0x0002   // 'INACTIVE' keyword
-#define    BITMAP         0x0004   // 'BITMAP' keyword
-#define    CHECKED        0x0008   // 'CHECKED' keyword
-#define    POPUP          0x0010   // Used internally
-#define    MENUBARBREAK   0x0020   // 'MENUBARBREAK' keyword
-#define    MENUBREAK      0x0040   // 'MENUBREAK' keyword
-#define    ENDMENU        0x0080   // Used internally
-#define    OWNERDRAW      0x0100   // 'OWNERDRAW' keyword
+#define    MENU_ITEM_GRAYED         0x0001   // 'GRAYED' keyword
+#define    MENU_ITEM_INACTIVE       0x0002   // 'INACTIVE' keyword
+#define    MENU_ITEM_BITMAP         0x0004   // 'BITMAP' keyword
+#define    MENU_ITEM_CHECKED        0x0008   // 'CHECKED' keyword
+#define    MENU_ITEM_POPUP          0x0010   // Used internally
+#define    MENU_ITEM_MENUBARBREAK   0x0020   // 'MENUBARBREAK' keyword
+#define    MENU_ITEM_MENUBREAK      0x0040   // 'MENUBREAK' keyword
+#define    MENU_ITEM_ENDMENU        0x0080   // Used internally
+#define    MENU_ITEM_OWNERDRAW      0x0100   // 'OWNERDRAW' keyword
 
 
 typedef struct __attribute__ ((__packed__)) {
@@ -129,7 +129,11 @@ class Menu : public Object {
     public:
 
 
-        Menu() : Object( OBJECT_TYPE_MENU ) {}
+        Menu( const ResourceList * pResList, const Resource * pRes ) /* : Object( OBJECT_TYPE_MENU ) */ {
+
+            setType( OBJECT_TYPE_MENU );
+
+        }
 
 
         virtual ~Menu() override {}
@@ -159,6 +163,18 @@ class MyMenu : public std::vector<MENU_ITEM> {
         ~MyMenu() {}
 
 };
+
+
+class MenuList : public std::map<const Resource *,Menu> {
+
+    public:
+
+        const Menu * open( HMODULE hInst, LPCTSTR ID );
+
+};
+
+
+extern  MenuList menus;
 
 
 #endif /* YW_MENU_H */

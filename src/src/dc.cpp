@@ -126,7 +126,7 @@ void DC::fill( const RECT & r, COLORREF cFill ) {
 
         for ( pt.x = r.left; pt.x < r.right; pt.x++ ) {
 
-            if ( pPixels->SetPixel( pt, cFill ) ) {
+            if ( /* pPixels-> */ SetPixel( pt, cFill, 0 ) ) {
 
                 paint( pt, cFill );
 
@@ -154,11 +154,11 @@ void DC::Invert( const RECT & r ) {
 
             COLORREF c;
 
-            if ( pPixels->GetPixel( pt, c ) ) {
+            if ( /* pPixels-> */ GetPixel( pt, c ) ) {
 
                 c ^= 0x80;
 
-                if ( pPixels->SetPixel( pt, c ) ) {
+                if ( /* pPixels-> */ SetPixel( pt, c, 0 ) ) {
 
                     paint( pt, c );
 
@@ -235,7 +235,7 @@ bool DC::GetPixel( const POINT & pt, COLORREF & c ) {
 
     if ( NULL != pPixels ) {
 
-        return pPixels->GetPixel( pt, c );
+//        return pPixels->GetPixel( pt, c );
 
     }
 
@@ -276,7 +276,7 @@ bool DC::SetPixel( POINT pt, COLORREF c, COLORREF /* pixel */ ) {
 
     if ( DC::Memory & flags ) {
 
-        return pPixels->SetPixel( pt, c );
+//        return pPixels->SetPixel( pt, c );
 
     }
 
@@ -291,7 +291,7 @@ bool DC::SetPixel( POINT pt, COLORREF c, COLORREF /* pixel */ ) {
     } else {
 
         // Client area only.
-        if ( ! pPixels->SetPixel( pt, c ) ) {
+        if ( ! /* pPixels-> */ pWnd->ClientPixels.SetPixel( pt, c ) ) {
 
             return false;
 

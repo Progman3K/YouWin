@@ -54,7 +54,7 @@ static unsigned uMKXButton2 = 0;
 
 void StartPoints( void ) {
 
-    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL StartPoints" ) );
+//    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL StartPoints" ) );
     glBegin( GL_POINTS );
 
 }
@@ -62,7 +62,7 @@ void StartPoints( void ) {
 
 void EndPoints( void ) {
 
-    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL EndPoints" ) );
+//    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL EndPoints" ) );
     glEnd();
 
     glFlush();
