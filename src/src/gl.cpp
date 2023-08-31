@@ -1,13 +1,9 @@
+#if defined( YOU_WIN_GRAPHICAL_OPENGL )
 
 
 #include "ywin.h"
 
 
-#if defined( YOU_WIN_GRAPHICAL ) && defined( YOU_WIN_GRAPHICAL_OPENGL )
-#ifndef ANDROID
-
-
-namespace GL {
 #ifdef __DARWIN__
 #include <OpenGL/gl.h>
 #include <OpenGL/glext.h>
@@ -20,7 +16,6 @@ namespace GL {
 #include <GL/freeglut.h>
 #include <GL/glx.h>
 #endif
-}
 
 
 /* These defines missing from glut headers??? */
@@ -31,10 +26,6 @@ namespace GL {
 #define GLUT_KEY_RSHIFT      0x0071
 #define GLUT_KEY_CONTROL     0x0072
 #define GLUT_KEY_ALT         0x0074
-
-
-using namespace GL;
-
 
 #include "glevents.h"
 
@@ -52,33 +43,7 @@ static unsigned uMKXButton1 = 0;
 static unsigned uMKXButton2 = 0;
 
 
-void StartPoints( void ) {
-
-//    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL StartPoints" ) );
-    glBegin( GL_POINTS );
-
-}
-
-
-void EndPoints( void ) {
-
-//    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL EndPoints" ) );
-    glEnd();
-
-    glFlush();
-
-}
-
-
-void DC::Out( const POINT & pt, COLORREF c ) {
-
-    glColor4f( GetRValue( c ) / 255.0, GetGValue( c ) / 255.0, GetBValue( c ) / 255.0, GetAValue( c ) / 255.0 );
-    glVertex2f( pt.x + 0.5, pt.y + 0.5 );
-
-}
-
-
-void MouseButton( int button, int state, int x, int y ) {
+static void MouseButton( int button, int state, int x, int y ) {
 
   // Respond to mouse button presses.
   // If button1 pressed, mark this state so we know in motion function.
@@ -131,14 +96,14 @@ void MouseButton( int button, int state, int x, int y ) {
 }
 
 
-void MouseCapture( int x, int y ) {
+static void MouseCapture( int x, int y ) {
 
     GLInput.pQ->PostMouseMove( x, y, ( uMKControl | uMKLButton | uMKMButton | uMKRButton | uMKShift | uMKXButton1 | uMKXButton2 ) );
 
 }
 
 
-void MouseMove( int x, int y ) {
+static void MouseMove( int x, int y ) {
 
     GLInput.pQ->PostMouseMove( x, y, ( uMKControl | uMKLButton | uMKMButton | uMKRButton | uMKShift | uMKXButton1 | uMKXButton2 ) );
 
@@ -185,13 +150,15 @@ static void PostKeyMsg( bool bUp, unsigned char c, int x, int y ) {
 }
 
 
-void glkeysup( unsigned char c, int x, int y ) {
+static void glkeysup( unsigned char c, int x, int y ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "ASCII key %d UP at (%d,%d)" ), c, x, y );
     PostKeyMsg( true, c, x, y );
 
 }
-void glkeys( unsigned char c, int x, int y ) {
+
+
+static void glkeys( unsigned char c, int x, int y ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "ASCII key %d DOWN at (%d,%d)" ), c, x, y );
     PostKeyMsg( false, c, x, y );
@@ -258,7 +225,7 @@ static void PostFKeyMsg( bool bUp, int c, int x, int y ) {
 }
 
 
-void glfunctionkeysup( int c, int x, int y ) {
+static void glfunctionkeysup( int c, int x, int y ) {
 
 //    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Function key %d UP at (%d,%d)" ), c, x, y );
 // uMKXButton1 = MK_XBUTTON1;
@@ -267,7 +234,9 @@ void glfunctionkeysup( int c, int x, int y ) {
     PostFKeyMsg( true, c, x, y );
 
 }
-void glfunctionkeys( int c, int x, int y ) {
+
+
+static void glfunctionkeys( int c, int x, int y ) {
 
 //    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Function key %d DOWN at (%d,%d)" ), c, x, y );
 // uMKXButton1 = 0;
@@ -278,15 +247,8 @@ void glfunctionkeys( int c, int x, int y ) {
 }
 
 
-void GL::drawscreen( void ) {
 
-    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL drawscreen" ) );
-    glutSwapBuffers();
-
-}
-
-
-void reshape( int cx, int cy ) {
+static void reshape( int cx, int cy ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Setting up a 2D projection, desktop resized to %dx%d" ), cx, cy );
 
@@ -330,7 +292,7 @@ void reshape( int cx, int cy ) {
 }
 
 
-void PrepGL( int cx, int cy ) {
+static void PrepGL( int cx, int cy ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "OpenGL initialization begins" ) );
 
@@ -364,7 +326,50 @@ void PrepGL( int cx, int cy ) {
 }
 
 
-int GL::glInit( int cx, int cy, EventQ & Q, int argc, char * argv[] ) {
+void PostRefresh( void ) {
+
+    glutPostRedisplay();
+
+}
+
+
+void RasterUpdate( void ) {
+#ifdef __DARWIN__
+#else
+    glutMainLoopEvent();
+#endif
+}
+
+
+void StartPoints( void ) {
+
+//    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL StartPoints" ) );
+    glBegin( GL_POINTS );
+
+}
+
+
+void EndPoints( void ) {
+
+//    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL EndPoints" ) );
+    glEnd();
+
+    glFlush();
+
+}
+
+
+void DC::Out( const POINT & pt, COLORREF c ) {
+
+    glColor4f( GetRValue( c ) / 255.0, GetGValue( c ) / 255.0, GetBValue( c ) / 255.0, GetAValue( c ) / 255.0 );
+    glVertex2f( pt.x + 0.5, pt.y + 0.5 );
+
+}
+
+
+int ywDisplay::Init( int cx, int cy, EventQ & Q, int argc, char * argv[], LPARAM ) {
+
+    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "OpenGL glInit begins" ) );
 
 #ifndef __DARWIN__
 
@@ -431,12 +436,14 @@ int GL::glInit( int cx, int cy, EventQ & Q, int argc, char * argv[] ) {
 
     glutReshapeFunc( reshape );
 
+    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "OpenGL glInit ends" ) );
+
     return 0;
 
 }
 
 
-void GL::glDestroy( void ) {
+void ywDisplay::Destroy( void ) {
 
     if ( 0 != window ) {
 
@@ -448,6 +455,12 @@ void GL::glDestroy( void ) {
 }
 
 
+void ywDisplay::drawscreen( void ) {
 
-#endif /* ! ANDROID */
-#endif /* YOU_WIN_GRAPHICAL && YOU_WIN_GRAPHICAL_OPENGL */
+    DBG_MSG( DBG_GRAPHICAL, TEXT( "GL drawscreen" ) );
+    glutSwapBuffers();
+
+}
+
+
+#endif /* YOU_WIN_GRAPHICAL_OPENGL */

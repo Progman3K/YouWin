@@ -16,7 +16,7 @@ static BOOL InformDisplayChanged( HWND hWnd, LPARAM lParam ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Top-level window %lX informed of resize" ), hWnd );
 
-    Window * pWnd = reinterpret_cast<Window *>( hWnd );
+    ywWindow * pWnd = reinterpret_cast<ywWindow *>( hWnd );
 
     if ( WS_CHILD & pWnd->dwStyle ) {
 
@@ -44,7 +44,7 @@ void Desktop::OnDisplayChange( HWND hWnd, UINT uiBitsPerPixel, UINT usercx, UINT
 
     MoveWindow( hWnd, 0, 0, usercx, usercy, false );
 
-    EnumChildWindows( NULL, InformDisplayChanged, (LPARAM)hWnd );
+    EnumWindows( InformDisplayChanged, (LPARAM)hWnd );
 
 }
 

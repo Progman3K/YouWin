@@ -2,6 +2,9 @@
 #define YW_I_WINDOW_H
 
 
+#include <vector>
+
+
 #include "bitmap.h"
 
 
@@ -15,15 +18,17 @@ typedef BOOLEAN ( * FPBENUMTEXTWINDOWSPROC)( class IWindow * pWnd, LPARAM lParam
 int iEnumWindows( FPBENUMTEXTWINDOWSPROC fpbEnumTextWindowsProc, BOOLEAN bAscending, class IWindow * pWndStart, LPARAM lParam );
 
 
-class WindowArea : public IBitmap {
+class WindowArea : public protoBitmap<COLORREF> {
 
     public:
 
+#if 0
         BITMAP_FMT getfmt( void ) const override {
 
             return BITMAP_FMT_NONE;
 
         }
+
 
         unsigned getbpp( void ) const override { return 24; }
 
@@ -38,7 +43,7 @@ class WindowArea : public IBitmap {
         const void * data( void ) const override { return 0; }
 
         size_t size( void ) const override { return false; }
-
+#endif
 };
 
 
@@ -48,74 +53,27 @@ class IWindow {
     BYTE ucSig[sizeof(SIGNATURE)];       // Makes it possible to identify structure.
 
 
-    typedef struct {
-
-        IWindow * pParentWnd;
-        IWindow * pChildWnd;
-        IWindow * pNext;
-        bool     bStopOnFirstMatch;
-
-    } ECWGetNextDlgTabstopParams;
-
-
-    static BOOLEAN ECWGetNextDlgTabstopEnum( IWindow * pWnd, LPARAM lParam ) {
-
-        ECWGetNextDlgTabstopParams * pParams = (ECWGetNextDlgTabstopParams *)lParam;
-
-        if ( pWnd->pParentWnd != (HWND)pParams->pParentWnd ) {
-
-            return true;
-
-        }
-
-        if ( pWnd == pParams->pChildWnd ) {
-
-            return true;
-
-        }
-
-        if ( ! pWnd->CanAcceptFocus() ) {
-
-            return true;
-
-        }
-
-        pParams->pNext = pWnd;
-
-        if ( pParams->bStopOnFirstMatch ) {
-
-            return false;
-
-        }
-
-        return true;
-
-    }
-
-
     public:
 
-//        typedef std::vector<COLORREF> PixelBuffer;
-
         IWindow *   pParentWnd;
-        IWindow *   pPrevSiblingWnd;  // Previous sibling in linked list of windows. NULL if first (top desktop window) in list.
-        IWindow *   pNextSiblingWnd;  // Next sibling in linked list of windows. NULL if last (bottom desktop window) in list.
+
+        HMENU       hMenu;             // Control ID for child-windows
+
+        std::vector<IWindow *> children;
 
         unsigned    x;                // position on parent.
         unsigned    y;                // position on parent.
         unsigned    cx;               // Number of character collumns (width) including frame.
         unsigned    cy;               // Number of character lines (height) including frame.
 
-        Region      ClientArea;
-        Region      NonClientArea;
+        ywRegion    ClientArea;
+        ywRegion    NonClientArea;
 
         WindowArea  ClientPixels;
         WindowArea  NonClientPixels;
 
-//        protoBitmap<COLORREF> ClientPixels;
-//        protoBitmap<COLORREF> NonClientPixels;
-
         DWORD       dwStyle;
+        DWORD       dwExStyle;
 
         bool        bPopupDisabled;
 
@@ -133,8 +91,6 @@ class IWindow {
             y               = rel_to_parent_y;
             cx              = count_x;
             cy              = count_y;
-            pPrevSiblingWnd = NULL;
-            pNextSiblingWnd = NULL;
             bPopupDisabled  = false;
 
         }
@@ -301,7 +257,7 @@ class IWindow {
 
         }
 
-
+#if 0
         // Returns the window covering this point.
         IWindow * pWndPointObscured( POINT pt ) {
 
@@ -364,42 +320,112 @@ class IWindow {
             return NULL;
 
         }
-
-
-        static IWindow * GetNextTabstop( IWindow * pDlg, IWindow * pCtlWnd, bool bForward ) {
-
-            /* Walk the list and for all children of hDlg, return the one ( iCtrlID == hMenu ) */
-
-            ECWGetNextDlgTabstopParams Params;
-
-            Params.pParentWnd        = pDlg;
-            Params.pChildWnd         = pCtlWnd;
-            Params.pNext             = NULL;
-            Params.bStopOnFirstMatch = true;
-
-            iEnumWindows( ECWGetNextDlgTabstopEnum, bForward, pCtlWnd, (LPARAM)&Params );
-
-            return Params.pNext;
-
-        }
-
+#endif
 
         static IWindow * GetTabstop( IWindow * pWnd, bool bForwards ) {
 
-            ECWGetNextDlgTabstopParams  Params;
+            IWindow * pTabstopWnd = NULL;
 
-            Params.pParentWnd        = pWnd;
-            Params.pChildWnd         = NULL;
-            Params.pNext             = NULL;
-            Params.bStopOnFirstMatch = bForwards;
+            if ( bForwards ) {
 
-            iEnumWindows( ECWGetNextDlgTabstopEnum, true, pWnd, (LPARAM)&Params );
+                for ( auto i = pWnd->children.begin(); i != pWnd->children.end(); i++ ) {
 
-            return Params.pNext;
+                    if ( ! (*i)->CanAcceptFocus() ) {
+
+                        continue;
+
+                    }
+
+                    pTabstopWnd = *i;
+                    break;
+
+                }
+
+            } else {
+
+                for ( auto i = pWnd->children.rbegin(); i != pWnd->children.rend(); i++ ) {
+
+                    if ( ! (*i)->CanAcceptFocus() ) {
+
+                        continue;
+
+                    }
+
+                    pTabstopWnd = *i;
+                    break;
+
+                }
+
+            }
+
+            return pTabstopWnd;
 
         }
 
-        static IWindow * TopmostWindow( void );
+
+        static IWindow * GetNextTabstop( IWindow * pWnd, IWindow * pCtlWnd, bool bForward ) {
+
+            /* Walk the list and for all children of hDlg, return the one ( iCtrlID == hMenu ) */
+            bool bTabstopFound = false;
+
+            if ( bForward ) {
+
+                for ( auto i = pWnd->children.begin(); i != pWnd->children.end(); i++ ) {
+
+                    if ( pCtlWnd == *i ) {
+
+                        bTabstopFound = true;
+                        continue;
+
+                    }
+
+                    if ( bTabstopFound ) {
+
+                        if ( (*i)->CanAcceptFocus() ) {
+
+                            return *i;
+
+                        }
+
+                    }
+
+                }
+
+                /* Couldn't find a tabstop AFTER the control in question, so return the very first tabstop */
+                return GetTabstop( pWnd, true );
+
+            } else {
+
+                for ( auto i = pWnd->children.rbegin(); i != pWnd->children.rend(); i++ ) {
+
+                    if ( pCtlWnd == *i ) {
+
+                        bTabstopFound = true;
+                        continue;
+
+                    }
+
+                    if ( bTabstopFound ) {
+
+                        if ( (*i)->CanAcceptFocus() ) {
+
+                            return *i;
+
+                        }
+
+                    }
+
+                }
+
+                /* Couldn't find a tabstop BEFORE the control in question, so return the very last tabstop */
+                return GetTabstop( pWnd, false );
+
+            }
+
+        }
+
+
+//        static IWindow * TopmostWindow( void );
 
 };
 

@@ -31,9 +31,11 @@ typedef struct {
 
 typedef struct tagRGBTRIPLE {
 
-  uint8_t rgbtBlue;
-  uint8_t rgbtGreen;
-  uint8_t rgbtRed;
+    uint8_t rgbtBlue;
+    uint8_t rgbtGreen;
+    uint8_t rgbtRed;
+
+//    uint8_t rgbReserved;
 
 } RGBTRIPLE, *PRGBTRIPLE, *NPRGBTRIPLE, *LPRGBTRIPLE;
 
@@ -139,12 +141,15 @@ typedef struct {
     int32_t      bV5YPelsPerMeter;
     uint32_t     bV5ClrUsed;
     uint32_t     bV5ClrImportant;
+
     uint32_t     bV5RedMask;
     uint32_t     bV5GreenMask;
     uint32_t     bV5BlueMask;
     uint32_t     bV5AlphaMask;
     uint32_t     bV5CSType;
+
     CIEXYZTRIPLE bV5Endpoints;
+
     uint32_t     bV5GammaRed;
     uint32_t     bV5GammaGreen;
     uint32_t     bV5GammaBlue;

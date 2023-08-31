@@ -11,7 +11,7 @@ static unsigned AppendSegment( TCHAR * lpucDestination, unsigned char const * lp
 
         _stprintf( szByte,
 #ifdef UNICODE
-                   Dim( szByte ),
+                   ARRAY_SIZE( szByte ),
 #endif
                    TEXT( "%02lX" ), (unsigned long)(*lpucSource) );
 
@@ -100,7 +100,7 @@ static bool InternalDumpBuffer( TSTRING /* dumpbuffer */ & sDumpBuffer, unsigned
     static TCHAR          szEOL[]    = TEXT( "\n" );
     static TCHAR          szNul[]    = TEXT( "" );
 
-    TCHAR                 szHeader[ Dim( szSegOff ) ];
+    TCHAR                 szHeader[ ARRAY_SIZE( szSegOff ) ];
 
     /*
         Calculate the size of a line.
@@ -155,7 +155,7 @@ static bool InternalDumpBuffer( TSTRING /* dumpbuffer */ & sDumpBuffer, unsigned
         /* Append preamble */
         unsigned long ulLen = (unsigned)_stprintf( szHeader,
 #ifdef UNICODE
-                                     Dim( szHeader ),
+                                     ARRAY_SIZE( szHeader ),
 #endif
                                      szSegOff, (unsigned long)HIWORD( ulLenDumped ), (unsigned long)LOWORD( ulLenDumped ) );
 
@@ -313,5 +313,71 @@ extern "C" void DBGTRACE_API DBG_TRACE_DUMP_BUFFER( unsigned uLineNo, const char
     // DBG_TRACE( dwDebugChannelsBitmap, sDumpbuffer.c_str() );
 
     dbgtrace( uLineNo, pszFile, dwDebugChannelsBitmap, sDumpbuffer.c_str() );
+
+}
+
+
+extern "C" void DBGTRACE_API DBG_TRACE_DUMP_BINARY_BUFFER( unsigned uLineNo, const char * pszFile, unsigned long dwDebugChannelsBitmap, unsigned uBytesPerLine, void const * lpucBuffer, unsigned long ulBufferLen ) {
+
+    if ( 0 == ulBufferLen ) {
+
+        return;
+
+    }
+
+//    if ( ! ( dwDebugChannelsBitmap & g_dwDebugBitmap ) ) {
+
+        /* Not interested in this channel. */
+//        return;
+
+//    }
+
+    for ( unsigned long uPos = 0; uPos < ulBufferLen; ) {
+
+        /* Print out offset uPos */
+
+        TSTRING hexbytes;
+        TSTRING binarybytes;
+
+        for ( unsigned u = 0; ( uPos < ulBufferLen ) && ( u < uBytesPerLine ); u++ ) {
+
+            unsigned char uByte = *( (unsigned const char *)lpucBuffer + uPos );
+
+            TCHAR szHex[4] = { 0 };
+
+            AppendSegment( szHex, &uByte, 1 );
+
+            hexbytes.append( szHex );
+
+            unsigned uBitNo = 1;
+
+            TSTRING binarybyte;
+            for ( unsigned ubit = 0; ubit < __CHAR_BIT__; ubit++ ) {
+
+                if ( uByte & uBitNo ) {
+
+                    binarybyte.insert( 0, TEXT( "1" ) );
+
+                } else {
+
+                    binarybyte.insert( 0, TEXT( "0" ) );
+
+                }
+
+                uBitNo = uBitNo << 1;
+
+            }
+
+            hexbytes.append( TEXT( " " ) );
+            binarybytes.append( binarybyte );
+            binarybytes.append( TEXT( " " ) );
+
+             uPos++;
+
+        }
+
+        dbgtrace( 0, 0, dwDebugChannelsBitmap, ( hexbytes + binarybytes ).c_str() );
+
+    }
 
 }

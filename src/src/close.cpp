@@ -23,6 +23,12 @@ int CloseWindowLib( void ) {
 
     }
 
+    for ( auto j = classes.rbegin() ; j != classes.rend(); ++j ) {
+
+        UnregisterClass( j->second->ClassName.c_str(), 0 );
+
+    }
+
 #ifdef YOU_WIN_GRAPHICAL
 
     // Free the fonts?
@@ -31,19 +37,6 @@ int CloseWindowLib( void ) {
 //        Font * pFont = i->second;
 
     }
-
-
-
-
-#if defined( TARGET_OS_MAC ) && TARGET_OS_IPHONE
-    iRet = iOSDestroy( app );
-#else
-#ifdef ANDROID
-    droidDestroy( g.app );
-#else
-    GL::glDestroy();
-#endif
-#endif
 
 #endif /* YOU_WIN_GRAPHICAL */
 

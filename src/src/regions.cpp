@@ -3,7 +3,7 @@
 #include "ywin.h"
 
 
-void Window::CalculateRegions() {
+void ywWindow::CalculateRegions() {
 
     // Client area starts off taking up the entire window.
     ClientArea.reset();
@@ -246,7 +246,7 @@ int ExcludeClipRect( HDC hDC, int left, int top, int right, int bottom ) {
 
     }
 
-    Region Rgn( left, top, right - left, bottom - top );
+    ywRegion Rgn( left, top, right - left, bottom - top );
     RECT   r;
 
     r.left   = left;
@@ -283,7 +283,7 @@ DWORD GetRegionData( HRGN hRgn, DWORD dwCount, RGNDATA * pRgnData ) {
 
     }
 
-    Region * pRgn = reinterpret_cast<Region *>( hRgn );
+    ywRegion * pRgn = reinterpret_cast<ywRegion *>( hRgn );
 
     if ( NULL == pRgnData ) {
 
@@ -333,7 +333,7 @@ int SelectClipRegion( HDC hDC, HRGN hRgn ) {
 
     }
 
-    int iCount = pDC->AddExclusion( reinterpret_cast<Region *>( hRgn ) );
+    int iCount = pDC->AddExclusion( reinterpret_cast<ywRegion *>( hRgn ) );
 
     if ( 0 == iCount ) {
 
@@ -354,7 +354,7 @@ int SelectClipRegion( HDC hDC, HRGN hRgn ) {
 
 HRGN CreateRectRgn( int nLeftRect, int nTopRect, int nRightRect, int nBottomRect ) {
 
-    Region * pRgn = new Region( nLeftRect, nTopRect, nRightRect, nBottomRect );
+    ywRegion * pRgn = new ywRegion( nLeftRect, nTopRect, nRightRect, nBottomRect );
 
     return pRgn;
 

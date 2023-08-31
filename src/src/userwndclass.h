@@ -5,11 +5,11 @@
 #include "genericwindow.h"
 
 
-class UserWindow : public Window {
+class UserWindow : public ywWindow {
 
     public:
 
-        UserWindow( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hParent, int userx, int usery, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hUserInst, LPVOID pParam, int cbWndExtra ) : Window( pWindowClass, pWindowName, hParent, userx, usery, count_x, count_y, MenuOrID, Style, ExtStyle, wndproc, hUserInst, pParam ) {}
+        UserWindow( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hParent, int userx, int usery, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hUserInst, LPVOID pParam, int cbWndExtra ) : ywWindow( pWindowClass, pWindowName, hParent, userx, usery, count_x, count_y, MenuOrID, Style, ExtStyle, wndproc, hUserInst, pParam ) {}
 
         std::vector<BYTE>   WndExtra;
 
@@ -28,7 +28,7 @@ class UserWindowClass : public WindowClass {
 
         virtual ~UserWindowClass() {}
 
-        class Window * Allocate( HWND hParent, LPCTSTR pWindowName, int userx, int usery, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC userwndproc, HINSTANCE hUserInst, LPVOID pParam ) override {
+        class ywWindow * Allocate( HWND hParent, LPCTSTR pWindowName, int userx, int usery, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC userwndproc, HINSTANCE hUserInst, LPVOID pParam ) override {
 
            UserWindow * pWnd = new UserWindow( this, pWindowName, hParent, userx, usery, count_x, count_y, MenuOrID, Style, ExtStyle, userwndproc, hUserInst, pParam, cbWndExtra );
 
@@ -48,7 +48,7 @@ class UserWindowClass : public WindowClass {
 
         }
 
-        void Discard( class Window * pThis ) override {
+        void Discard( class ywWindow * pThis ) override {
 
             delete reinterpret_cast<UserWindow *>( pThis );
 

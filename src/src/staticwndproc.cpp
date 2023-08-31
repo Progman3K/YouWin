@@ -12,7 +12,7 @@ void Static::DrawIcon( HWND hWnd, RECT * pr, PAINTSTRUCT * pPS ) {
 
     } else {
 
-        DrawEdge( pPS->hdc, pr, BDR_RAISEDOUTER, BF_RECT );
+        DrawEdge( pPS->hdc, pr, BDR_SUNKENINNER, BF_RECT );
 
     }
 
@@ -23,24 +23,26 @@ void Static::DrawFrame( HDC hDC, RECT & r ) {
 
     if ( SS_BLACKFRAME == LOWORD( dwStyle ) ) {
 
-        DrawEdge( hDC, &r, BDR_RAISEDOUTER, BF_RECT );
+        DrawEdge( hDC, &r, BDR_SUNKENINNER, BF_RECT );
         return;
 
     }
 
     if ( SS_GRAYFRAME == LOWORD( dwStyle ) ) {
 
-        DrawEdge( hDC, &r, BDR_RAISEDOUTER, BF_RECT );
+        DrawEdge( hDC, &r, BDR_SUNKENINNER, BF_RECT );
         return;
 
     }
 
     if ( SS_WHITEFRAME == LOWORD( dwStyle ) ) {
 
-        DrawEdge( hDC, &r, BDR_RAISEDOUTER, BF_RECT );
+        DrawEdge( hDC, &r, BDR_SUNKENINNER, BF_RECT );
         return;
 
     }
+
+    DrawEdge( hDC, &r, BDR_SUNKENINNER, BF_RECT );
 
 }
 
@@ -95,7 +97,7 @@ void Static::OnPaint( HWND hWnd, PAINTSTRUCT * pPS ) {
     SelectClipRegion( pPS->hdc, hClip );
     DeleteObject( hClip );
 
-    DrawFrame( pPS->hdc, r );
+//    DrawFrame( pPS->hdc, r );
 
     SelectClipRegion( pPS->hdc, NULL );
 
@@ -158,6 +160,33 @@ HICON Static::OnSetIcon( HWND hWnd, unsigned uType, HICON hNewIcon ) {
 }
 
 
+void Static::OnNCPaint( HWND hWnd, HRGN hRgn ) {
+
+    HDC hDC = GetDCEx( hWnd, hRgn, DCX_WINDOW | DCX_INTERSECTRGN );
+
+    if ( NULL == hDC ) {
+
+        return;
+
+    }
+
+    RECT r = {0,0,0,0};
+
+    GetWindowRect( hWnd, &r );
+
+    /* Convert from global screen-coordinates to local window-coordinates */
+    r.right  = r.right - r.left;
+    r.bottom = r.bottom - r.top;
+    r.left   = 0;
+    r.top    = 0;
+
+    DrawFrame( hDC, r );
+
+    ReleaseDC( hWnd, hDC );
+
+}
+
+
 LRESULT Static::WndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 
     Static * pWnd = reinterpret_cast<Static *>( hWnd );
@@ -172,6 +201,11 @@ LRESULT Static::WndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 
             return (LRESULT)HANDLE_STM_SETICON( hWnd, wParam, lParam, pWnd->OnSetIcon );
 
+        case WM_NCPAINT:
+
+            HANDLE_WM_NCPAINT( hWnd, wParam, lParam, pWnd->OnNCPaint );
+            return 0;
+
         case WM_PAINT: {
 
                 PAINTSTRUCT ps;
@@ -185,7 +219,7 @@ LRESULT Static::WndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
                 EndPaint( hWnd, &ps );
 
             }
-            return true;
+            return 0;
 
     }
 
@@ -194,7 +228,7 @@ LRESULT Static::WndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 }
 
 
-Static::Static( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hParent, int x, int y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hInst, LPVOID pParam ) : Window( pWindowClass, pWindowName, hParent, x, y, count_x, count_y, MenuOrID, Style, ExtStyle, wndproc, hInst, pParam ) {
+Static::Static( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hParent, int x, int y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hInst, LPVOID pParam ) : ywWindow( pWindowClass, pWindowName, hParent, x, y, count_x, count_y, MenuOrID, Style, ExtStyle, wndproc, hInst, pParam ) {
 
     hIcon = NULL;
 
@@ -233,7 +267,8 @@ Static::Static( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hPar
 
     if ( NULL != hIcon ) {
 
-        Static_SetIcon( this, hIcon );
+        HICON hOldIcon = Static_SetIcon( this, hIcon );
+        DBG_MSG( DBG_GRAPHICAL, TEXT( "New icon set, old icon was %lX" ), hOldIcon );
 
     }
 

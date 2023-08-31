@@ -5,7 +5,7 @@
 
 LONG_PTR SetWindowLongPtr( HWND hWnd, int iIndex, LONG_PTR lVal ) {
 
-    Window * pWnd;
+    ywWindow * pWnd;
     LONG_PTR lOldVal;
 
     if ( ( pWnd = IsWnd( hWnd ) ) == NULL ) {
@@ -66,7 +66,7 @@ LONG_PTR SetWindowLongPtr( HWND hWnd, int iIndex, LONG_PTR lVal ) {
 
 LONG_PTR GetWindowLongPtr( HWND hWnd, int iIndex ) {
 
-    Window * pWnd;
+    ywWindow * pWnd;
 
     if ( ( pWnd = IsWnd( hWnd ) ) == NULL ) {
 

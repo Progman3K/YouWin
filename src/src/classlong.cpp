@@ -5,7 +5,7 @@
 
 ULONG_PTR SetClassLongPtr( HWND hWnd, int iIndex, LONG_PTR lVal ) {
 
-    Window * pWnd;
+    ywWindow * pWnd;
     ULONG_PTR lOldVal;
 
     if ( ( pWnd = IsWnd( hWnd ) ) == NULL ) {
@@ -55,7 +55,7 @@ ULONG_PTR SetClassLongPtr( HWND hWnd, int iIndex, LONG_PTR lVal ) {
 
 ULONG_PTR GetClassLongPtr( HWND hWnd, int iIndex ) {
 
-    Window * pWnd;
+    ywWindow * pWnd;
 
     if ( ( pWnd = IsWnd( hWnd ) ) == NULL ) {
 

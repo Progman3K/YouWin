@@ -57,7 +57,7 @@ BOOL DeleteObject( HGDIOBJ h ) {
         case OBJECT_TYPE_USERBITMAP:
 
             DBG_MSG( DBG_WIN32API, TEXT( "Deleting USERBITMAP handle %lX\n" ), h );
-            Bitmap::discard( (IBitmap *)pObj );
+            Bitmap::discard( (IBitmap *)pObject );
             break;
 
         case OBJECT_TYPE_RESOURCEBITMAP:
@@ -108,7 +108,7 @@ BOOL DeleteObject( HGDIOBJ h ) {
 
         case OBJECT_TYPE_REGION:
 
-            delete reinterpret_cast<Region *>( h );
+            delete reinterpret_cast<ywRegion *>( h );
             return true;
 
         default:
@@ -172,7 +172,7 @@ HGDIOBJ SelectObject( HDC hDC, HGDIOBJ hObj ) {
 
         case OBJECT_TYPE_REGION: {
 
-            int iRet = pDC->AddExclusion( reinterpret_cast<Region *>( hObj ) );
+            int iRet = pDC->AddExclusion( reinterpret_cast<ywRegion *>( hObj ) );
 
             return (HGDIOBJ)(long)iRet; }
 

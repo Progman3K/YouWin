@@ -37,11 +37,42 @@ ResIcon::ResIcon( const BITMAPINFO * p ) {
 
             DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Icon - Monochrome" ) );
 
-            pDIB = (BYTE *)&pBI->bmiColors[16];
-            pAND = pDIB + ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) / 2 );
+            pDIB = (BYTE *)&pBI->bmiColors[2];
+            pAND = pDIB + ( ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) / 2 ) / 4 );
 
-            DBG_DMP( DBG_DATA_DUMPS, pDIB, ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) / 2 );
-            DBG_DMP( DBG_DATA_DUMPS, pAND, ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) / 8 );
+#ifdef DEBUG
+            DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "DIB bits:" ) );
+
+            unsigned bitsperline;
+
+            switch( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) ) {
+
+                case 32:
+
+                    bitsperline = 4;
+                    break;
+
+                case 64:
+
+                    bitsperline = 8;
+                    break;
+
+                case 128:
+
+                    bitsperline = 16;
+                    break;
+
+                default:
+
+                    bitsperline = 16;
+                    break;
+
+            }
+
+            DBG_DMPBIN( DBG_DATA_DUMPS, bitsperline, pDIB, ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) / 2 ) / 4 );
+            DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "AND bits:" ) );
+            DBG_DMPBIN( DBG_DATA_DUMPS, bitsperline, pAND, ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) / 8 );
+#endif /* DEBUG */
             break;
 
         case 4:
@@ -74,6 +105,16 @@ ResIcon::ResIcon( const BITMAPINFO * p ) {
             pAND = pDIB + ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) );
             break;
 
+        case 32:
+
+            DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Icon - 32 bit truecolor" ) );
+
+            pDIB = (BYTE *)&pBI->bmiColors[0];
+            DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "AND bits:" ) );
+            pAND = pDIB + ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) );
+            DBG_DMPBIN( DBG_DATA_DUMPS, 8, pAND, ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) / 8 );
+            break;
+
         default:
 
             DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Icon - Unsupported bpp: %u" ), getbpp() );
@@ -86,8 +127,26 @@ ResIcon::ResIcon( const BITMAPINFO * p ) {
 
 bool ResIcon::GetPixel1bpp( const POINT & pt, COLORREF & c ) const {
 
-    // TODO: Implementation missing
-    return false;
+    if ( BitXOn( pAND, pt.x, ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) - 1 ) - pt.y, I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ), I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) {
+
+        /* Monochrome bitmaps AND mask is inverted: If the bit is ON, the pixel is transparent */
+        return false;
+
+    }
+
+    if ( BitXOn( pDIB, pt.x, ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) - 1 ) - pt.y, I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ), I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) {
+
+        /* Monochrome bitmaps DIB mask: If the bit is ON, the pixel is white */
+        c = RGBA( 255, 255, 255, 0 );
+
+    } else {
+
+        /* Pixel is black */
+        c = RGBA( 0, 0, 0, 0 );
+
+    }
+
+    return true;
 
 }
 
@@ -170,6 +229,19 @@ bool ResIcon::GetPixel24bpp( const POINT & pt, COLORREF & c ) const {
 }
 
 
+bool ResIcon::GetPixel32bpp( const POINT & pt, COLORREF & c ) const {
+
+
+    // set pixel
+    RGBQUAD pixel = pBI->bmiColors[ ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) - 1 ) - pt.y ) ) + pt.x ) ];
+
+    c = RGBA( pixel.rgbRed, pixel.rgbGreen, pixel.rgbBlue, 255 - pixel.rgbReserved );
+
+    return true;
+
+}
+
+
 bool ResIcon::GetPixel( const POINT & pt, COLORREF & c ) const {
 
     switch( getbpp() ) {
@@ -178,6 +250,7 @@ bool ResIcon::GetPixel( const POINT & pt, COLORREF & c ) const {
         case 4:  return GetPixel4bpp( pt, c );
         case 8:  return GetPixel8bpp( pt, c );
         case 24: return GetPixel24bpp( pt, c );
+        case 32: return GetPixel32bpp( pt, c );
 
     }
 
@@ -207,7 +280,7 @@ void Icon::_create( const ResourceList * pResList, const Resource * pRes ) {
     pIconDir = (const IconDirectory *)pResource->Id.pData;
 
     DBG_MSG( DBG_GENERAL_INFORMATION,
-        TEXT( "IconGoupHeader size: %u. hdr - Reserved: %u, ResType: %u, ResCount: %u. entry - bWidth: %u, bHeight: %u, bColorCount: %u, bReserved: %u, wPlanes: %u,  wBitCount: %u, lBytesInRes: %u" ),
+        TEXT( "IconGoupHeader size: %u. hdr - Reserved: %u, ResType: %u, ResCount: %u. entry - bWidth: %u, bHeight: %u, bColorCount: %u, bReserved: %u, wPlanes: %u,  wBitCount: %u, lBytesInRes: %u, wNameOrdinal: %u" ),
     (unsigned)I386PE_INT32_TO_HOST( &pResource->Id.pHeader->uiSize ),
     (unsigned)pIconDir->hdr.Reserved,
     (unsigned)pIconDir->hdr.ResType,
@@ -218,7 +291,8 @@ void Icon::_create( const ResourceList * pResList, const Resource * pRes ) {
     (unsigned)pIconDir->entry[0].bReserved,
     (unsigned)pIconDir->entry[0].wPlanes,
     (unsigned)pIconDir->entry[0].wBitCount,
-    (unsigned)pIconDir->entry[0].lBytesInRes
+    (unsigned)pIconDir->entry[0].lBytesInRes,
+    (unsigned)pIconDir->entry[0].wNameOrdinal
     );
 
     for ( unsigned u = 0; u < (unsigned)I386PE_INT16_TO_HOST( &pIconDir->hdr.ResCount ); u++ ) {
@@ -258,8 +332,6 @@ void Icon::_create( const ResourceList * pResList, const Resource * pRes ) {
             (unsigned)I386PE_INT32_TO_HOST( &pBI->bmiHeader.biClrImportant )
             );
 
-//            DBG_DMP( DBG_DATA_DUMPS, pIcon->Id.pData + sizeof( BITMAPINFOHEADER ), I386PE_INT32_TO_HOST( &pIcon->Id.pHeader->uiSize ) - sizeof( BITMAPINFOHEADER ) );
-
             switch( I386PE_INT16_TO_HOST( &pBI->bmiHeader.biBitCount ) ) {
 
                 case 0: /* 24 bit true colour */
@@ -267,52 +339,13 @@ void Icon::_create( const ResourceList * pResList, const Resource * pRes ) {
                     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Icon - 0 bit colour ???" ) );
                     break;
 
-                /* Monochrome bitmap */
                 case 1:
                 case 4:
                 case 8:
                 case 24:
-
-                    BMP.push_back( ResIcon( pBI ) );
-                    break;
-
                 case 32:
 
-                    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Icon - 32bpp, not handled" ) );
-
-//                    pBMP = Bitmap::alloc( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ), I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2, 1, 32, NULL );
-#if 0
-                    /* Bitmap follows directly */
-
-                    pDIB = (BYTE *)&pBI->bmiColors[0];
-
-                    pAND = pDIB + ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) );
-
-                    DBG_DMP( DBG_DATA_DUMPS, pAND, ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) / 8 );
-
-                    for( pt.y = 0; pt.y < I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2; pt.y++ ) {
-
-                        for ( pt.x = 0; pt.x < I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ); pt.x++ ) {
-
-                            COLORREF c;
-
-                            if ( BitXOn( pAND, pt.x, ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) - 1 ) - pt.y, I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ), I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) ) {
-
-                                c = RGBA( 0, 0, 0, 255 );
-
-                            } else {
-
-                                // set pixel
-                                RGBQUAD pixel = pBI->bmiColors[ ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biWidth ) * ( ( ( I386PE_INT32_TO_HOST( &pBI->bmiHeader.biHeight ) / 2 ) - 1 ) - pt.y ) ) + pt.x ) ];
-
-                                c = RGBA( pixel.rgbRed, pixel.rgbGreen, pixel.rgbBlue, 0 );
-
-                            }
-
-                        }
-
-                    }
-#endif
+                    BMP.push_back( ResIcon( pBI ) );
                     break;
 
                 default:
@@ -330,14 +363,26 @@ void Icon::_create( const ResourceList * pResList, const Resource * pRes ) {
 
 const IBitmap * Icon::GetBmp( void ) const {
 
+#if 0
     for ( const auto & icon : BMP ) {
 
-        /* TODO: For now, grab 1st image found */
+        /* TODO: Evaluate each image for its correspondance to the output */
         return &icon;
 
     }
 
-    return 0;
+//    return 0;
+#endif
+
+    /* TODO: For now, grab last image (therefore highest-resolution) found */
+
+    if ( BMP.size() < 1 ) {
+
+        return 0;
+
+    }
+
+    return & BMP.back();
 
 }
 

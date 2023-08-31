@@ -61,7 +61,7 @@ int main( int iArgC, char * argv[] ) {
 
         int iRet = ReadFontData( pFile, pHdr, totalsize );
 
-        Font font( pHdr );
+        ywFont font( pHdr );
         if ( 0 != ReadCharset( pFile, &font ) ) {
 
             return -1;

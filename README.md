@@ -20,7 +20,7 @@ Supported: OS/X, iOS, Android, Linux, additional platforms.
 * makedepend (optional)
 * windres (part of binutils and also MinGW)
 * MinGW (optional)
-* a c++11 compiler
+* a c++20 compiler
 
 Target dependencies
 
@@ -39,6 +39,10 @@ OpenGL
 X11
 
 	* libX11
+
+Linux Framebuffer
+
+	* no dependancies
 
 Text
 
@@ -70,7 +74,7 @@ cd ~
 git get youwin
 sudo ln -s ~/youwin /opt/youwin
 cd youwin/samples/madchatter
-../../ywconfigure android|ios|opengl|text|xwin [debug/release]
+../../ywconfigure android|ios|opengl|text|xwin|lxfb [debug/release]
 make depend (optional)
 make
 ```

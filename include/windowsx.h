@@ -2,6 +2,7 @@
 #define YOUWIN_WINDOWSX_H
 
 
+/* void Cls_OnChar(HWND hwnd, TCHAR ch, int cRepeat) */
 #define HANDLE_WM_CHAR(hwnd, wParam, lParam, fn)   ((fn)((hwnd), (UINT)(wParam), (int)(short)LOWORD(lParam)), 0L)
 #define FORWARD_WM_CHAR(hwnd, ch, cRepeat, fn)     (void)(fn)((hwnd), WM_CHAR, (WPARAM)(UINT)(ch), MAKELPARAM((cRepeat),0))
 
@@ -83,6 +84,7 @@
 #define HANDLE_WM_KILLFOCUS(hwnd, wParam, lParam, fn) ((fn)((hwnd), (HWND)(wParam)), 0L)
 #define FORWARD_WM_KILLFOCUS(hwnd, hwndNewFocus, fn) (void)(fn)((hwnd), WM_KILLFOCUS, (WPARAM)(HWND)(hwndNewFocus), 0L)
 
+/* void Cls_OnLButtonDown(HWND hwnd, BOOL fDoubleClick, int x, int y, UINT keyFlags) */
 #define HANDLE_WM_LBUTTONDBLCLK(hwnd,wParam,lParam,fn) ((fn)((hwnd),1,(int)(short)LOWORD(lParam),(int)(short)HIWORD(lParam),(UINT)(wParam)),0)
 #define HANDLE_WM_LBUTTONDOWN(hwnd,wParam,lParam,fn) ((fn)((hwnd),0,(int)(short)LOWORD(lParam),(int)(short)HIWORD(lParam),(UINT)(wParam)),0)
 #define FORWARD_WM_LBUTTONDOWN(hwnd,fDoubleClick,x,y,keyFlags,fn) (void)(fn)((hwnd),(fDoubleClick) ? WM_LBUTTONDBLCLK : WM_LBUTTONDOWN,(WPARAM)(UINT)(keyFlags),MAKELPARAM((x),(y)))
@@ -140,6 +142,10 @@
 
 #define HANDLE_WM_PAINT(hwnd,wParam,lParam,fn) ((fn)(hwnd),0)
 #define FORWARD_WM_PAINT(hwnd,fn) (void)(fn)((hwnd),WM_PAINT,0,0)
+
+#define HANDLE_WM_PARENTNOTIFY(hwnd, wParam, lParam, fn) ((fn)((hwnd), (UINT)LOWORD(wParam), (HWND)(lParam), (UINT)HIWORD(wParam)), 0L)
+#define FORWARD_WM_PARENTNOTIFY(hwnd, msg, hwndChild, idChild, fn) (void)(fn)(( hwnd ), WM_PARENTNOTIFY, MAKEWPARAM( msg, idChild ), (LPARAM)( hwndChild ))
+
 
 #define FORWARD_WM_POWERBROADCAST(hwnd,code,pbsettings,fn) (void)(fn)((hwnd),WM_POWERBROADCAST,(WPARAM)(int)(code),(LPARAM)pbsettings)
 #define HANDLE_WM_POWERBROADCAST(hwnd,wParam,lParam,fn) ((fn)((hwnd),(int)(wParam),(POWERBROADCAST_SETTING *)(lParam)),0)

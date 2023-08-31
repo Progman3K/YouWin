@@ -29,7 +29,7 @@
 
 
 extern int ReadFontData( FILE * pFile, Font_Header * & pHdr, unsigned & uSize );
-extern int WriteFontData( FILE * pFile, Font * pFont, unsigned uSize );
-extern int ReadCharset( FILE * pFile, Font * pFont );
+extern int WriteFontData( FILE * pFile, ywFont * pFont, unsigned uSize );
+extern int ReadCharset( FILE * pFile, ywFont * pFont );
 
 #endif /* FNTC_H */

@@ -1,43 +1,43 @@
 #ifdef DefaultSunProCCompilerMajorVersion
 .SUFFIXES: .o .cpp
 .cpp.o:
-        $(RM) $@
-         $(CXX) -c $(CXXFLAGS) -std=c++11 $(INCLUDES) $(_NOOP_) $*.cpp
+	$(RM) $@
+	$(CXX) -c $(CXXFLAGS) -std=c++20 $(INCLUDES) $(_NOOP_) $*.cpp
 
 
-      CFLAGS  = -features=zla -std=c++11
-     CXXFLAGS = -Wall -features=zla -std=c++11
-      LDOPTIONS = -features=zla -std=c++11
-      LDLIBS =
-      EXTRA_LOAD_FLAGS =
+           CFLAGS  = -features=zla -std=c++20
+          CXXFLAGS = -Wall -features=zla -std=c++20
+         LDOPTIONS = -features=zla -std=c++20
+            LDLIBS =
+  EXTRA_LOAD_FLAGS =
 
 #endif
 
 
 #ifndef BUILD_WIN32
-      INCLUDES += -I/opt/youwin/include
+          INCLUDES += -I/opt/youwin/include
 #endif
 
-      INCLUDES += -I../include -I../src -I/opt/youwin/include
+          INCLUDES += -I../include -I../src -I/opt/youwin/include
 
-       APPNAME = fntc
+           APPNAME = fntc
 
-          SRCS = \
-                 main.cpp \
-                 readfont.cpp \
-                 writefont.cpp
+              SRCS = \
+                     main.cpp \
+                     readfont.cpp \
+                     writefont.cpp
 
-          OBJS = $(SRCS:.cpp=.o)
+              OBJS = $(SRCS:.cpp=.o)
 
-     CXXFLAGS += -Wall -std=c++20
+          CXXFLAGS += -Wall -std=c++20
 
             /* fix certain linker problems by using the same compiler (c++ hopefully) for everything. */
-            CC = $(CXX) 
+                CC = $(CXX) 
 
 #ifdef DefaultSunProCCompilerMajorVersion
-/*    LDOPTIONS += -lstdc++ */
+/*         LDOPTIONS += -lstdc++ */
 #else
-    LDOPTIONS += -lstdc++
+         LDOPTIONS += -lstdc++
 #endif
 
 

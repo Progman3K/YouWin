@@ -85,7 +85,7 @@ bool bWindowsIntersect( IWindow * pTopWnd, IWindow * pWnd ) {
 
 BOOLEAN bEnumRepaintWndProc( IWindow * pWnd, LPARAM lParam ) {
 
-    Window * pTopWnd = reinterpret_cast<Window *>( lParam );
+    ywWindow * pTopWnd = reinterpret_cast<ywWindow *>( lParam );
 
 //    RECT r;
 
@@ -110,7 +110,7 @@ BOOLEAN bEnumRepaintWndProc( IWindow * pWnd, LPARAM lParam ) {
 
 
 // Repaint all the windows under this one.
-void RepaintWindowsUnder( Window * pWnd ) {
+void RepaintWindowsUnder( ywWindow * pWnd ) {
 
     /* Enumerate all windows from this one in descending order */
     iEnumWindows( bEnumRepaintWndProc, false, pWnd, (LPARAM)pWnd );

@@ -18,14 +18,14 @@ static void OnLButtonDown( HWND hWnd, BOOLEAN bDblClick, int x, int y, UINT uiKe
     pt.x = x;
     pt.y = y;
 
-    if ( ! ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
+    if ( ! ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
 
         /* This is a click in the non-client area. */
         FORWARD_WM_NCLBUTTONDOWN( hWnd, bDblClick, x, y, uiKeyFlags, SendMessage );
 
     } else {
 
-        pt = pt - ( reinterpret_cast<Window *>( hWnd ) )->GetParentOffset();
+        pt = pt - ( reinterpret_cast<ywWindow *>( hWnd ) )->GetParentOffset();
 
         FORWARD_WM_LBUTTONDOWN( hWnd, bDblClick, pt.x, pt.y, uiKeyFlags, SendMessage );
 
@@ -42,14 +42,14 @@ static void OnLButtonUp( HWND hWnd, int x, int y, UINT uiKeyFlags ) {
     pt.x = x;
     pt.y = y;
 
-    if ( ! ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
+    if ( ! ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
 
         /* This is a click in the non-client area. */
         FORWARD_WM_NCLBUTTONUP( hWnd, x, y, uiKeyFlags, SendMessage );
 
     } else {
 
-        pt = pt - ( reinterpret_cast<Window *>( hWnd ) )->GetParentOffset();
+        pt = pt - ( reinterpret_cast<ywWindow *>( hWnd ) )->GetParentOffset();
 
         FORWARD_WM_LBUTTONUP( hWnd, pt.x, pt.y, uiKeyFlags, SendMessage );
 
@@ -66,14 +66,14 @@ static void OnMButtonDown( HWND hWnd, BOOLEAN bDblClick, int x, int y, UINT uiKe
     pt.x = x;
     pt.y = y;
 
-    if ( ! ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
+    if ( ! ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
 
         /* This is a click in the non-client area. */
         FORWARD_WM_NCMBUTTONDOWN( hWnd, bDblClick, x, y, uiKeyFlags, SendMessage );
 
     } else {
 
-        pt = pt - ( reinterpret_cast<Window *>( hWnd ) )->GetParentOffset();
+        pt = pt - ( reinterpret_cast<ywWindow *>( hWnd ) )->GetParentOffset();
 
         FORWARD_WM_MBUTTONDOWN( hWnd, bDblClick, pt.x, pt.y, uiKeyFlags, SendMessage );
 
@@ -90,14 +90,14 @@ static void OnMButtonUp( HWND hWnd, int x, int y, UINT uiKeyFlags ) {
     pt.x = x;
     pt.y = y;
 
-    if ( ! ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
+    if ( ! ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
 
         /* This is a click in the non-client area. */
         FORWARD_WM_NCMBUTTONUP( hWnd, x, y, uiKeyFlags, SendMessage );
 
     } else {
 
-        pt = pt - ( reinterpret_cast<Window *>( hWnd ) )->GetParentOffset();
+        pt = pt - ( reinterpret_cast<ywWindow *>( hWnd ) )->GetParentOffset();
 
         FORWARD_WM_MBUTTONUP( hWnd, pt.x, pt.y, uiKeyFlags, SendMessage );
 
@@ -119,7 +119,7 @@ static void OnMouseMove( HWND hWnd, int x, int y, UINT uiKeyFlags ) {
 
     if ( HTCLIENT == uHT ) {
 
-        pt = pt - ( reinterpret_cast<Window *>( hWnd ) )->GetParentOffset();
+        pt = pt - ( reinterpret_cast<ywWindow *>( hWnd ) )->GetParentOffset();
 
         FORWARD_WM_MOUSEMOVE( hWnd, pt.x, pt.y, uiKeyFlags, SendMessage );
 
@@ -140,14 +140,14 @@ static void OnRButtonDown( HWND hWnd, BOOLEAN bDblClick, int x, int y, UINT uiKe
     pt.x = x;
     pt.y = y;
 
-    if ( ! ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
+    if ( ! ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
 
         /* This is a click in the non-client area. */
         FORWARD_WM_NCRBUTTONDOWN( hWnd, bDblClick, x, y, uiKeyFlags, SendMessage );
 
     } else {
 
-        pt = pt - ( reinterpret_cast<Window *>( hWnd ) )->GetParentOffset();
+        pt = pt - ( reinterpret_cast<ywWindow *>( hWnd ) )->GetParentOffset();
 
         FORWARD_WM_RBUTTONDOWN( hWnd, bDblClick, pt.x, pt.y, uiKeyFlags, SendMessage );
 
@@ -164,14 +164,14 @@ static void OnRButtonUp( HWND hWnd, int x, int y, UINT uiKeyFlags ) {
     pt.x = x;
     pt.y = y;
 
-    if ( ! ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
+    if ( ! ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
 
         /* This is a click in the non-client area. */
         FORWARD_WM_NCRBUTTONUP( hWnd, x, y, uiKeyFlags, SendMessage );
 
     } else {
 
-        pt = pt - ( reinterpret_cast<Window *>( hWnd ) )->GetParentOffset();
+        pt = pt - ( reinterpret_cast<ywWindow *>( hWnd ) )->GetParentOffset();
 
         FORWARD_WM_RBUTTONUP( hWnd, pt.x, pt.y, uiKeyFlags, SendMessage );
 
@@ -188,14 +188,14 @@ static void OnXButtonDown( HWND hWnd, BOOLEAN bDblClick, int x, int y, UINT uiKe
     pt.x = x;
     pt.y = y;
 
-    if ( ! ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
+    if ( ! ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
 
         /* This is a click in the non-client area. */
         FORWARD_WM_NCXBUTTONDOWN( hWnd, bDblClick, x, y, uiKeyFlags, SendMessage );
 
     } else {
 
-        pt = pt - ( reinterpret_cast<Window *>( hWnd ) )->GetParentOffset();
+        pt = pt - ( reinterpret_cast<ywWindow *>( hWnd ) )->GetParentOffset();
 
         FORWARD_WM_XBUTTONDOWN( hWnd, bDblClick, pt.x, pt.y, uiKeyFlags, SendMessage );
 
@@ -212,18 +212,50 @@ static void OnXButtonUp( HWND hWnd, int x, int y, UINT uiKeyFlags ) {
     pt.x = x;
     pt.y = y;
 
-    if ( ! ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<Window *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
+    if ( ! ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.IsEmpty() && ( reinterpret_cast<ywWindow *>( hWnd ) )->NonClientArea.PtIn( pt ) ) {
 
         /* This is a click in the non-client area. */
         FORWARD_WM_NCXBUTTONUP( hWnd, x, y, uiKeyFlags, SendMessage );
 
     } else {
 
-        pt = pt - ( reinterpret_cast<Window *>( hWnd ) )->GetParentOffset();
+        pt = pt - ( reinterpret_cast<ywWindow *>( hWnd ) )->GetParentOffset();
 
         FORWARD_WM_XBUTTONUP( hWnd, pt.x, pt.y, uiKeyFlags, SendMessage );
 
     }
+
+}
+
+
+static IWindow * WindowAt( IWindow * pParentWnd, POINT * pPt ) {
+
+    IWindow * pWnd = NULL;
+
+    if ( pParentWnd->bPointInWindow( *pPt ) ) {
+
+        pWnd = pParentWnd;
+
+    }
+
+    /* Check if it's within one of its popups */
+    for ( auto child = pParentWnd->children.rbegin(); child != pParentWnd->children.rend(); child++ ) {
+
+        /* Last popup is highest in the Z order */
+        IWindow * pChildWnd = WindowAt( *child, pPt );
+
+        if ( ! pChildWnd ) {
+
+            continue;
+
+        }
+
+        pWnd = pChildWnd;
+        break;
+
+    }
+
+    return pWnd;
 
 }
 
@@ -252,7 +284,7 @@ LRESULT DispatchMessage( const MSG * pMsg ) {
         pt.x = GET_X_LPARAM( pMsg->lParam );
         pt.y = GET_Y_LPARAM( pMsg->lParam );
 
-        Window * pWnd = Window::At( &pt );
+        IWindow * pWnd = WindowAt( g.pTopWnd, &pt );
 
         if ( NULL == pWnd ) {
 

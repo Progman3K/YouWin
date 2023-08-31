@@ -5,8 +5,8 @@
 
 BOOL PostMessage( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 
-    Window * pWnd;
-    BOOL     bRet;
+    ywWindow * pWnd;
+    BOOL       bRet;
 
     if ( HWND_BROADCAST == hWnd ) {
 
@@ -100,7 +100,8 @@ BOOL PostMessage( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 
     }
 
-    DBG_MSG( DBG_ERROR, TEXT( "Post message %u to loop" ), Msg.Msg.message );
+    DBG_MSG( DBG_ERROR, TEXT( "Posting message to loop:" ), Msg.Msg.message );
+    TRACE_MESSAGE( DBG_WINDOW_MESSAGES, Msg.Msg.hwnd, Msg.Msg.message, Msg.Msg.wParam, Msg.Msg.lParam );
     return g.Q.PostToQ( g.Q.MsgQ, &Msg );
 
 }

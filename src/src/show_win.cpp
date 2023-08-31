@@ -5,7 +5,7 @@
 
 BOOL ShowWindow( HWND hWnd, int iShow ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( NULL == pWnd ) {
 

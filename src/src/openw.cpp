@@ -6,7 +6,7 @@
 static DefWindowClass DefWndClass( TEXT( "" ), DefWindowProc, (HBRUSH)&brWindow, CS_SYSTEM, NULL );
 
 
-Window * Window::Create( DWORD ExtStyle, const TCHAR * pClassName, LPCTSTR pWindowName, DWORD style, int ix, int iy, unsigned int cx, unsigned int cy, HWND hParentWnd, HMENU hMenu, HINSTANCE hInst, LPVOID pParam ) {
+ywWindow * ywWindow::Create( DWORD ExtStyle, const TCHAR * pClassName, LPCTSTR pWindowName, DWORD style, int ix, int iy, unsigned int cx, unsigned int cy, HWND hParentWnd, HMENU hMenu, HINSTANCE hInst, LPVOID pParam ) {
 
     WindowClass * pClass = NULL;
 
@@ -72,7 +72,7 @@ Window * Window::Create( DWORD ExtStyle, const TCHAR * pClassName, LPCTSTR pWind
     }
 
     // Allocate the new window handle and
-    Window * pWnd = pClass->Allocate( hParentWnd, pWindowName, ix, iy, cx, cy, hMenu, style, ExtStyle, pClass->GetWindowProc(), hInst, pParam );
+    ywWindow * pWnd = pClass->Allocate( hParentWnd, pWindowName, ix, iy, cx, cy, hMenu, style, ExtStyle, pClass->GetWindowProc(), hInst, pParam );
 
     if ( NULL == pWnd ) {
 
@@ -116,8 +116,8 @@ Window * Window::Create( DWORD ExtStyle, const TCHAR * pClassName, LPCTSTR pWind
 
 HWND CreateWindowEx( DWORD dwExStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD dwStyle, int x, int y, int cx, int cy, HWND hParentWnd, HMENU hMenu, HINSTANCE hInst, LPVOID pParam ) {
 
-    Window * pWnd;
-    IWindow * pTopWnd;
+    ywWindow * pWnd;
+//    IWindow * pTopWnd;
 
     /* Rule out the obvious */
     if ( WS_CHILD & dwStyle ) {
@@ -131,42 +131,28 @@ HWND CreateWindowEx( DWORD dwExStyle, LPCTSTR pClassName, LPCTSTR pWindowName, D
     }
 
     // Allocate the new window handle and
-    if ( ( pWnd = Window::Create( dwExStyle, pClassName, pWindowName, dwStyle, x, y, cx, cy, hParentWnd, hMenu, hInst, pParam ) ) == NULL ) {
+    if ( ( pWnd = ywWindow::Create( dwExStyle, pClassName, pWindowName, dwStyle, x, y, cx, cy, hParentWnd, hMenu, hInst, pParam ) ) == NULL ) {
 
         return (HWND)NULL;
 
     }
 
-    // insert it on TOP of the window list
-    if ( ( pTopWnd = IWindow::TopmostWindow() ) == NULL ) {
+    if ( WS_POPUP & dwStyle ) {
 
-        if ( NULL == g.pTopWnd ) {
+        if ( ( NULL == hParentWnd ) || ( HWND_DESKTOP == hParentWnd ) ) {
 
-            g.pTopWnd = pWnd;
+            /* Window is owned by the desktop */
+            g.pTopWnd->children.insert( g.pTopWnd->children.begin(), pWnd );
 
         } else {
 
-            // First child. Link directly onto desktop.
-            if ( g.pTopWnd->pPrevSiblingWnd ) {
-
-                // Internal error. List is corrupt.
-                return NULL;
-
-            }
-
-            g.pTopWnd->pPrevSiblingWnd = pWnd;
-
-            // Relink window with others below it.
-            pWnd->pNextSiblingWnd = g.pTopWnd;
+            /* Insert as first child */
+            ywWindow * pParentWnd = (ywWindow *)hParentWnd;
+            pParentWnd->children.insert( pParentWnd->children.begin(), pWnd );
 
         }
 
-    } else {
-
-        // Not the first child.
-        pTopWnd->pPrevSiblingWnd = pWnd;
-        // Relink window with others below it.
-        pWnd->pNextSiblingWnd = pTopWnd;
+        return pWnd;
 
     }
 
@@ -174,6 +160,17 @@ HWND CreateWindowEx( DWORD dwExStyle, LPCTSTR pClassName, LPCTSTR pWindowName, D
 
         pWnd->Text.assign( pWindowName );
         //. FORWARD_WM_SETTEXT( (HWND)pWnd, pWindowName, SendMessage );
+
+    }
+
+    /* Insert as last child */
+    if ( HWND_DESKTOP == hParentWnd || ( 0 == hParentWnd ) ) {
+
+        g.pTopWnd->children.push_back( pWnd );
+
+    } else {
+
+        ((ywWindow *)hParentWnd)->children.push_back( pWnd );
 
     }
 

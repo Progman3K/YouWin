@@ -37,14 +37,22 @@ void OutputDebugString( LPCTSTR pszString ) {
 
 LRESULT SendMessage( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 
+    if ( ( 0 == hWnd ) || ( HWND_DESKTOP == hWnd ) ) {
+
+
+        DBG_MSG( DBG_WINDOW_MESSAGES, "SendMessage called with handle %lX", hWnd );
+        hWnd = g.pTopWnd;
+
+    }
+
 #ifndef NDEBUG
     TCHAR szPrefix[1024];
 
     ZeroMemory( szPrefix, sizeof( szPrefix ) );
 
-    LPCTSTR lpszClassname = ( reinterpret_cast<Window *>( hWnd ) )->pClass->GetClassName();
+    LPCTSTR lpszClassname = ( reinterpret_cast<ywWindow *>( hWnd ) )->pClass->GetClassName();
 
-    long lID = (long)( reinterpret_cast<Window *>( hWnd ) )->hMenu;
+    long lID = (long)( reinterpret_cast<ywWindow *>( hWnd ) )->hMenu;
 
     _sntprintf( szPrefix, Dim( szPrefix ) - 1, TEXT( "%s %ld " ), lpszClassname, lID );
 
@@ -93,12 +101,12 @@ fin:
 
         case WM_ERASEBKGND:
 
-            ( reinterpret_cast<Window *>( hWnd ) )->fErase = ! (bool)lVal;
+            ( reinterpret_cast<ywWindow *>( hWnd ) )->fErase = ! (bool)lVal;
             break;
 
         case WM_NCPAINT:
 
-            ( reinterpret_cast<Window *>( hWnd ) )->bDrawFramePending = false;
+            ( reinterpret_cast<ywWindow *>( hWnd ) )->bDrawFramePending = false;
             break;
 
     }

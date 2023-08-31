@@ -11,7 +11,7 @@
 
 int DC::TypeByteAt( HFONT hUserFont, POINT pt, UINT uFlags, UINT uFormat, TCHAR c, const RECT * pr ) {
 
-    Font * pFont = reinterpret_cast<Font *>( hUserFont );
+    ywFont * pFont = reinterpret_cast<ywFont *>( hUserFont );
 
     long Width = pFont->pHdr->uAvgCharWidth;
     long Height = pFont->pHdr->uAvgCharHeight;

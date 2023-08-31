@@ -144,15 +144,15 @@ bool UserBitmap::GetPixel( const POINT & pt, COLORREF & c ) const {
 
                 unsigned stride = ( ( ( ( pBitmap->bmiHeader.biWidth * pBitmap->bmiHeader.biBitCount ) + 31 ) & ~31 ) >> 3 );
 
-                const RGBTRIPLE * pRGB = (const RGBTRIPLE *)( ( (const BYTE *)pBitmap->bmiColors ) + ( ( pBitmap->bmiHeader.biHeight - pt.y ) * stride ) );
+                const RGBQUAD * pRGB = (const RGBQUAD *)( ( ((const BYTE *)pBitmap ) + sizeof( BITMAPINFOHEADER ) ) + ( ( pBitmap->bmiHeader.biHeight - pt.y ) * stride ) );
 
                 pRGB += pt.x;
 
                 BYTE r,g,b;
 
-                r = pRGB->rgbtRed;
-                g = pRGB->rgbtGreen;
-                b = pRGB->rgbtBlue;
+                r = pRGB->rgbRed;
+                g = pRGB->rgbGreen;
+                b = pRGB->rgbBlue;
 
                 c = RGB( r, g, b );
 
@@ -191,6 +191,7 @@ bool UserBitmap::GetPixel( const POINT & pt, COLORREF & c ) const {
 
         default:
 
+            DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Bitmap format %d UNKNOWN" ), fmt );
             return false;
 
     }

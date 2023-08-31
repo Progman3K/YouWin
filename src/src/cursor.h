@@ -8,17 +8,17 @@
 #include "resource.h"
 
 
-class Cursor : public Object {
+class ywCursor : public Object {
 
     public:
 
-        Cursor() {
+        ywCursor() {
 
             setType( OBJECT_TYPE_CURSOR );
 
         }
 
-        virtual ~Cursor() override {}
+        virtual ~ywCursor() override {}
 
 };
 

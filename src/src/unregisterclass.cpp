@@ -14,7 +14,6 @@ BOOL UnregisterClass( LPCTSTR lpszClassName, HINSTANCE hInst ) {
     if ( classes.end() == i ) {
 
         DBG_MSG( DBG_ERROR, TEXT( "Error - UnregisterClass: class '%s' NOT FOUND" ), lpszClassName );
-
         return false;
 
     }
@@ -24,11 +23,13 @@ BOOL UnregisterClass( LPCTSTR lpszClassName, HINSTANCE hInst ) {
     if ( CS_SYSTEM & pClass->GetClassStyles() ) {
 
         /* System classes cannot be unregistered */
+        DBG_MSG( DBG_ERROR, TEXT( "System class '%s' not unregistered" ), lpszClassName );
         return false;
 
     }
 
     // Do any windows of said class exist?
+    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "User class '%s' unregistered" ), lpszClassName );
 
     delete pClass;
 

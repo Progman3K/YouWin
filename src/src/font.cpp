@@ -38,7 +38,7 @@ static BOOL CALLBACK EnumFontResNamesProc( HMODULE hModule, LPCTSTR restype, LPT
 
 
 
-void Font::_create( void ) {
+void ywFont::_create( void ) {
 
     DBG_MSG( DBG_FONT_SYSTEM,
         TEXT( "Font %lX - Point size: %u, flags: %u, AvgCharHeight: %u, AvgCharWidth: %u, MaxCharHeight: %u, MaxCharWidth: %u, Leading: %u, typeface name: '%s'" ),
@@ -117,7 +117,7 @@ void Font::_create( void ) {
 
 
 
-const Font * FontList::open( const ResourceList & resources, LPCTSTR pszName ) {
+const ywFont * FontList::open( const ResourceList & resources, LPCTSTR pszName ) {
 
     /*
         look in the current list.
@@ -157,7 +157,7 @@ const Font * FontList::open( const ResourceList & resources, LPCTSTR pszName ) {
     }
 
     /* Make the font */
-    Font font( lf.pHdr );
+    ywFont font( lf.pHdr );
     TSTRING name( pszName );
     auto f = emplace( name, font );
 
@@ -178,7 +178,7 @@ const Font * FontList::open( const ResourceList & resources, LPCTSTR pszName ) {
 
 HFONT CreateFontIndirect( const LOGFONT * plf ) {
 
-    const Font * pFont = fonts.Find( plf->lfFaceName );
+    const ywFont * pFont = fonts.Find( plf->lfFaceName );
 
     return (HFONT)pFont;
 
@@ -225,7 +225,7 @@ int EnumFonts( HDC hDC, LPCTSTR pszFaceName, FONTENUMPROC pFontFunc, LPARAM lPar
         ZeroMemory( &lf, sizeof( lf ) );
         ZeroMemory( &tm, sizeof( tm ) );
 
-        const Font * pFont = &i->second;
+        const ywFont * pFont = &i->second;
 
         pFont->GetMetrics( &tm );
 

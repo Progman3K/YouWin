@@ -615,7 +615,13 @@ void Listbox::OnLButtonDown( HWND hWnd, BOOLEAN bDblClick, int userx, int usery,
 
                 /* Selection has changed */
 
-                ListBox_SetCurSel( hWnd, iItem );
+                int iRet = ListBox_SetCurSel( hWnd, iItem );
+
+                if ( LB_ERR == iRet ) {
+
+                    DBG_MSG( DBG_ERROR, TEXT( "ERROR: UNABLE TO RESET LISTBOX" ) );
+
+                }
 
                 /* Notify parent */
 

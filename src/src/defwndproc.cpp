@@ -6,93 +6,19 @@
 static Click rightclick;
 
 
-typedef struct {
-
-    IWindow * pParentWnd;
-    IWindow * pWnd;
-
-} NextChild;
 
 
-static BOOLEAN EnumChildren( IWindow * pWnd, LPARAM lParam ) {
-
-    NextChild * pNext = (NextChild *)lParam;
-
-    if ( pWnd->pParentWnd != pNext->pParentWnd ) {
-
-        return true;
-
-    }
-
-    pNext->pWnd = pWnd;
-
-    return false;
-
-
-}
-
-
-static void RemoveNode( Window * pWnd ) {
-
-    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Removing window %lX from linked-list" ), pWnd );
-
-    if ( pWnd->pPrevSiblingWnd ) {
-
-        // NOT the topmost window. Change IT'S next pointer to MY next pointer.
-        DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "NOT the topmost window. Change IT'S next pointer to MY next pointer %lX" ), pWnd->pNextSiblingWnd );
-        pWnd->pPrevSiblingWnd->pNextSiblingWnd = pWnd->pNextSiblingWnd;
-
-    }
-
-    if ( pWnd->pNextSiblingWnd ) {
-
-        // NOT the bottommost window. Change IT'S previous pointer to MY previous pointer.
-        DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "NOT the bottommost window. Change IT'S previous pointer to MY previous pointer %lX" ), pWnd->pPrevSiblingWnd );
-        pWnd->pNextSiblingWnd->pPrevSiblingWnd = pWnd->pPrevSiblingWnd;
-
-    }
-
-}
-
-
-void Window::OnDestroy( HWND hWnd ) {
+void ywWindow::OnDestroy( HWND hWnd ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Window %lX: delete child controls..." ), hWnd );
 
     bNoRedraw = true;
 
-    int iEnum;
+    if ( 0 != pParentWnd ) {
 
-    NextChild   Child;
-
-    Child.pParentWnd = reinterpret_cast<LPWindow>( hWnd );
-
-    // Remove it from the linked list.
-    RemoveNode( this );
-
-    for ( ;; ) {
-
-        Child.pWnd = NULL;
-
-        iEnum = iEnumWindows( EnumChildren, true, reinterpret_cast<IWindow *>( hWnd ), (LPARAM)&Child );
-
-        if ( NULL == Child.pWnd ) {
-
-            break;
-
-        }
-
-        /* Since we are NOT in an enumeration the list is NOT being walked and cannot go bad, process the deletetions synchronously. */
-        FORWARD_WM_DESTROY( (HWND)Child.pWnd, SendMessage );
-
-//        DestroyWindow( (HWND)Child.lpWnd ); 
+        FORWARD_WM_PARENTNOTIFY( pParentWnd, WM_DESTROY, this, reinterpret_cast<WPARAM>( hMenu ), SendMessage );
 
     }
-
-    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Window %lX: delete child controls ended code %d" ), hWnd, iEnum );
-
-//    ShowWindow( hWnd, SW_HIDE );
-
 
     if ( GetFocus() == this ) {
 
@@ -112,7 +38,7 @@ void Window::OnDestroy( HWND hWnd ) {
 }
 
 
-void Window::OnEnable( HWND hWnd, BOOL bEnable ) {
+void ywWindow::OnEnable( HWND hWnd, BOOL bEnable ) {
 
     if ( bEnable ) {
 
@@ -147,7 +73,7 @@ void Window::OnEnable( HWND hWnd, BOOL bEnable ) {
 }
 
 
-void Window::OnSetText( HWND hWnd, LPCTSTR lpszText ) {
+void ywWindow::OnSetText( HWND hWnd, LPCTSTR lpszText ) {
 
     Text.assign( lpszText );
 
@@ -156,7 +82,7 @@ void Window::OnSetText( HWND hWnd, LPCTSTR lpszText ) {
 }
 
 
-void Window::OnMouseClicks( HWND hWnd, BOOLEAN bDblClick, int userx, int usery, UINT uiKeyFlags ) {
+void ywWindow::OnMouseClicks( HWND hWnd, BOOLEAN bDblClick, int userx, int usery, UINT uiKeyFlags ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Mouse %sclick at (%d,%d) flags %X" ), bDblClick ? "double" : "", userx, usery, uiKeyFlags );
 
@@ -232,7 +158,7 @@ void Window::OnMouseClicks( HWND hWnd, BOOLEAN bDblClick, int userx, int usery, 
 }
 
 
-void Window::OnNCMouseClicks( HWND hWnd, BOOLEAN bDblClick, int userx, int usery, UINT uiKeyFlags ) {
+void ywWindow::OnNCMouseClicks( HWND hWnd, BOOLEAN bDblClick, int userx, int usery, UINT uiKeyFlags ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Non-client mouse %sclick at (%d,%d) flags %X" ), bDblClick ? "double" : "", userx, usery, uiKeyFlags );
 
@@ -423,7 +349,7 @@ void DrawTriangle( HDC hDC, triangle_orientation orientation, const RECT & r2, H
 }
 
 
-void Window::DrawScrollBar( HDC hDC, bool bHorizontal, SCROLLBARINFO * pSBInfo ) {
+void ywWindow::DrawScrollBar( HDC hDC, bool bHorizontal, SCROLLBARINFO * pSBInfo ) {
 
     SolidBrush brScrollbar( SysColorScrollbar.GetColor(), true );
     SolidBrush brArrow( SysColorBtnText.GetColor(), true );
@@ -465,7 +391,7 @@ void Window::DrawScrollBar( HDC hDC, bool bHorizontal, SCROLLBARINFO * pSBInfo )
 }
 
 
-void Window::OnNCPaint( HWND hWnd, HRGN hRgn ) {
+void ywWindow::OnNCPaint( HWND hWnd, HRGN hRgn ) {
 
     HDC hDC = GetDCEx( hWnd, hRgn, DCX_WINDOW | DCX_INTERSECTRGN );
 
@@ -542,7 +468,7 @@ void Window::OnNCPaint( HWND hWnd, HRGN hRgn ) {
         COLORREF cCaption;
         bool     bActive;
 
-        if ( ( NULL != GetFocus() ) && ( GetPopup( reinterpret_cast<Window *>( GetFocus() ) ) == this ) ) {
+        if ( ( NULL != GetFocus() ) && ( GetPopup( reinterpret_cast<ywWindow *>( GetFocus() ) ) == this ) ) {
 
             bActive  = true;
             cCaption = SysColorActiveCaption.GetColor();
@@ -614,7 +540,7 @@ static bool OnPaint( HWND hWnd ) {
 }
 
 
-bool Window::OnEraseBackground( HWND hWnd, HDC hDC ) {
+bool ywWindow::OnEraseBackground( HWND hWnd, HDC hDC ) {
 
     HBRUSH  hbr;
 
@@ -641,7 +567,7 @@ bool Window::OnEraseBackground( HWND hWnd, HDC hDC ) {
 #ifdef YOU_WIN_TXT
 static void OnSetfocus( HWND hWnd, HWND hOldfocuswnd ) {
 
-    Window * pWnd = reinterpret_cast<LPWindow>( hWnd );
+    ywWindow * pWnd = reinterpret_cast<LPWindow>( hWnd );
 
     /* Hack to temporarily SEE the focus change */
     POINT pt = pWnd->GetParentOffset();
@@ -652,7 +578,7 @@ static void OnSetfocus( HWND hWnd, HWND hOldfocuswnd ) {
 #endif
 
 
-void Window::OnSetRedraw( HWND hWnd, BOOL bRedraw ) {
+void ywWindow::OnSetRedraw( HWND hWnd, BOOL bRedraw ) {
 
     bNoRedraw = ! bRedraw;
 
@@ -667,7 +593,7 @@ void Window::OnSetRedraw( HWND hWnd, BOOL bRedraw ) {
 }
 
 
-UINT Window::OnNCHitTest( HWND hWnd, int absx, int absy ) {
+UINT ywWindow::OnNCHitTest( HWND hWnd, int absx, int absy ) {
 
     // x and y are relative to upper-left of the screen, not relative to the window
 
@@ -713,7 +639,31 @@ UINT Window::OnNCHitTest( HWND hWnd, int absx, int absy ) {
 }
 
 
-LRESULT Window::DefWndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
+void ywWindow::OnParentNotify( HWND hWnd, UINT uiMsg, HWND hChildWnd, int iChildID ) {
+
+    switch( uiMsg ) {
+
+        case WM_DESTROY:
+
+            for ( auto i = children.begin(); i != children.end(); i++ ) {
+
+                if ( *i == hChildWnd ) {
+
+                    children.erase( i );
+//                    i.base().erase(i) );
+                    break;
+
+                }
+
+            }
+            break;
+
+    }
+
+}
+
+
+LRESULT ywWindow::DefWndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 
     switch( uiMsg ) {
 
@@ -782,6 +732,11 @@ LRESULT Window::DefWndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam 
             HANDLE_WM_NCPAINT( hWnd, wParam, lParam, OnNCPaint );
             break;
 
+        case WM_PARENTNOTIFY:
+
+            HANDLE_WM_PARENTNOTIFY( hWnd, wParam, lParam, OnParentNotify );
+            break;
+
         case WM_PAINT:
 
             return OnPaint( hWnd );
@@ -816,6 +771,6 @@ LRESULT Window::DefWndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam 
 
 LRESULT DefWindowProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 
-    return (reinterpret_cast<Window *>( hWnd ))->DefWndProc( hWnd, uiMsg, wParam, lParam );
+    return (reinterpret_cast<ywWindow *>( hWnd ))->DefWndProc( hWnd, uiMsg, wParam, lParam );
 
 }

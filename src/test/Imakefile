@@ -15,17 +15,22 @@ LD_LIBRARY_PATH=..:$LD_LIBRARY_PATH ./test
 
             SUBDIRS += ../
 
-             LDLIBS += -static-libgcc -L../ -lyouwin
+             LDLIBS += -z noexecstack -static-libgcc -L../ -lyouwin
 
 #else /* Build with imake-only */
 
-/* 32-bit compilation
-                   WRC = i686-w64-mingw32-windres
-                    CC = i686-w64-mingw32-g++
-*/
-/* 64-bit compilation */
-                 WRC = x86_64-w64-mingw32-windres
-                  CC = x86_64-w64-mingw32-g++
+
+#if defined( BUILD_WIN32 )
+                   CC = i686-w64-mingw32-g++
+                  WRC = i686-w64-mingw32-windres
+#endif
+
+#if defined( BUILD_WIN64 )
+                   CC = x86_64-w64-mingw32-g++
+                  WRC = x86_64-w64-mingw32-windres
+#endif
+
+
                  CXX = $(CC)
              INCROOT = .
            USRLIBDIR = .

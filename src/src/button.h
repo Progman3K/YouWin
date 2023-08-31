@@ -8,11 +8,11 @@
 #define HANDLE_BM_GETCHECK( hwnd, wParam, lParam, fn )      ( (fn)((hwnd)) )
 
 
-class Button : public Window {
+class Button : public ywWindow {
 
     public:
 
-        Button( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hParent, int userx, int usery, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hUserInst, LPVOID pParam ) : Window( pWindowClass, pWindowName, hParent, userx, usery, count_x, count_y, MenuOrID, Style, ExtStyle, wndproc, hUserInst, pParam ) {
+        Button( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hParent, int userx, int usery, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hUserInst, LPVOID pParam ) : ywWindow( pWindowClass, pWindowName, hParent, userx, usery, count_x, count_y, MenuOrID, Style, ExtStyle, wndproc, hUserInst, pParam ) {
 
             iButtonstate = BST_INDETERMINATE;
 
@@ -26,6 +26,7 @@ class Button : public Window {
 
         void     AutoCheck();
 
+        void     OnChar( HWND hWnd, TCHAR ch, int cRepeat );
         int      OnGetCheck( HWND );
         void     OnKeydown( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags );
         void     OnKeyup( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags );
@@ -47,14 +48,14 @@ class ButtonClass : public WindowClass {
 
         ButtonClass( LPCTSTR pszName, WNDPROC Wndproc, /* COLOR_PAIR default_colors, */ HBRUSH hBackBrush, UINT styles, HICON hIco ) : WindowClass( pszName, Wndproc, /* default_colors, */ hBackBrush, styles, hIco ) {}
 
-        class Window * Allocate( HWND hParent, LPCTSTR pWindowName, int x, int y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC userwndproc, HINSTANCE hInst, LPVOID pParam ) override {
+        class ywWindow * Allocate( HWND hParent, LPCTSTR pWindowName, int x, int y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC userwndproc, HINSTANCE hInst, LPVOID pParam ) override {
 
            // return new CButton( class WindowClass * pWindowClass, HWND hParent, int x, int y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, WNDPROC wndproc );
            return new Button( this, pWindowName, hParent, x, y, count_x, count_y, MenuOrID, Style, ExtStyle, userwndproc, hInst, pParam );
 
         }
 
-        void Discard( class Window * pThis ) override {
+        void Discard( class ywWindow * pThis ) override {
 
             delete reinterpret_cast<Button *>( pThis );
 

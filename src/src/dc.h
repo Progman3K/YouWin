@@ -33,11 +33,11 @@ class DC {
 
         COLOR_PAIR text;          // Current fg/bg color of text.
 
-        DC( IWindow * pFromWnd, Region * pRegion, IBitmap * pixels, Flags uflags );
+        DC( IWindow * pFromWnd, ywRegion * pRegion, IBitmap * pixels, Flags uflags );
 
-        int AddIntersection( Region * pRgn );
+        int AddIntersection( ywRegion * pRgn );
 
-        int AddExclusion( Region * pRgn );
+        int AddExclusion( ywRegion * pRgn );
 
         void copy( const POINT & pt, DC * pDC, const RECT & r );
 
@@ -56,7 +56,7 @@ class DC {
 
         void SetSize( unsigned cx, unsigned cy );
 
-        void SetShape( Region * pRegion );
+        void SetShape( ywRegion * pRegion );
 
         bool In( POINT & pt ) const;
 
@@ -79,10 +79,10 @@ class DC {
 
         IBitmap * pPixels;
 
-        Region    shape;        // Output functions use to clip.
+        ywRegion  shape;        // Output functions use to clip.
 
-        Region    intersect;    // Output functions use to clip.
-        Region    exclude;      // Output functions use to clip.
+        ywRegion  intersect;    // Output functions use to clip.
+        ywRegion  exclude;      // Output functions use to clip.
 
     private:
 

@@ -5,7 +5,6 @@
 
 BOOL StretchBlt( HDC hdcDst, int xDest, int yDest, int wDest, int hDest, HDC hdcSrc, int xSrc, int ySrc, int wSrc, int hSrc, DWORD rop ) {
 
-#if 1
     DC * pSrcDC = (DC *)hdcSrc;
     DC * pDstDC = (DC *)hdcDst;
 
@@ -59,16 +58,6 @@ BOOL StretchBlt( HDC hdcDst, int xDest, int yDest, int wDest, int hDest, HDC hdc
     }
 
     EndPoints();
-
-#else
-    RECT r;
-    r.left   = xDest;
-    r.top    = yDest;
-    r.right  = wDest;
-    r.bottom = hDest;
-
-    FillRect( hdcDst, &r, GetSysColorBrush( COLOR_WINDOW ) );
-#endif
 
     return true;
 

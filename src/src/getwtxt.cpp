@@ -5,7 +5,7 @@
 
 int GetWindowText( HWND hWnd, LPTSTR pszDest, int iMaxLen ) {
 
-    Window * pWnd;
+    ywWindow * pWnd;
 
     if ( ! ( pWnd = IsWnd( hWnd ) ) ) {
 
@@ -14,7 +14,7 @@ int GetWindowText( HWND hWnd, LPTSTR pszDest, int iMaxLen ) {
     }
 
     _tcsncpy( pszDest, pWnd->Text.c_str(), iMaxLen );
-    
+
     return _tcslen( pszDest );
 
 }
@@ -22,14 +22,14 @@ int GetWindowText( HWND hWnd, LPTSTR pszDest, int iMaxLen ) {
 
 int GetWindowTextLength( HWND hWnd ) {
 
-    Window * pWnd;
-    
+    ywWindow * pWnd;
+
     if ( ! ( pWnd = IsWnd( hWnd ) ) ) {
-    
+
         return -1;
-        
+
     }
-    
+
     return pWnd->Text.size();
-    
+
 }

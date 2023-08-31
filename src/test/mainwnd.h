@@ -46,6 +46,7 @@ class CMainWnd : public DlgWnd<CMainWnd> {
 //            ShowWindow( GetDlgItem( hWnd, IDE_TEST ), SW_HIDE );
 
 //            dlginfo.InstantiateAndRecord( GetWindowInstance( hWnd ), MAKEINTRESOURCE( IDD_MAIN ), HWND_DESKTOP );
+            MoveWindow( GetDlgItem( hWnd, IDST_ICON ), 0, 0, 512, 512, true );
             return true;
 
         }
@@ -73,11 +74,11 @@ class CMainWnd : public DlgWnd<CMainWnd> {
                         r.top    = 1;
                         r.right  = r.left + 10;
                         r.bottom = r.top + 10;
-                        
+
                         HDC hDC;
-                        
+
                         hDC = GetDC( hWnd );
-                        
+
                         filledcircle( 30, 30, 20, hDC );
 
 //                        DrawCircle( 0, 0, 20, hDC );
@@ -85,7 +86,7 @@ class CMainWnd : public DlgWnd<CMainWnd> {
 //                        DrawFilledCircle( 30, 30, 30, hDC );
 
 //                        DrawFrameControl( hDC, &r, DFC_BUTTON, DFCS_BUTTONRADIO ); 
-                        
+
                         ReleaseDC( hWnd, hDC );
 
 //                        dlginfo.MoveTo( hWnd, r.left, r.top );
@@ -98,19 +99,19 @@ class CMainWnd : public DlgWnd<CMainWnd> {
 //            FORWARD_WM_SETREDRAW( GetDlgItem( hDlg, IDE_TEST ), true, SendMessage );
 
         }
-        
-#if 0        
+
+#if 0
         void Circle( int Radius, int xC, int yC ) {
-            
+
             int P;
             int x,y;
-            
+
 //        void Draw(int x,int y,int xC,int yC);
-        
+
             P = 1 - Radius;
             x = 0;
             y = Radius;
-            
+
             draw( x, y, xC, yC );
 
             while ( x <= y ) {
@@ -118,16 +119,16 @@ class CMainWnd : public DlgWnd<CMainWnd> {
                 x++;
 
                 if ( P < 0 ) {
-                    
+
                     P += 2 * x + 1;
-                    
+
                 } else {
-                    
+
                     P += 2 * ( x - y ) + 1;
                     y--;
-                    
+
                 }
-                
+
                 draw( x, y, xC, yC );
 
             }
@@ -146,8 +147,8 @@ class CMainWnd : public DlgWnd<CMainWnd> {
             putpixel( xC + y, yC - x, 12 );
             putpixel( xC - y, yC - x, 12 );
 
-        }        
-        
+        }
+
 #endif
         void DrawFilledCircle( int x, int y, int r, HDC hDC ) {
 
@@ -158,7 +159,7 @@ class CMainWnd : public DlgWnd<CMainWnd> {
             }
 
         }
-        
+
         void DrawCircle( int x0, int y0, int radius, HDC hDC ) {
 
             // int x = radius, y = 0;
@@ -176,15 +177,15 @@ class CMainWnd : public DlgWnd<CMainWnd> {
                 SetPixel( hDC, -y + x0, -x + y0, 0 );
                 SetPixel( hDC,  x + x0, -y + y0, 0 );
                 SetPixel( hDC,  y + x0, -x + y0, 0 );
-                
+
                 y++;
-                
+
                 if ( radiusError < 0 ) {
-                    
+
                     radiusError += 2 * y + 1;
 
                 } else {
-                    
+
                     x--;
                     radiusError += 2 * ( y - x + 1 );
 
@@ -192,43 +193,43 @@ class CMainWnd : public DlgWnd<CMainWnd> {
 
             }
 
-        }        
+        }
 
 
         void circleA( int rx, int ry, int r, HDC hDC ) {
-            
+
             int x, y;
-            
+
             for( x = rx - r; x <= rx + r; x++ )
                 for( y = ry - r; y <= ry + r; y++ )
                     if ( ( ( x * x ) + ( y * y ) ) == ( r * r ) )
                         SetPixel( hDC, x, y, 0 );
 
         }
-        
+
         void circleB( int rx, int ry, int r, int f, HDC hDC ) {
-            
+
             int x, y;
-            
+
             for( x = rx - r; x <= rx + r; x++ )
                 for( y = ry - r; y <= ry + r; y++ )
                     if ( ( ( ( x * x ) + ( y * y ) ) > ( r * r ) - ( f / 2 ) ) && ( ( ( x * x ) + ( y * y ) ) < ( r * r ) + ( f / 2 ) ) )
                         SetPixel( hDC, x, y, 0 );
 
         }
-        
+
         void filledcircle( int oldx, int oldy, int r, HDC hDC ) {
-            
+
             int x, y;
             int rx = 0;
             int ry = 0;
-            
+
             for( x = rx - r; x <= rx + r; x++ )
                 for( y = ry - r; y <= ry + r; y++ )
                     if ( ( ( x * x ) + ( y * y ) ) < ( r * r ) )
                         SetPixel( hDC, oldx + x, oldy + y, 0 );
-                    
-        }        
+
+        }
 
     public:
 

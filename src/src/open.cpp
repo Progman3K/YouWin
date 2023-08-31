@@ -16,8 +16,8 @@ GLOBALS g = {
     ,480
     ,800
 #else
-    ,1920
-    ,1080
+    ,1024
+    ,768
 #endif
 #endif
 
@@ -457,7 +457,7 @@ OpenYWStatus OpenWindowLib( intptr_t lParam, TERMINALOUTPUTFUNC pTerminal ) {
 
 #ifdef YOU_WIN_TXT
 
-    Font font( &TextFont.font );
+    ywFont font( &TextFont.font );
     auto f = fonts.emplace( IDSZ_SYSTEM, font );
 
     DBG_MSG( DBG_ERROR, TEXT( "Make System font: %s" ), f.second ? "Success" : "Failed" );

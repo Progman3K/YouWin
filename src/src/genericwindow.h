@@ -11,14 +11,14 @@
 #include "UTF16.h"
 
 
-class Window : public IWindow {
+class ywWindow : public IWindow {
 
     public:
 
         DC ClientDC;
         DC NonClientDC;
 
-        Window( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hParent, int rel_to_parent_x, int rel_to_parent_y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hInstance, LPVOID pParam ) : IWindow( reinterpret_cast<IWindow *>( hParent ), Style, rel_to_parent_x, rel_to_parent_y, count_x, count_y ), ClientDC( this, &ClientArea, &ClientPixels, DC::StaticToWindow ), NonClientDC( this, &NonClientArea, &NonClientPixels, DC::StaticToWindow ) {
+        ywWindow( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hParent, int rel_to_parent_x, int rel_to_parent_y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hInstance, LPVOID pParam ) : IWindow( reinterpret_cast<IWindow *>( hParent ), Style, rel_to_parent_x, rel_to_parent_y, count_x, count_y ), ClientDC( this, &ClientArea, &ClientPixels, DC::StaticToWindow ), NonClientDC( this, &NonClientArea, &NonClientPixels, DC::StaticToWindow ) {
 
             // ---------------------------- Initialize it.
 
@@ -60,14 +60,14 @@ class Window : public IWindow {
 
         }
 
-        ~Window() {
+        ~ywWindow() {
 
             DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "%s %lX, ID %lu deleted" ), pClass->GetClassName(), this, (unsigned long)hMenu );
 
         }
 
         // Internal.
-        static Window * Create( DWORD ExtStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD style, int ix, int iy, unsigned int cx, unsigned int cy, HWND hParentWnd, HMENU hMenu, HINSTANCE hInst, LPVOID pParam );
+        static ywWindow * Create( DWORD ExtStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD style, int ix, int iy, unsigned int cx, unsigned int cy, HWND hParentWnd, HMENU hMenu, HINSTANCE hInst, LPVOID pParam );
 
         unsigned            uiHScrollPos;     // Horizontal scroll offset.
         unsigned            uiHScrollMax;     //
@@ -82,13 +82,13 @@ class Window : public IWindow {
         bool                fErase;            /* WM_ERASEBKGND is pending */
         bool                bDrawFramePending;
         int *               piDlgRetCode;      // The value of EndDialog( hWnd, x )
-        HMENU               hMenu;             // Control ID for child-windows
+//        HMENU               hMenu;             // Control ID for child-windows
         BOOLEAN             bScrollLock;       // TRUE if this window will NOT scroll when text reaches it's last line.
         BOOLEAN             bNoRedraw;         // Output to this window is NOT to be painted. Used to "Halt" the display.
         LONG_PTR            lUserData;         //
         WNDPROC             WndProc;           //
         DLGPROC             bDlgProc;          //
-        DWORD               dwExStyle;
+//        DWORD               dwExStyle;
         HINSTANCE           hInst;
         class WindowClass * pClass;
         TSTRING             Text;
@@ -97,9 +97,9 @@ class Window : public IWindow {
 
         void CalculateRegions();
 
-        static Window * ToWnd( HWND hWnd, const char * pszFile, unsigned uLine );
+        static ywWindow * ToWnd( HWND hWnd, const char * pszFile, unsigned uLine );
 
-        static Window * At( POINT * );
+//        static Window * At( POINT * );
 
         RECT rCaption;
 
@@ -124,6 +124,7 @@ class Window : public IWindow {
         void OnNCMouseClicks( HWND hWnd, BOOLEAN bDblClick, int x, int y, UINT uiKeyFlags );
         UINT OnNCHitTest( HWND hWnd, int x, int y );
         void OnNCPaint( HWND hWnd, HRGN hRgn );
+        void OnParentNotify( HWND hWnd, UINT uiMsg, HWND hChildWnd, int iChildID );
 
         void OnSetRedraw( HWND hWnd, BOOL bRedraw );
 
@@ -133,10 +134,10 @@ class Window : public IWindow {
 
 };
 
-typedef Window * PWindow;
-typedef Window * LPWindow;
+typedef ywWindow * PWindow;
+typedef ywWindow * LPWindow;
 
-typedef std::vector<Window *> WindowList;
+typedef std::vector<ywWindow *> WindowList;
 
 
 #endif /* YW_H_GENERIC_WINDOW_H */

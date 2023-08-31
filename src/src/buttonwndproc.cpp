@@ -79,11 +79,9 @@ void Button::OnKeydown( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags 
 
                 FORWARD_WM_DRAWITEM( pParentWnd, &dis, SendMessage );
 
-            } else {
-
-                RedrawWindow( hWnd, NULL, NULL, RDW_ERASE | RDW_ERASENOW | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
-
             }
+
+            RedrawWindow( hWnd, NULL, NULL, RDW_ERASE | RDW_ERASENOW | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
 
             /* Notify parent */
             FORWARD_WM_COMMAND( pParentWnd, (unsigned long)hMenu, hWnd, BN_CLICKED, PostMessage );
@@ -129,13 +127,6 @@ void Button::OnKeyup( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags ) 
 
 void Button::OnLButtonDown( HWND hWnd, BOOLEAN bDblClick, int /* userx */, int /* usery */, UINT uiKeyFlags ) {
 
-    if ( NULL == pParentWnd ) {
-
-        DBG_MSG( DBG_ERROR, TEXT( "NOTIFICATION LOST" ) );
-        return;
-
-    }
-
     if ( WS_DISABLED & dwStyle ) {
 
         return;
@@ -155,6 +146,14 @@ void Button::OnLButtonDown( HWND hWnd, BOOLEAN bDblClick, int /* userx */, int /
     }
 
     RedrawWindow( hWnd, NULL, NULL, RDW_ERASE | RDW_ERASENOW | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
+
+    if ( NULL == pParentWnd ) {
+
+        DBG_MSG( DBG_ERROR, TEXT( "NOTIFICATION LOST" ) );
+        return;
+
+    }
+
     FORWARD_WM_COMMAND( pParentWnd, (unsigned long)hMenu, hWnd, BN_CLICKED, PostMessage );
 
 }
@@ -545,6 +544,21 @@ void staticstyles( DWORD dwStyle, TSTRING & styles ) {
 }
 
 
+void Button::OnChar( HWND hWnd, TCHAR ch, int cRepeat ) {
+
+    switch( ch ) {
+
+        case ' ':
+
+            /* For a button, receiving a space is the same as being clicked/toggled */
+            FORWARD_WM_LBUTTONDOWN( hWnd, false, 0, 0, 0, SendMessage );
+            break;
+
+    }
+
+}
+
+
 LRESULT Button::WndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
 
     Button * pWnd = reinterpret_cast<Button *>( hWnd );
@@ -554,6 +568,10 @@ LRESULT Button::WndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam ) {
         case BM_GETCHECK:
 
             return HANDLE_BM_GETCHECK( hWnd, wParam, lParam, pWnd->OnGetCheck );
+
+        case WM_CHAR:
+
+            return HANDLE_WM_CHAR( hWnd, wParam, lParam, pWnd->OnChar );
 
         case WM_CREATE: {
 

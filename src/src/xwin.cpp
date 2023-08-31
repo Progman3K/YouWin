@@ -1,23 +1,26 @@
 
 
+
+
+#if defined( YOU_WIN_GRAPHICAL_XWIN )
+
+
 #include <DbgTrace.h>
+#include <windowsx.h>
 
-
-#if defined( YOU_WIN_GRAPHICAL ) && defined( YOU_WIN_GRAPHICAL_XWIN )
-#ifndef ANDROID
-
+#include "eventq.h"
 
 #include "xwin.h"
 #include "graphical.h"
 #include "dc.h"
 
 
-namespace GL {
+//namespace GL {
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
-}
-using namespace GL;
+//}
+//using namespace GL;
 
 
 static /*const*/ std::map<unsigned int /* x keycode */, UINT /* VKey */> vk_list;
@@ -274,7 +277,7 @@ static struct the_X : public Handler {
 } X;
 
 
-int GL::glInit( int cx, int cy, EventQ & Q, int argc, char * Argv[] ) {
+int ywDisplay::Init( int cx, int cy, EventQ & Q, int argc, char * Argv[], LPARAM ) {
 
     /* open connection with the server */
     x.display = XOpenDisplay( NULL );
@@ -353,7 +356,7 @@ void Close() {
 }
 
 
-void GL::glDestroy( void ) {
+void ywDisplay::Destroy( void ) {
 
     Close();
 
@@ -372,9 +375,6 @@ extern "C" void glutMainLoopEvent() {
 //    XFlush( x.display );
 
 }
-
-
-void StartPoints( void ) {}
 
 
 void EndPoints( void ) {
@@ -416,5 +416,4 @@ void DC::Out( const POINT & pt, COLORREF c ) {
 }
 
 
-#endif /* ! ANDROID */
 #endif /* YOU_WIN_GRAPHICAL && YOU_WIN_GRAPHICAL_XWIN */

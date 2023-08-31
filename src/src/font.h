@@ -115,7 +115,7 @@ typedef struct PACKED tagFont_Header {
 } Font_Header;
 
 
-class Font : public Object {
+class ywFont : public Object {
 
     chardef controlchar;
 
@@ -136,7 +136,7 @@ class Font : public Object {
         Faces       glyphs;
         const Font_Header * pHdr;
 
-        Font( const Font_Header * pFontHdr ) {
+        ywFont( const Font_Header * pFontHdr ) {
 
             setType( OBJECT_TYPE_FONT );
             pHdr = pFontHdr;
@@ -149,7 +149,7 @@ class Font : public Object {
         }
 
 
-        virtual ~Font() override {
+        virtual ~ywFont() override {
 
         }
 
@@ -260,16 +260,16 @@ class Font : public Object {
 };
 
 
-typedef std::pair <TSTRING, Font> FontPair;
+typedef std::pair <TSTRING, ywFont> FontPair;
 
 
-class FontList : public std::map <TSTRING, Font> {
+class FontList : public std::map <TSTRING, ywFont> {
 
     public:
 
-        const Font * open( const ResourceList & resource, LPCTSTR pszName );
+        const ywFont * open( const ResourceList & resource, LPCTSTR pszName );
 
-        const Font * Find( LPCTSTR pszName ) {
+        const ywFont * Find( LPCTSTR pszName ) {
 
             const iterator & i = find( pszName );
 

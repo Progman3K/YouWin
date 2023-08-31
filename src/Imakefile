@@ -58,6 +58,7 @@
                         src/com.cpp \
                         src/comboboxwndproc.cpp \
                         src/console.cpp \
+                        src/console_input.cpp \
                         src/dc.cpp \
                         src/defdlgproc.cpp \
                         src/defwndproc.cpp \
@@ -92,6 +93,7 @@
                         src/ldmenu.cpp \
                         src/ldstring.cpp \
                         src/listboxwndproc.cpp \
+                        src/lxfb.cpp \
                         src/menu.cpp \
                         src/messagebox.cpp \
                         src/object.cpp \

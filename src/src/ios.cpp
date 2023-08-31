@@ -256,7 +256,9 @@ bool iOSKeyMouse::EventHandler() {
 }
 
 
-int iOSInit( iOSApp * app ) {
+int ywDisplay::Init( int cx, int cy, EventQ & Q, int argc, const char * argv[], LPARAM lParam ) {
+
+    iOSApp * app = reinterpret_cast<iOSApp *>( lParam );
 
     g.iCX = app->cx;
     g.iCY = app->cy;
@@ -284,7 +286,7 @@ int iOSInit( iOSApp * app ) {
 }
 
 
-int iOSCleanup( iOSApp * app ) {
+void ywDisplay::Destroy( void ) {
 
     if ( NULL != pInput ) {
 

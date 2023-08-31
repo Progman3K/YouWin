@@ -5,20 +5,20 @@
 
 static BOOL ReDrawFamily( HWND hWnd, LPARAM flags ) {
 
-    Window * pWnd = reinterpret_cast<Window *>( hWnd );
+    ywWindow * pWnd = reinterpret_cast<ywWindow *>( hWnd );
 
     if ( ( 0 == pWnd ) || ( pWnd->bNoRedraw ) ) {
 
         /* Drawing, re-drawing or erasing of any type not allowed */
-        return false;
+        return true;
 
     }
 
-    Window * pPopuWnd = reinterpret_cast<Window *>( IWindow::GetPopup( pWnd ) );
+    ywWindow * pPopuWnd = reinterpret_cast<ywWindow *>( IWindow::GetPopup( pWnd ) );
 
     if( ( NULL != pPopuWnd ) && pPopuWnd->bNoRedraw ) {
 
-        return false;
+        return true;
 
     }
 
@@ -37,7 +37,7 @@ static BOOL ReDrawFamily( HWND hWnd, LPARAM flags ) {
 
         }
 
-        if ( ( RDW_FRAME & flags ) && ( ! pWnd->NonClientArea.IsEmpty() ) ) {
+        if ( ( RDW_FRAME & flags ) || ( ! pWnd->NonClientArea.IsEmpty() ) ) {
 
             if ( ( RDW_UPDATENOW & flags ) || ( RDW_ERASENOW & flags ) ) {
 
@@ -87,17 +87,15 @@ static BOOL ReDrawFamily( HWND hWnd, LPARAM flags ) {
 
 BOOL RedrawWindow( HWND hWnd, const RECT * pr, HRGN hRgn, UINT flags ) {
 
-    Window * pWnd;
+    ywWindow * pWnd;
 
-    if ( NULL == hWnd ) {
+    if ( ( NULL == hWnd ) || ( HWND_DESKTOP == hWnd ) ) {
 
-        pWnd = reinterpret_cast<Window *>( g.pTopWnd );
-
-    } else {
-
-        pWnd = IsWnd( hWnd );
+        hWnd = g.pTopWnd;
 
     }
+
+    pWnd = IsWnd( hWnd );
 
     if ( NULL == pWnd ) {
 
@@ -132,6 +130,14 @@ BOOL RedrawWindow( HWND hWnd, const RECT * pr, HRGN hRgn, UINT flags ) {
 
     }
 
+    if ( RDW_FRAME & flags ) {
+
+        /* Entire non-client area to be painted */
+        pWnd->NonClientDC.AddIntersection( NULL );
+        pWnd->NonClientDC.AddExclusion( NULL );
+
+    }
+
     if ( RDW_INVALIDATE & flags ) {
 
          /* Add supplied rectangle/region to intersection in client area */
@@ -146,7 +152,7 @@ BOOL RedrawWindow( HWND hWnd, const RECT * pr, HRGN hRgn, UINT flags ) {
 
             if ( NULL != pr ) {
 
-                Region region;
+                ywRegion region;
 
                 region.add( *pr );
 
@@ -156,7 +162,7 @@ BOOL RedrawWindow( HWND hWnd, const RECT * pr, HRGN hRgn, UINT flags ) {
 
             if ( NULL != hRgn ) {
 
-                pWnd->ClientDC.AddIntersection( reinterpret_cast<Region *>( hRgn ) );
+                pWnd->ClientDC.AddIntersection( reinterpret_cast<ywRegion *>( hRgn ) );
 
             }
 
@@ -181,7 +187,7 @@ BOOL RedrawWindow( HWND hWnd, const RECT * pr, HRGN hRgn, UINT flags ) {
 
             if ( NULL != pr ) {
 
-                Region region;
+                ywRegion region;
 
                 region.add( *pr );
 
@@ -191,7 +197,7 @@ BOOL RedrawWindow( HWND hWnd, const RECT * pr, HRGN hRgn, UINT flags ) {
 
             if ( NULL != hRgn ) {
 
-                pWnd->ClientDC.AddExclusion( reinterpret_cast<Region *>( hRgn ) );
+                pWnd->ClientDC.AddExclusion( reinterpret_cast<ywRegion *>( hRgn ) );
 
             }
 

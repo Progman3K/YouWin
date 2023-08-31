@@ -2,7 +2,7 @@
 
 #include "ywin.h"
 
-
+#if 0
 IWindow * IWindow::TopmostWindow( void ) {
 
     // Walk the window list UP from the desktop and return the topmost window
@@ -136,25 +136,63 @@ BOOLEAN bEnumFindWindowAtSpot( IWindow * pWnd, LPARAM lParam ) {
 
 Window * Window::At( POINT * pPt ) {
 
-    /* Find out which window is here, */
-    EnumFWaS    eFWaS;
+    Window * pWnd = NULL;
 
-    eFWaS.pWnd = NULL;
-    eFWaS.pt   = *pPt;
+    for ( auto popup = g.pTopWnd->children.rbegin(); popup != g.pTopWnd->children.rend(); popup++ ) {
 
-    /* Find which window is at x,y and send to it directly. */
-    iEnumWindows( bEnumFindWindowAtSpot, true, NULL, (LPARAM)&eFWaS );
+        /* Last popup is highest in the Z order */
+        if ( ! (*popup)->bPointInWindow( *pPt ) ) {
 
-    if ( NULL == eFWaS.pWnd ) {
+            continue;
+
+        }
+
+        pWnd = (Window *)*popup;
+
+        /* But if one of its children fits, supersede */
+        for ( auto child = pWnd->children.rbegin(); child != pWnd->children.rend(); child++ ) {
+
+            if ( (*child)->bPointInWindow( *pPt ) ) {
+
+                /* This is the first window encountered from the top-down */
+
+                if ( ! IsWindowVisible( (HWND)*child ) ) {
+
+                    /* Not visible, ignore it */
+                    continue;
+
+                }
+
+                /* MUST not have any disabled parent */
+//                if ( ! IsWindowEnabled( (HWND)pWnd ) ) {
+
+//                    continue;
+
+//                }
+
+                pWnd = (Window *)*child;
+                break;
+
+            }
+
+        }
+
+        if ( pWnd ) {
+
+            break;
+
+        }
+
+    }
+
+    if ( NULL == pWnd ) {
 
         return NULL;
 
     }
 
     /* Translate from absolute to window-relative coordinates */
-    eFWaS.pt = eFWaS.pt - eFWaS.pWnd->GetParentOffset();
-
-    *pPt = eFWaS.pt;
+    *pPt = *pPt - pWnd->GetParentOffset();
 
     DBG_MSG( DBG_GENERAL_INFORMATION, 
     TEXT(
@@ -164,20 +202,21 @@ Window * Window::At( POINT * pPt ) {
         " (%4d,%4d)"
         "%s%s%s%s%s%s%s%s%s%s%s%s"
     ),
-    eFWaS.pWnd->pClass->GetClassName(), eFWaS.pWnd, (unsigned long)( eFWaS.pWnd->hMenu ), eFWaS.pWnd->cx, eFWaS.pWnd->cy,
-    ( WS_BORDER      & eFWaS.pWnd->dwStyle ) ? " WS_BORDER"      : "",
-    ( WS_CAPTION     & eFWaS.pWnd->dwStyle ) ? " WS_CAPTION"     : "",
-    ( WS_CHILD       & eFWaS.pWnd->dwStyle ) ? " WS_CHILD"       : "",
-    ( WS_DISABLED    & eFWaS.pWnd->dwStyle ) ? " WS_DISABLED"    : "",
-    ( WS_GROUP       & eFWaS.pWnd->dwStyle ) ? " WS_GROUP"       : "",
-    ( WS_MINIMIZEBOX & eFWaS.pWnd->dwStyle ) ? " WS_MINIMIZEBOX" : "",
-    ( WS_OVERLAPPED  & eFWaS.pWnd->dwStyle ) ? " WS_OVERLAPPED"  : "",
-    ( WS_SYSMENU     & eFWaS.pWnd->dwStyle ) ? " WS_SYSMENU"     : "",
-    ( WS_TABSTOP     & eFWaS.pWnd->dwStyle ) ? " WS_TABSTOP"     : "",
-    ( WS_THICKFRAME  & eFWaS.pWnd->dwStyle ) ? " WS_THICKFRAME"  : "",
-    ( WS_VISIBLE     & eFWaS.pWnd->dwStyle ) ? " WS_VISIBLE"     : "",
-    ( WS_VSCROLL     & eFWaS.pWnd->dwStyle ) ? " WS_VSCROLL"     : "" );
+    pWnd->pClass->GetClassName(), pWnd, (unsigned long)( pWnd->hMenu ), pWnd->cx, pWnd->cy,
+    ( WS_BORDER      & pWnd->dwStyle ) ? " WS_BORDER"      : "",
+    ( WS_CAPTION     & pWnd->dwStyle ) ? " WS_CAPTION"     : "",
+    ( WS_CHILD       & pWnd->dwStyle ) ? " WS_CHILD"       : "",
+    ( WS_DISABLED    & pWnd->dwStyle ) ? " WS_DISABLED"    : "",
+    ( WS_GROUP       & pWnd->dwStyle ) ? " WS_GROUP"       : "",
+    ( WS_MINIMIZEBOX & pWnd->dwStyle ) ? " WS_MINIMIZEBOX" : "",
+    ( WS_OVERLAPPED  & pWnd->dwStyle ) ? " WS_OVERLAPPED"  : "",
+    ( WS_SYSMENU     & pWnd->dwStyle ) ? " WS_SYSMENU"     : "",
+    ( WS_TABSTOP     & pWnd->dwStyle ) ? " WS_TABSTOP"     : "",
+    ( WS_THICKFRAME  & pWnd->dwStyle ) ? " WS_THICKFRAME"  : "",
+    ( WS_VISIBLE     & pWnd->dwStyle ) ? " WS_VISIBLE"     : "",
+    ( WS_VSCROLL     & pWnd->dwStyle ) ? " WS_VSCROLL"     : "" );
 
-    return eFWaS.pWnd;
+    return pWnd;
 
 }
+#endif

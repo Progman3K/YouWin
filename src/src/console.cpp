@@ -1,47 +1,23 @@
 
 
+#if defined( YOU_WIN_TXT )
+
+
 #include "ywin.h"
+#include "console_input.h"
 
-
-#ifndef YOU_WIN_GRAPHICAL
-
-// YOU_WIN_TXT
 
 #ifndef __APPLE_CC__
 __thread
 #endif
 POINT _pt;
 
-KeyMouse    Input( &g.Q, fileno( stdin ) );
 
-
-static struct termios   orig_termios;
 static struct sigaction sa;
 
 
-static void reset_terminal_mode( void ) {
+KeyMouse    Input( &g.Q, fileno( stdin ) );
 
-    tcsetattr( 0, TCSANOW, &orig_termios );
-
-}
-
-
-static void set_conio_terminal_mode() {
-
-    struct termios new_termios;
-
-    /* take two copies - one for now, one for later */
-    tcgetattr( 0, &orig_termios );
-    memcpy( &new_termios, &orig_termios, sizeof( new_termios ) );
-
-    /* register cleanup handler, and set the new terminal mode */
-    atexit( reset_terminal_mode );
-
-    cfmakeraw( &new_termios );
-
-    tcsetattr( 0, TCSANOW, &new_termios );
-
-}
 
 
 /*
@@ -254,11 +230,11 @@ static int InstallSignalHandler( void ) {
 }
 
 
-int TerminalInit( void ) {
+int ywDisplay::Init( int cx, int cy, EventQ & Q, int argc, char * argv[], LPARAM ) {
 
     DBG_MSG( DBG_CONSOLE, TEXT( "Init terminal" ) );
 
-    set_conio_terminal_mode();
+    set_console_input_mode();
 
     struct winsize ws;
     if ( 0 == ioctl( STDOUT_FILENO, TIOCGWINSZ, &ws ) ) {
@@ -282,6 +258,9 @@ int TerminalInit( void ) {
 
     g.pTerminal( g.lClientData, IDSZ_MOUSE_REPORTING, strlen( IDSZ_MOUSE_REPORTING ) );
 
+    /* register cleanup handler, and set the new terminal mode */
+    atexit( reset_console_input_mode );
+
     InstallSignalHandler();
 
     return 0;
@@ -289,10 +268,10 @@ int TerminalInit( void ) {
 }
 
 
-void TerminalCleanup( void ) {
+void ywDisplay::Destroy( void ) {
 
     DBG_MSG( DBG_CONSOLE, TEXT( "Cleanup resets terminal" ) );
-    reset_terminal_mode();
+    reset_console_input_mode();
 
 }
 
@@ -439,6 +418,7 @@ int DC::TypeByteAt( HFONT, POINT pt, UINT /* uFlags */, UINT uFormat, TCHAR c, c
     ptScreen.x = ParentOffset.x + shape.x + pt.x;
     ptScreen.y = ParentOffset.y + shape.y + pt.y;
 
+#if 0
     if ( pWnd->pWndPointObscured( ptScreen ) ) {
 
         /* Window ABOVE this one obscuring it, do not paint. */
@@ -446,6 +426,7 @@ int DC::TypeByteAt( HFONT, POINT pt, UINT /* uFlags */, UINT uFormat, TCHAR c, c
         return 1;
 
     }
+#endif
 
     Out( ptScreen, cStorage );
 

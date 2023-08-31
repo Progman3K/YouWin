@@ -81,6 +81,13 @@
           CXXFLAGS += -Wall -std=c++20
 
 
+#if defined( BUILD_RELEASE )
+        CXXDEBUGFLAGS = -Os
+#else
+        CXXDEBUGFLAGS = -O0 -g -fno-inline -fno-omit-frame-pointer
+#endif
+
+
 src/resource/resource.rc: src/resource/dialogs.rc src/resource/strings.rc src/resource/version.rc
 
 #ifdef BUILD_YOU_WIN
@@ -105,7 +112,12 @@ cleandir::
 	$(RM) $(APPNAME)
 
 
-$(APPNAME): /* resource.res */
+#if defined( BUILD_WIN32 ) || defined( BUILD_WIN64 )
+$(APPNAME): src/resource/resource.res
+#endif
+#if defined( BUILD_YOU_WIN )
+$(APPNAME): resource.res /opt/youwin/src/libyouwin.a
+#endif
 
 
 #ifdef BUILD_YOU_WIN

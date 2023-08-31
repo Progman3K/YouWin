@@ -153,6 +153,7 @@ class ResIcon : public IBitmap {
     bool GetPixel4bpp( const POINT & pt, COLORREF & c ) const;
     bool GetPixel8bpp( const POINT & pt, COLORREF & c ) const;
     bool GetPixel24bpp( const POINT & pt, COLORREF & c ) const;
+    bool GetPixel32bpp( const POINT & pt, COLORREF & c ) const;
 
     public:
 

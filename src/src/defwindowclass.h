@@ -11,15 +11,15 @@ class DefWindowClass : public WindowClass {
 
         DefWindowClass( const TCHAR * pszName, WNDPROC Wndproc, /* COLOR_PAIR default_colors, */ HBRUSH hBackBrush, UINT styles, HICON hIco ) : WindowClass( pszName, Wndproc, /* default_colors, */ hBackBrush, styles, hIco ) {}
 
-        class Window * Allocate( HWND hParent, LPCTSTR pWindowName, int x, int y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Styles, DWORD ExtStyles, WNDPROC userwndproc, HINSTANCE hInst, LPVOID pParam ) override {
+        class ywWindow * Allocate( HWND hParent, LPCTSTR pWindowName, int x, int y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Styles, DWORD ExtStyles, WNDPROC userwndproc, HINSTANCE hInst, LPVOID pParam ) override {
 
-           return new Window( this, pWindowName, hParent, x, y, count_x, count_y, MenuOrID, Styles, ExtStyles, userwndproc, hInst, pParam );
+           return new ywWindow( this, pWindowName, hParent, x, y, count_x, count_y, MenuOrID, Styles, ExtStyles, userwndproc, hInst, pParam );
 
         }
 
-        void Discard( class Window * pThis ) override {
+        void Discard( class ywWindow * pThis ) override {
 
-            delete reinterpret_cast<Window *>( pThis );
+            delete reinterpret_cast<ywWindow *>( pThis );
 
         }
 

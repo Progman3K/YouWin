@@ -10,8 +10,8 @@
 #if defined( YOU_WIN_TXT ) && defined( YOU_WIN_GRAPHICAL )
 #error ONLY ONE OF THE FOLLOWING MUST BE DEFINED - YOU_WIN_TXT or YOU_WIN_GRAPHICAL
 #endif
-#if defined( YOU_WIN_GRAPHICAL ) && ! ( defined( YOU_WIN_GRAPHICAL_OPENGL ) || defined( YOU_WIN_GRAPHICAL_XWIN ) || defined( ANDROID) || defined( YOU_WIN_GRAPHICAL_OSX ) )
-#error WHEN BUILDING YOU_WIN_GRAPHICAL ONLY ONE OF THE FOLLOWING MUST BE DEFINED - YOU_WIN_GRAPHICAL_OPENGL or YOU_WIN_GRAPHICAL_XWIN or ANDROID or YOU_WIN_GRAPHICAL_OSX
+#if defined( YOU_WIN_GRAPHICAL ) && ! ( defined( YOU_WIN_GRAPHICAL_OPENGL ) || defined( YOU_WIN_GRAPHICAL_LXFB ) || defined( YOU_WIN_GRAPHICAL_XWIN ) || defined( ANDROID) || defined( YOU_WIN_GRAPHICAL_OSX ) )
+#error WHEN BUILDING YOU_WIN_GRAPHICAL ONLY ONE OF THE FOLLOWING MUST BE DEFINED - YOU_WIN_GRAPHICAL_OPENGL or YOU_WIN_GRAPHICAL_LXFB or YOU_WIN_GRAPHICAL_XWIN or ANDROID or YOU_WIN_GRAPHICAL_OSX
 #endif
 
 
@@ -64,20 +64,18 @@
 #include "apple.h"
 #endif
 
+#include "graphical.h"
 
-#ifdef YOU_WIN_TXT
 
 #include "text.h"
+#include "lxfb.h"
+#include "xwin.h"
+#include "gl.h"
 
-#else /* GRAPHICAL */
-
-#include "graphical.h"
 
 #ifdef ANDROID
 #include "ywandroid.h"
 #endif
-
-#endif /* GRAPHICAL */
 
 
 #include <ASCII.h>
@@ -138,7 +136,7 @@ typedef struct {
     int                  iCY;                         // Display Y size
     BYTE                 ucWndSig[sizeof(SIGNATURE)]; // Signature for sanity checks on handles.
     IWindow *            pTopWnd;                     // Bottom-most window. (Desktop)
-    Window *             pFocusWnd;                   // Who has focus/caret
+    IWindow *            pFocusWnd;                   // Who has focus/caret
     LPARAM               lClientData;                 // Private data passed back to user at terminaloutputfunc I/O
 //    unsigned short       usAutoTimerID;               // Next Auto-ID timer ID
     TERMINALOUTPUTFUNC   pTerminal;                   // Raw output goes here
@@ -167,7 +165,7 @@ extern StaticClass      CStatic;
 extern ProgressbarClass CProgressbar;
 
 // Returns a pointer to the windows data storage or NULL if handle is NOT valid.
-#define IsWnd( h ) Window::ToWnd( h, __FILE__, __LINE__ )
+#define IsWnd( h ) ywWindow::ToWnd( h, __FILE__, __LINE__ )
 
 // ------------------------------ Native API
 

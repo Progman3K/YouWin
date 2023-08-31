@@ -14,15 +14,15 @@
 #if DefaultSunProCCompilerMajorVersion
       CFLAGS  = -features=zla
      CXXFLAGS = -features=zla
-     LDOPTIONS = -features=zla -std=c++11
+     LDOPTIONS = -features=zla -std=c++20
       LDLIBS =
       EXTRA_LOAD_FLAGS =
 #else
     LDOPTIONS += -lstdc++
 #endif
 
-      CFLAGS  += -std=c++11
-     CXXFLAGS += -Wall -std=c++11
+      CFLAGS  += -std=c++20
+     CXXFLAGS += -Wall -std=c++20
 
             /* fix certain linker problems by using the same compiler for everything. */
             CC = $(CXX) 

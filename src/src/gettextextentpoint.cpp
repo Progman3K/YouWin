@@ -9,11 +9,11 @@ BOOL GetTextExtentPoint32( HDC hDC, LPCTSTR psz, int iLen, LPSIZE pSize ) {
     pSize->cy = 0;
 
     DC *   pDC   = reinterpret_cast<DC *>( hDC );
-    Font * pFont = reinterpret_cast<Font *>( pDC->hFont );
+    ywFont * pFont = reinterpret_cast<ywFont *>( pDC->hFont );
 
     if ( NULL == pFont ) {
 
-        pFont = reinterpret_cast<Font *>( hSystemFont );
+        pFont = reinterpret_cast<ywFont *>( hSystemFont );
 
     }
 

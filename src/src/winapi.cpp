@@ -34,6 +34,13 @@ HWND GetDesktopWindow( void ) {
 }
 
 
+DWORD GetLastError( void ) {
+
+    return errno;
+
+}
+
+
 HGDIOBJ GetStockObject( int nIndex ) {
 
     switch ( nIndex ) {
@@ -132,7 +139,7 @@ COLORREF GetPixel( HDC hDC, int iX, int iY ) {
 
 BOOL GetScrollBarInfo( HWND hWnd, LONG lObjectID, PSCROLLBARINFO pSBI ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( ( NULL == pWnd ) || ( NULL == pSBI ) ) {
 
@@ -185,11 +192,11 @@ BOOL GetTextMetrics( HDC hDC, TEXTMETRIC * pTM ) {
 
     if ( NULL == pDC->hFont ) {
 
-        ( reinterpret_cast<Font *>( hSystemFont ) )->GetMetrics( pTM );
+        ( reinterpret_cast<ywFont *>( hSystemFont ) )->GetMetrics( pTM );
 
     } else {
 
-        ( reinterpret_cast<Font *>( pDC->hFont ) )->GetMetrics( pTM );
+        ( reinterpret_cast<ywFont *>( pDC->hFont ) )->GetMetrics( pTM );
 
     }
 
@@ -258,41 +265,9 @@ UINT_PTR SetTimer( HWND hWnd, UINT_PTR uID, UINT uiTimerRefresh, TIMERPROC timer
 }
 
 
-typedef struct {
-
-    Window * pParentWnd;
-    int      iDlgID;
-    Window * pChildWnd;
-
-} ECWGetDlgItemParams;
-
-
-static BOOLEAN ECWGetDlgItem( Window * pWnd, LPARAM lParam ) {
-
-    ECWGetDlgItemParams * pParams = (ECWGetDlgItemParams *)lParam;
-
-    if ( pWnd->pParentWnd != (HWND)pParams->pParentWnd ) {
-
-        return true;
-
-    }
-
-    if ( pParams->iDlgID != (long)pWnd->hMenu ) {
-
-        return true;
-
-    }
-
-    pParams->pChildWnd = pWnd;
-
-    return false;
-
-}
-
-
 BOOL GetClientRect( HWND hWnd, LPRECT pr ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( ( NULL == pWnd ) || ( NULL == pr ) ) {
 
@@ -314,7 +289,7 @@ BOOL GetClientRect( HWND hWnd, LPRECT pr ) {
 
 BOOL GetWindowRect( HWND hWnd, LPRECT pr ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( ( NULL == pWnd ) || ( NULL == pr ) ) {
 
@@ -337,7 +312,7 @@ BOOL GetWindowRect( HWND hWnd, LPRECT pr ) {
 
 BOOL ScreenToClient( HWND hWnd, LPPOINT pPt ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( ( NULL == pWnd ) || ( NULL == pPt ) ) {
 
@@ -358,7 +333,7 @@ BOOL ScreenToClient( HWND hWnd, LPPOINT pPt ) {
 
 BOOL ClientToScreen( HWND hWnd, LPPOINT lpPt ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( ( NULL == pWnd ) || ( NULL == lpPt ) ) {
 
@@ -378,7 +353,7 @@ BOOL ClientToScreen( HWND hWnd, LPPOINT lpPt ) {
 
 int GetDlgCtrlID( HWND hWnd ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( NULL == pWnd ) {
 
@@ -400,30 +375,31 @@ HWND GetDlgItem( HWND hDlg, int iCtrlID ) {
 
     }
 
+    ywWindow * pParentWnd = (ywWindow *)hDlg;
+    ywWindow * pWnd = NULL;
+
     /* Walk the list and for all children of hDlg, return the one ( iCtrlID == hMenu ) */
+    for ( auto i = pParentWnd->children.begin(); i != pParentWnd->children.end(); i++ ) {
 
-    ECWGetDlgItemParams  Params;
+        if ( ! ( ( (*i)->pParentWnd == hDlg ) && (  reinterpret_cast<long>( ((ywWindow *)(*i))->hMenu ) == iCtrlID ) ) ) {
 
-    Params.pParentWnd = reinterpret_cast<Window *>( hDlg );
-    Params.iDlgID     = iCtrlID;
-    Params.pChildWnd  = NULL;
+            continue;
 
-    iEnumWindows( (FPBENUMTEXTWINDOWSPROC)ECWGetDlgItem, true, reinterpret_cast<Window *>( hDlg ), (LPARAM)&Params );
+        }
 
-    if ( NULL == Params.pChildWnd ) {
-
-        DBG_MSG( DBG_ERROR, TEXT( "ERROR: CONTROL ID %d NOT FOUND IN WINDOW %08lX" ), iCtrlID, hDlg );
+        pWnd = (ywWindow *)(*i);
+        break;
 
     }
 
-    return Params.pChildWnd;
+    return pWnd;
 
 }
 
 
 UINT GetDlgItemInt( HWND hDlg, int iCtrlID, BOOL * lpTranslated, BOOL /* bSigned */ ) {
 
-    Window * pWnd = reinterpret_cast<Window *>( GetDlgItem( hDlg, iCtrlID ) );
+    ywWindow * pWnd = reinterpret_cast<ywWindow *>( GetDlgItem( hDlg, iCtrlID ) );
 
     if ( ( NULL == pWnd ) || ( 0 == pWnd->Text.size() ) ) {
 
@@ -466,7 +442,7 @@ UINT GetDlgItemInt( HWND hDlg, int iCtrlID, BOOL * lpTranslated, BOOL /* bSigned
 
 BOOL SetDlgItemInt( HWND hDlg, int iCtrlID, UINT uValue, BOOL bSigned ) {
 
-    Window * pWnd = reinterpret_cast<Window *>( GetDlgItem( hDlg, iCtrlID ) );
+    ywWindow * pWnd = reinterpret_cast<ywWindow *>( GetDlgItem( hDlg, iCtrlID ) );
 
     if ( NULL == pWnd ) {
 
@@ -517,7 +493,7 @@ LRESULT SendDlgItemMessage( HWND hDlg, int iCtrlID, UINT uiMsg, WPARAM wParam, L
 
 HWND GetParent( HWND hWnd ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( NULL == pWnd ) {
 
@@ -589,7 +565,7 @@ HWND FindText( LPFINDREPLACE lpfr ) {
 
 BOOL EnableWindow( HWND hWnd, BOOL bEnable ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( NULL == pWnd ) {
 
@@ -608,7 +584,7 @@ BOOL EnableWindow( HWND hWnd, BOOL bEnable ) {
 
 int EndDialog( HWND hDlg, int iCode ) {
 
-    Window * pWnd = IsWnd( hDlg );
+    ywWindow * pWnd = IsWnd( hDlg );
 
     if ( NULL == pWnd ) {
 
@@ -627,7 +603,8 @@ int EndDialog( HWND hDlg, int iCode ) {
         *pWnd->pbClosed = true;
 
     }
-//    DestroyWindow( hDlg );
+
+    //    DestroyWindow( hDlg );
 
     return 0;
 
@@ -636,7 +613,7 @@ int EndDialog( HWND hDlg, int iCode ) {
 
 HDC BeginPaint( HWND hWnd, PAINTSTRUCT * pPaint ) {
 
-    Window * pWnd = reinterpret_cast<Window *>( hWnd );
+    ywWindow * pWnd = reinterpret_cast<ywWindow *>( hWnd );
 
     pPaint->rcPaint.left   = 0;
     pPaint->rcPaint.top    = 0;
@@ -664,7 +641,7 @@ HDC BeginPaint( HWND hWnd, PAINTSTRUCT * pPaint ) {
 
 BOOL EndPaint( HWND hWnd, const PAINTSTRUCT * pPaint ) {
 
-    Window * pWnd = reinterpret_cast<Window *>( hWnd );
+    ywWindow * pWnd = reinterpret_cast<ywWindow *>( hWnd );
 
     if ( NULL == pWnd ) {
 
@@ -778,7 +755,7 @@ BOOL GetClassInfo( HINSTANCE hInst, LPCTSTR pClassName, WNDCLASS * pWndClass ) {
 
 BOOL IsIconic( HWND hWnd ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( NULL == pWnd ) {
 
@@ -793,7 +770,7 @@ BOOL IsIconic( HWND hWnd ) {
 
 int GetClassName( HWND hWnd, LPTSTR lpClassName, int nMaxCount ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( ( NULL == pWnd ) || ( 2 > nMaxCount ) ) {
 
@@ -808,7 +785,7 @@ int GetClassName( HWND hWnd, LPTSTR lpClassName, int nMaxCount ) {
 
 BOOL IsWindowVisible( HWND hWnd ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( NULL == pWnd ) {
 
@@ -836,7 +813,7 @@ BOOL IsWindowVisible( HWND hWnd ) {
 
         }
 
-        pWnd = reinterpret_cast<Window *>( pWnd->pParentWnd );
+        pWnd = reinterpret_cast<ywWindow *>( pWnd->pParentWnd );
 
     }
 
@@ -878,7 +855,7 @@ BOOL IsWindowEnabled( HWND hWnd ) {
 
         }
 
-        pWnd = reinterpret_cast<Window *>( pWnd->pParentWnd );
+        pWnd = reinterpret_cast<ywWindow *>( pWnd->pParentWnd );
 
     }
 
@@ -899,6 +876,8 @@ BOOL InvertRect( HDC hDC, const RECT * pr ) {
 
 }
 
+
+#if 0
 
 typedef struct {
 
@@ -960,19 +939,72 @@ static BOOLEAN EnumChildren( Window * pWnd, LPARAM lParam ) {
     return bRet;
 
 }
+#endif
 
 
 BOOL EnumChildWindows( HWND hParentWnd, WNDENUMPROC pEnumFunc, LPARAM lParam ) {
 
-    EnumChildWindowsParams  Params;
+    if ( ! pEnumFunc ) {
 
-    Params.pParentWnd = reinterpret_cast<Window *>( hParentWnd );
-    Params.pEnumFunc  = pEnumFunc;
-    Params.lParam     = lParam;
+        return false;
 
-    int iEnum = iEnumWindows( (FPBENUMTEXTWINDOWSPROC)EnumChildren, true, reinterpret_cast<Window *>( hParentWnd ), (LPARAM)&Params );
+    }
 
-    return 0 < iEnum;
+    IWindow * pWnd;
+
+    if ( 0 == hParentWnd ) {
+
+        pWnd = g.pTopWnd;
+
+    } else {
+
+        pWnd = (IWindow *)hParentWnd;
+
+    }
+
+    for ( auto child = pWnd->children.begin(); child != pWnd->children.end(); child++ ) {
+
+        if ( ! pEnumFunc( *child, lParam ) ) {
+
+            return false;
+
+        }
+
+        /* If the child window has children, enumerate them too */
+        if ( ! EnumChildWindows( *child, pEnumFunc, lParam ) ) {
+
+            return false;
+
+        }
+
+    }
+
+    return true;
+
+}
+
+
+BOOL EnumWindows( WNDENUMPROC pEnumFunc, LPARAM lParam ) {
+
+    BOOL bEnum = false;
+
+    if ( pEnumFunc ) {
+
+        for ( auto popup = g.pTopWnd->children.begin(); popup != g.pTopWnd->children.end(); popup++ ) {
+
+            bEnum = pEnumFunc( *popup, lParam );
+
+            if ( ! bEnum ) {
+
+                return 0;
+
+            }
+
+        }
+
+    }
+
+    return bEnum;
 
 }
 
@@ -1096,6 +1128,10 @@ BOOL LineTo( HDC hDC, int DestX, int DestY ) {
 
     }
 
+    /* Update the current pen position */
+    pDC->ptPen.x = x;
+    pDC->ptPen.y = y;
+
     return true;
 
 }
@@ -1133,7 +1169,7 @@ BOOL MoveToEx( HDC hDC, int x, int y, LPPOINT lpPt ) {
 
 BOOL MoveWindow( HWND hWnd, int x, int y, int cx, int cy, BOOL bRepaint ) {
 
-    Window * pWnd = reinterpret_cast<Window *>( hWnd );
+    ywWindow * pWnd = reinterpret_cast<ywWindow *>( hWnd );
 
     if ( NULL == pWnd ) {
 
@@ -1196,7 +1232,7 @@ HWND SetFocus( HWND hWnd ) {
     HWND hOldFocusWnd = (HWND)g.pFocusWnd;
     HWND hOldPopupWnd = IWindow::GetPopup( g.pFocusWnd );
 
-    g.pFocusWnd       = reinterpret_cast<Window *>( hWnd );
+    g.pFocusWnd       = reinterpret_cast<ywWindow *>( hWnd );
 
     HWND hNewPopupWnd = IWindow::GetPopup( g.pFocusWnd );
 
@@ -1206,7 +1242,7 @@ HWND SetFocus( HWND hWnd ) {
 
         if ( ( NULL != hOldPopupWnd ) && ( hOldPopupWnd != hNewPopupWnd ) ) {
 
-            RedrawWindow( hOldPopupWnd, NULL, NULL, RDW_ERASE | RDW_ERASENOW | RDW_FRAME | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
+//            RedrawWindow( hOldPopupWnd, NULL, NULL, RDW_ERASE | RDW_ERASENOW | RDW_FRAME | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
 
         }
 
@@ -1218,7 +1254,7 @@ HWND SetFocus( HWND hWnd ) {
 
         if ( NULL != hNewPopupWnd ) {
 
-            RedrawWindow( hNewPopupWnd, NULL, NULL, RDW_ERASE | RDW_ERASENOW | RDW_FRAME | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
+//            RedrawWindow( hNewPopupWnd, NULL, NULL, RDW_ERASE | RDW_ERASENOW | RDW_FRAME | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
 
         }
 
@@ -1252,7 +1288,7 @@ UINT SetTextAlign( HDC hDC, UINT uMode ) {
 
 BOOL ShowScrollBar( HWND hWnd, int wBar, BOOL bShow ) {
 
-    Window * pWnd = IsWnd( hWnd );
+    ywWindow * pWnd = IsWnd( hWnd );
 
     if ( NULL == pWnd ) {
 

@@ -1,12 +1,12 @@
-#ifndef YW_H_REGIONS_H
-#define YW_H_REGIONS_H
+#ifndef YW_REGION_H
+#define YW_REGION_H
 
 
 #include <vector>
 #include "object.h"
 
 
-class Region : public std::vector<RECT>, public Object {
+class ywRegion : public std::vector<RECT>, public Object {
 
 
     public:
@@ -18,7 +18,7 @@ class Region : public std::vector<RECT>, public Object {
         unsigned cy;
 
 
-        Region() /* : Object( OBJECT_TYPE_REGION ) */ {
+        ywRegion() /* : Object( OBJECT_TYPE_REGION ) */ {
 
             setType( OBJECT_TYPE_REGION );
             reset();
@@ -26,10 +26,10 @@ class Region : public std::vector<RECT>, public Object {
         }
 
 
-        virtual ~Region() override {}
+        virtual ~ywRegion() override {}
 
 
-        Region( int X, int Y, unsigned CX, unsigned CY ) /* : Object( OBJECT_TYPE_REGION ) */ {
+        ywRegion( int X, int Y, unsigned CX, unsigned CY ) /* : Object( OBJECT_TYPE_REGION ) */ {
 
             setType( OBJECT_TYPE_REGION );
             x  = X;
@@ -168,4 +168,4 @@ class Region : public std::vector<RECT>, public Object {
 };
 
 
-#endif /* YW_H_REGIONS_H */
+#endif /* YW_REGION_H */

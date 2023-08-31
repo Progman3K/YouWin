@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <ctime>
 #include <limits.h>
+#include <wchar.h>
 #include <tchar.h>
 
 
@@ -72,6 +73,12 @@ inline void dbgtrace(...){}
 #define DBG_WIN32API            0x0200L
 
 
+#define LOG_ALL_INFO            ((unsigned long)-1)
+#define LOG_DATETIME            0x0001L
+#define LOG_FILENAME_LINENUM    0x0002L
+#define LOG_THREADID            0x0004L
+
+
 #if ( defined( _DEBUG ) || defined( DEBUG ) )
 
 
@@ -84,6 +91,8 @@ void DBGTRACE_API SetTraceLevel( unsigned long dwDebugBitmap );
 void DBGTRACE_API SetTraceOutput( printfunc TraceFunc );
 void DBGTRACE_API DBG_TRACE( unsigned uLineNo, const char * pszFile, unsigned long dwDebugChannelsBitmap, const TCHAR * lpszFormat, ... );
 void DBGTRACE_API DBG_TRACE_DUMP_BUFFER( unsigned uLineNo, const char * pszFile, unsigned long dwDebugChannelsBitmap, void const * lpBuffer, unsigned long uBufferLen );
+void DBGTRACE_API DBG_TRACE_DUMP_BINARY_BUFFER( unsigned uLineNo, const char * pszFile, unsigned long dwDebugChannelsBitmap, unsigned uBytesPerLine, void const * lpBuffer, unsigned long uBufferLen );
+void DBGTRACE_API DBG_TRACE_LOGITEMS( unsigned long dwDebugLogItemsBitmap );
 void DBGTRACE_API DBG_TRACE_ASSERT( unsigned uLineNo, const char * pszFile, const TCHAR * lpszExpr );
 
 
@@ -91,6 +100,8 @@ void DBGTRACE_API DBG_TRACE_ASSERT( unsigned uLineNo, const char * pszFile, cons
 //#define DBG_MSG                dbgtraceheader( __LINE__, __FILE__ ); DBG_TRACE
 #define DBG_MSG( level, format, ... ) DBG_TRACE( __LINE__, __FILE__, level, format, ## __VA_ARGS__ )
 #define DBG_DMP( level, buffer, size ) DBG_TRACE_DUMP_BUFFER( __LINE__, __FILE__, level, buffer, size )
+#define DBG_DMPBIN( level, bytesperline, buffer, size ) DBG_TRACE_DUMP_BINARY_BUFFER( __LINE__, __FILE__, level, bytesperline, buffer, size )
+#define DBG_LOGITEMS( logitems ) DBG_TRACE_LOGITEMS( logitems )
 #define DBG_ASSERT( expr ) \
 { \
     if ( !(expr) ) { \
@@ -115,6 +126,7 @@ extern void NulFunction( unsigned long dwDebugChannelsBitmap, const char * lpszF
 
 inline void DBG_MSG( unsigned long, const TCHAR *, ... ) {}
 inline void DBG_DMP( unsigned long, const char *, int ) {}
+inline void DBG_DMPBIN( unsigned long, unsigned, const char *, int ) {}
 
 
 #else
@@ -131,6 +143,7 @@ inline void DBG_DMP( unsigned long, const char *, int ) {}
 #define TRACE_MESSAGE_NESTED( dwDebugChannels, Nest, Prefix, hWnd, uiMsg, wParam, lParam )
 #define SET_TRACE_LEVEL( dwDebugBitmap )
 #define DBG_DMP( dwDebugBitmap, lpucBuffer, uBufferLen )
+#define DBG_DMPBIN( dwDebugBitmap, bytesperline, lpucBuffer, uBufferLen )
 #define DBG_ASSERT( expr )
 #define SET_TRACE_OUTPUT( printfunc )
 

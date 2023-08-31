@@ -17,7 +17,7 @@ bool bWrite( const void * data, size_t len, FILE * pFile ) {
 }
 
 
-int WriteCharset( FILE * pFile, Font * pFont ) {
+int WriteCharset( FILE * pFile, ywFont * pFont ) {
 
     unsigned u;
 
@@ -45,7 +45,7 @@ int WriteCharset( FILE * pFile, Font * pFont ) {
 
     }
 
-    for ( Font::Faces::iterator pFace = pFont->glyphs.begin(); pFace != pFont->glyphs.end(); pFace++ ) {
+    for ( auto pFace = pFont->glyphs.begin(); pFace != pFont->glyphs.end(); pFace++ ) {
 
         //unsigned short u = (unsigned)pFace->second.pFace->size();
         unsigned short uscanlinecount = (unsigned)( pFace->second->cx * pFace->second->cy ) * uDataSize;
@@ -101,7 +101,7 @@ int WriteCharset( FILE * pFile, Font * pFont ) {
 }
 
 
-int WriteFontData( FILE * pFile, Font * pFont, unsigned uHeaderSize ) {
+int WriteFontData( FILE * pFile, ywFont * pFont, unsigned uHeaderSize ) {
 
     if (
 

@@ -700,27 +700,29 @@ void onNativeWindowRedrawNeeded( ANativeActivity * activity, ANativeWindow * pWn
 }
 
 
-int droidInit( struct android_app * app, const char ** ppszPath ) {
+int ywDisplay::Init( int cx, int cy, EventQ & Q, int argc, char * argv[], LPARAM lParam ) {
 
-    g.app             = app;
-    app->userData     = &g;
+    struct android_app * app = reinterpret_cast<struct android_app *>( lParam );
 
-    app->onAppCmd     = Android::HandleCmd;
-    app->onInputEvent = Android::HandleInput;
+    g.app                    = app;
+    app->userData            = &g;
+
+    app->onAppCmd            = Android::HandleCmd;
+    app->onInputEvent        = Android::HandleInput;
 
     app->activity->callbacks->onNativeWindowResized      = onNativeWindowResized;
     app->activity->callbacks->onNativeWindowRedrawNeeded = onNativeWindowRedrawNeeded;
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "notification functions registered" ) );
 
-    *ppszPath = app->activity->internalDataPath;
+//    *ppszPath = app->activity->internalDataPath;
 
     return 0;
 
 }
 
 
-void droidDestroy( struct android_app * app ) {
+void ywDisplay::Destroy( void ) {
 }
 
 

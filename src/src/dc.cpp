@@ -3,7 +3,7 @@
 #include "ywin.h"
 
 
-DC::DC( IWindow * pFromWnd, Region * pRegion, IBitmap * pixels, Flags uflags ) {
+DC::DC( IWindow * pFromWnd, ywRegion * pRegion, IBitmap * pixels, Flags uflags ) {
 
     flags           = uflags;
 
@@ -34,7 +34,7 @@ DC::DC( IWindow * pFromWnd, Region * pRegion, IBitmap * pixels, Flags uflags ) {
 }
 
 
-int DC::AddIntersection( Region * pRgn ) {
+int DC::AddIntersection( ywRegion * pRgn ) {
 
     if ( NULL == pRgn ) {
 
@@ -54,7 +54,7 @@ int DC::AddIntersection( Region * pRgn ) {
 }
 
 
-int DC::AddExclusion( Region * pRgn ) {
+int DC::AddExclusion( ywRegion * pRgn ) {
 
     if ( NULL == pRgn ) {
 
@@ -192,11 +192,13 @@ void DC::paint( const POINT & pt, COLORREF c ) {
 
     }
 
+#if 0
     if ( pWnd->pWndPointObscured( ptScreen ) ) {
 
         return;
 
     }
+#endif
 
     if ( WS_CHILD & pWnd->dwStyle ) {
 
@@ -276,7 +278,7 @@ bool DC::SetPixel( POINT pt, COLORREF c, COLORREF /* pixel */ ) {
 
     if ( DC::Memory & flags ) {
 
-//        return pPixels->SetPixel( pt, c );
+        return pPixels->SetPixel( pt, c );
 
     }
 
@@ -314,7 +316,7 @@ void DC::SetSize( unsigned cx, unsigned cy ) {
 }
 
 
-void DC::SetShape( Region * pRegion ) {
+void DC::SetShape( ywRegion * pRegion ) {
 
     if ( NULL == pRegion ) {
 

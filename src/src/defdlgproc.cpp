@@ -49,6 +49,8 @@ void Dialog::OnKeydown( HWND hDlg, UINT vk, BOOL fDown, int cRepeat, UINT flags 
         case VK_BACKTAB: /* User pressed SHIFT-TAB */
         case VK_TAB: /* User pressed TAB */
 
+            DBG_MSG( DBG_GENERAL_INFORMATION, "At tabstop %lX, Looking for next tabstop", GetFocus() );
+
             if (
 
             ( NULL != ( hCtlWnd = (HWND)GetNextTabstop( reinterpret_cast<LPWindow>( hDlg ), g.pFocusWnd, VK_TAB == vk ) ) ) ||
@@ -56,6 +58,7 @@ void Dialog::OnKeydown( HWND hDlg, UINT vk, BOOL fDown, int cRepeat, UINT flags 
 
             ) {
 
+                DBG_MSG( DBG_GENERAL_INFORMATION, "Go to next tabstop %lX", hCtlWnd );
                 SetFocus( hCtlWnd );
 
             }
@@ -63,9 +66,9 @@ void Dialog::OnKeydown( HWND hDlg, UINT vk, BOOL fDown, int cRepeat, UINT flags 
 
         case VK_RETURN: {
 
-                Window * pWnd;
+                ywWindow * pWnd;
 
-                pWnd = reinterpret_cast<Window *>( GetFocus() );
+                pWnd = reinterpret_cast<ywWindow *>( GetFocus() );
 
                 if ( NULL != pWnd ) {
 

@@ -375,11 +375,11 @@ bool Combobox::OnEraseBackground( HWND hWnd, HDC hDC ) {
 
     SolidBrush brBackground( SysColorWindow.GetColor(), true );
     SolidBrush brSelection( SysColorHighLight.GetColor(), true );
-    
+
     LONG Y = 0;
 
     ItemList::size_type Item = 0;
-    
+
     for ( ; Y < r.bottom; Item++ ) {
 
         if ( Item < items.size() ) {
@@ -444,7 +444,13 @@ void Combobox::OnLButtonDown( HWND hWnd, BOOLEAN bDblClick, int userx, int usery
 
         if ( PtInRect( &rItem, pt ) ) {
 
-            /* int iRet = */ ComboBox_SetCurSel( hWnd, (int)uItem );
+            int iRet = ComboBox_SetCurSel( hWnd, (int)uItem );
+
+            if ( ( CB_ERR == iRet ) || ( -1 == iRet ) ) {
+
+                DBG_MSG( DBG_ERROR, TEXT( "ERROR SETTING SELECTION IN COMBOBOX TO ITEM %u" ), uItem );
+
+            }
 
         }
 

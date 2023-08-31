@@ -3,7 +3,7 @@
 #include "ywin.h"
 
 
-int PopulateDialogFromTemplate( HINSTANCE hInst, Window * pDlg, const DLGTEMPLATE * pDlgHeader, const UTF_16 * p ) {
+int PopulateDialogFromTemplate( HINSTANCE hInst, ywWindow * pDlg, const DLGTEMPLATE * pDlgHeader, const UTF_16 * p ) {
 
 //    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "extra word: %X" ), *p );
 
@@ -21,7 +21,7 @@ int PopulateDialogFromTemplate( HINSTANCE hInst, Window * pDlg, const DLGTEMPLAT
 
         const UTF_16 * pParams = NULL;
 
-        /* Data for controls starts on a DWORD-aligned boundary, so adjust p if necessary */
+/*
         switch( (unsigned long)p % sizeof( uint32_t ) ) {
 
             case 0: DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "ON boundary" ) ); break;
@@ -30,10 +30,11 @@ int PopulateDialogFromTemplate( HINSTANCE hInst, Window * pDlg, const DLGTEMPLAT
             case 3: DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "offset 3"    ) ); break;
 
         }
-
+*/
+        /* Data for controls starts on a DWORD-aligned boundary, so adjust p if necessary */
         if ( 0 != ( (unsigned long)p % sizeof( unsigned ) ) ) {
 
-            DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "p is already aligned on a WORD boundary, so to make it DWORD aligned, we only need to increment it to the next WORD" ) );
+//            DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "p is already aligned on a WORD boundary, so to make it DWORD aligned, we only need to increment it to the next WORD" ) );
             p++;
 
         }
@@ -183,7 +184,7 @@ int PopulateDialogFromTemplate( HINSTANCE hInst, Window * pDlg, const DLGTEMPLAT
 }
 
 
-Window * CreateDialogObject( HINSTANCE hInst, LPCTSTR resname, HWND hParentWnd, DLGPROC bDlgProc, LPARAM lParam ) {
+ywWindow * CreateDialogObject( HINSTANCE hInst, LPCTSTR resname, HWND hParentWnd, DLGPROC bDlgProc, LPARAM lParam ) {
 
     HRSRC hRes = FindResource( hInst, resname, RT_DIALOG );
 
@@ -369,7 +370,7 @@ Window * CreateDialogObject( HINSTANCE hInst, LPCTSTR resname, HWND hParentWnd, 
 }
 
 
-int NativePopulateDialogFromTemplate( HINSTANCE hInst, Window * pDlg, const DLGTEMPLATE * pDlgHeader, const UTF_16 * p ) {
+int NativePopulateDialogFromTemplate( HINSTANCE hInst, ywWindow * pDlg, const DLGTEMPLATE * pDlgHeader, const UTF_16 * p ) {
 
 //    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "extra word: %X" ), *p );
 
@@ -415,15 +416,18 @@ int NativePopulateDialogFromTemplate( HINSTANCE hInst, Window * pDlg, const DLGT
 }
 
 
-static bool InitDialog( Window * pWnd, LPARAM lParam, bool bForceVisible ) {
+static bool InitDialog( ywWindow * pWnd, LPARAM lParam, bool bForceVisible ) {
 
-    IWindow * pTabWnd = IWindow::GetTabstop( pWnd, true );
+    IWindow * pTabStopWnd = IWindow::GetTabstop( pWnd, true );
 
+#if 0
+    DBG_MSG( DBG_GENERAL_INFORMATION, "TURNING OFF VISIBILITY FOR THIS WINDOW %lX", pWnd );
     /* Turn off WS_VISIBLE in case any drawing code is called. */
     DWORD dwOldStyle = pWnd->dwStyle;
     pWnd->dwStyle = ( ( ~WS_VISIBLE ) & pWnd->dwStyle );
+#endif
 
-    BOOLEAN bRet = FORWARD_WM_INITDIALOG( (HWND)pWnd, (HWND)pTabWnd, lParam, SendMessage );
+    BOOLEAN bRet = FORWARD_WM_INITDIALOG( (HWND)pWnd, (HWND)pTabStopWnd, lParam, SendMessage );
 
     if ( ( NULL != pWnd->pbClosed ) && *pWnd->pbClosed ) {
 
@@ -437,7 +441,7 @@ static bool InitDialog( Window * pWnd, LPARAM lParam, bool bForceVisible ) {
 
         /* Find and set focus to the first control in the dialog box that is VISIBLE, NOT disabled, and that has the WS_TABSTOP style. */
 
-        IWindow * pTabStopWnd = IWindow::GetTabstop( pWnd, true );
+//        pTabStopWnd = IWindow::GetTabstop( pWnd, true );
 
         if ( NULL != pTabStopWnd ) {
 
@@ -447,16 +451,20 @@ static bool InitDialog( Window * pWnd, LPARAM lParam, bool bForceVisible ) {
 
     } /* else the user set the focus */
 
+#if 0
     /* Restore original style bits. */
     pWnd->dwStyle = dwOldStyle;
 
     if ( bForceVisible || ( WS_VISIBLE & pWnd->dwStyle ) ) {
+
+        DBG_MSG( DBG_GENERAL_INFORMATION, "TURNING ON VISIBILITY FOR THIS WINDOW %lX", pWnd );
 
         /* Make sure style reflects the fact the window is going to be visible */
         pWnd->dwStyle |= WS_VISIBLE;
         RedrawWindow( (HWND)pWnd, NULL, NULL, RDW_ALLCHILDREN | RDW_ERASE | RDW_FRAME | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
 
     }
+#endif
 
     return true;
 
@@ -465,13 +473,21 @@ static bool InitDialog( Window * pWnd, LPARAM lParam, bool bForceVisible ) {
 
 HWND CreateDialogParam( HINSTANCE hInstance, LPCTSTR pDlgID, HWND hParentWnd, DLGPROC bDlgProc, LPARAM lParam ) {
 
-    Window * pWnd = CreateDialogObject( hInstance, pDlgID, hParentWnd, bDlgProc, lParam );
+    DBG_MSG( DBG_WIN32API, "Entering CreateDialogParam" );
+
+    ywWindow * pWnd = CreateDialogObject( hInstance, pDlgID, hParentWnd, bDlgProc, lParam );
 
     if ( NULL == pWnd ) {
 
+        DBG_MSG( DBG_WIN32API, "Exiting CreateDialogParam" );
         return NULL;
 
     }
+
+    DBG_MSG( DBG_GENERAL_INFORMATION, "TURNING OFF VISIBILITY FOR THIS WINDOW %lX", pWnd );
+    /* Turn off WS_VISIBLE in case any drawing code is called. */
+    DWORD dwOldStyle = pWnd->dwStyle;
+    pWnd->dwStyle = ( ( ~WS_VISIBLE ) & pWnd->dwStyle );
 
     BOOLEAN bClosed;
 
@@ -482,12 +498,24 @@ HWND CreateDialogParam( HINSTANCE hInstance, LPCTSTR pDlgID, HWND hParentWnd, DL
     if ( ! InitDialog( pWnd, lParam, false ) ) {
 
         DestroyWindow( (HWND)pWnd );
+        DBG_MSG( DBG_WIN32API, "Exiting CreateDialogParam" );
         return NULL;
 
     }
 
     pWnd->pbClosed = NULL;
 
+    if ( WS_VISIBLE & dwOldStyle ) {
+
+        DBG_MSG( DBG_GENERAL_INFORMATION, "TURNING ON VISIBILITY FOR THIS WINDOW %lX", pWnd );
+
+        /* Make sure style reflects the fact the window is going to be visible */
+        pWnd->dwStyle |= WS_VISIBLE;
+        RedrawWindow( (HWND)pWnd, NULL, NULL, RDW_ALLCHILDREN | RDW_ERASE | RDW_FRAME | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
+
+    }
+
+    DBG_MSG( DBG_WIN32API, "Exiting CreateDialogParam" );
     return (HWND)pWnd;
 
 }
@@ -652,7 +680,7 @@ HWND CreateDialogIndirect( HINSTANCE hInst, LPCDLGTEMPLATE pDlgHeader, HWND hPar
 }
 
 
-static INT_PTR DoModal( Window * pWnd, LPARAM lParam ) {
+static INT_PTR DoModal( ywWindow * pWnd, LPARAM lParam ) {
 
     IWindow * pParentPopupWnd = NULL;
 
@@ -671,6 +699,10 @@ static INT_PTR DoModal( Window * pWnd, LPARAM lParam ) {
     MSG Msg;
 
     int iRet = 0;
+
+    /* Make certain the dialog will be visible */
+    pWnd->dwStyle |= WS_VISIBLE;
+    RedrawWindow( (HWND)pWnd, NULL, NULL, RDW_ALLCHILDREN | RDW_ERASE | RDW_FRAME | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
 
     for ( ; ! *pWnd->pbClosed; ) {
 
@@ -719,7 +751,7 @@ INT_PTR DialogBoxIndirectParam( HINSTANCE hInst, LPCDLGTEMPLATE pDlgHeader, HWND
 
     HWND hOldFocusWnd = GetFocus();
 
-    Window * pWnd = reinterpret_cast<Window *>( CreateDialogIndirectParam( hInst, pDlgHeader, hParentWnd, bDlgProc, lParam ) );
+    ywWindow * pWnd = reinterpret_cast<ywWindow *>( CreateDialogIndirectParam( hInst, pDlgHeader, hParentWnd, bDlgProc, lParam ) );
 
     if ( NULL == pWnd ) {
 
@@ -729,14 +761,6 @@ INT_PTR DialogBoxIndirectParam( HINSTANCE hInst, LPCDLGTEMPLATE pDlgHeader, HWND
 
     pWnd->pbClosed     = &bClosed;
     pWnd->piDlgRetCode = &iDlgRet;
-
-    if ( ! ( WS_VISIBLE & pWnd->dwStyle ) ) {
-
-        /* Make certain the dialog will be visible */
-        pWnd->dwStyle |= WS_VISIBLE;
-        RedrawWindow( (HWND)pWnd, NULL, NULL, RDW_ALLCHILDREN | RDW_ERASE | RDW_FRAME | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
-
-    }
 
     DoModal( pWnd, lParam );
 
@@ -768,7 +792,7 @@ INT_PTR DialogBoxParam( HINSTANCE hInst, LPCTSTR pDlgID, HWND hParentWnd, DLGPRO
 
     HWND hOldFocusWnd = GetFocus();
 
-    Window * pWnd = CreateDialogObject( hInst, pDlgID, hParentWnd, bDlgProc, lParam );
+    ywWindow * pWnd = CreateDialogObject( hInst, pDlgID, hParentWnd, bDlgProc, lParam );
 
     if ( NULL == pWnd ) {
 
@@ -795,6 +819,12 @@ INT_PTR DialogBoxParam( HINSTANCE hInst, LPCTSTR pDlgID, HWND hParentWnd, DLGPRO
     }
 
     DestroyWindow( (HWND)pWnd );
+
+    if ( IsWindow( hParentWnd ) ) {
+
+        RedrawWindow( hParentWnd, 0, 0, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_INTERNALPAINT | RDW_ALLCHILDREN );
+
+    }
 
     return iDlgRet;
 

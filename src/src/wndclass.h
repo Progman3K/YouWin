@@ -12,10 +12,6 @@
 #include "brush.h"
 
 
-/* Special class style that indicates a class owned by the system, not the user, can not be passed in by the user */
-#define CS_SYSTEM      0x10000000
-
-
 class WindowClass {
 
     public:
@@ -80,9 +76,9 @@ class WindowClass {
 
         }
 
-        virtual class Window * Allocate( HWND hParent, LPCTSTR pWindowName, int x, int y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hInst, LPVOID pParam ) = 0;
+        virtual class ywWindow * Allocate( HWND hParent, LPCTSTR pWindowName, int x, int y, unsigned int count_x, unsigned int count_y, HMENU MenuOrID, DWORD Style, DWORD ExtStyle, WNDPROC wndproc, HINSTANCE hInst, LPVOID pParam ) = 0;
 
-        virtual void Discard( class Window * ) = 0;
+        virtual void Discard( class ywWindow * ) = 0;
 
         TSTRING      ClassName;
 

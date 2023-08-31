@@ -10,7 +10,7 @@ class iOSKeyMouse : public Handler {
 
     public:
 
-        Region updates;
+        ywRegion updates;
 
         bool SendUpdates( void );
 

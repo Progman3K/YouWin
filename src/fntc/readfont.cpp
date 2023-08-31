@@ -58,7 +58,7 @@ bool bReadValue( FILE * pFile, unsigned long int * lNum, int iBase ) {
 }
 
 
-int ReadCharset( FILE * pFile, Font * pFont ) {
+int ReadCharset( FILE * pFile, ywFont * pFont ) {
 
     char * psz;
     char szLine[4096];
@@ -205,7 +205,7 @@ int ReadCharset( FILE * pFile, Font * pFont ) {
 
         }
 
-        Font::FacePair pair;
+        ywFont::FacePair pair;
 
         pFace->uscanlinecount = pFace->cy;
 

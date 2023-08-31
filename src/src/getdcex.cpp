@@ -6,7 +6,7 @@
 extern "C" HDC GetDC( HWND hWnd ) {
 
     /* Returns a copy of the client area */
-    Window * pWnd;
+    ywWindow * pWnd;
 
     if ( NULL == hWnd ) {
 
@@ -27,7 +27,7 @@ extern "C" HDC GetDC( HWND hWnd ) {
 
     if ( NULL == pWnd ) {
 
-        Region region( 0, 0, GetSystemMetrics( SM_CXSCREEN ), GetSystemMetrics( SM_CYSCREEN ) );
+        ywRegion region( 0, 0, GetSystemMetrics( SM_CXSCREEN ), GetSystemMetrics( SM_CYSCREEN ) );
 
         DC * pDC = new DC( pWnd, &region, NULL, DC::EntireScreen );
 
@@ -50,9 +50,9 @@ extern "C" HDC GetDC( HWND hWnd ) {
 
 extern "C" HDC GetDCEx( HWND hWnd, HRGN hRgn, DWORD flags ) {
 
-    Window * pWnd;
+    ywWindow * pWnd;
     DC *     pDC   = NULL;
-    Region * pRgn  = reinterpret_cast<Region *>( hRgn );
+    ywRegion * pRgn  = reinterpret_cast<ywRegion *>( hRgn );
 
     if ( NULL == hWnd ) {
 
@@ -75,7 +75,7 @@ extern "C" HDC GetDCEx( HWND hWnd, HRGN hRgn, DWORD flags ) {
 
         if ( NULL == pWnd ) {
 
-            Region region( 0, 0, GetSystemMetrics( SM_CXSCREEN ), GetSystemMetrics( SM_CYSCREEN ) );
+            ywRegion region( 0, 0, GetSystemMetrics( SM_CXSCREEN ), GetSystemMetrics( SM_CYSCREEN ) );
 
             pDC = new DC( pWnd, &region, NULL, DC::EntireScreen );
 
@@ -87,7 +87,7 @@ extern "C" HDC GetDCEx( HWND hWnd, HRGN hRgn, DWORD flags ) {
 
         } else {
 
-            Region region( 0, 0, pWnd->cx, pWnd->cy );
+            ywRegion region( 0, 0, pWnd->cx, pWnd->cy );
 
             pDC = new DC( pWnd, &region, NULL, DC::EntireWindow );
 
@@ -135,7 +135,7 @@ extern "C" HDC GetDCEx( HWND hWnd, HRGN hRgn, DWORD flags ) {
 
 HDC CreateCompatibleDC( HDC hDC ) {
 
-    IBitmap * pBMP = Bitmap::alloc( 1, 1, 1, 1, NULL );
+    IBitmap * pBMP = Bitmap::alloc( 1, 1, 1, 32, NULL );
 
     DC * pDC = new DC( NULL, NULL, pBMP, DC::Memory );
 

@@ -418,6 +418,7 @@ extern "C" void DBGTRACE_API traceMSG( unsigned long dwDebugChannelsBitmap, unsi
 
         case WM_NULL:              _tcsncpy( szMsg, TEXT( "WM_NULL" ),            Dim( szMsg ) - 1 ); break;
         case WM_PAINT:             _tcsncpy( szMsg, TEXT( "WM_PAINT" ),           Dim( szMsg ) - 1 ); break;
+        case WM_PARENTNOTIFY:      _tcsncpy( szMsg, TEXT( "WM_PARENTNOTIFY" ),    Dim( szMsg ) - 1 ); break;
         case WM_POWERBROADCAST:    _tcsncpy( szMsg, TEXT( "WM_POWERBROADCAST" ),  Dim( szMsg ) - 1 ); break;
         case WM_QUIT:              _tcsncpy( szMsg, TEXT( "WM_QUIT" ),            Dim( szMsg ) - 1 ); break;
         case WM_RBUTTONDBLCLK:     _tcsncpy( szMsg, TEXT( "WM_RBUTTONDBLCLK" ),   Dim( szMsg ) - 1 ); break;
@@ -485,7 +486,6 @@ extern "C" void DBGTRACE_API traceMSG( unsigned long dwDebugChannelsBitmap, unsi
         case WM_MDIGETACTIVE:      _tcsncpy( szMsg, TEXT( "WM_MDIGETACTIVE" ), Dim( szMsg ) - 1 ); break;
         case WM_MDISETMENU:        _tcsncpy( szMsg, TEXT( "WM_MDISETMENU" ), Dim( szMsg ) - 1 ); break;
         case WM_CHILDACTIVATE:     _tcsncpy( szMsg, TEXT( "WM_CHILDACTIVATE" ), Dim( szMsg ) - 1 ); break;
-        case WM_PARENTNOTIFY:      _tcsncpy( szMsg, TEXT( "WM_PARENTNOTIFY" ), Dim( szMsg ) - 1 ); break;
         case WM_ENTERIDLE:         _tcsncpy( szMsg, TEXT( "WM_ENTERIDLE" ), Dim( szMsg ) - 1 ); break;
         case WM_QUEUESYNC:         _tcsncpy( szMsg, TEXT( "WM_QUEUESYNC" ), Dim( szMsg ) - 1 ); break;
 

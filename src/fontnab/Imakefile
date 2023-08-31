@@ -1,12 +1,18 @@
 
 # /* Build with imake-only */
 
-# 32-bit compilation
-#                   WRC = i686-w64-mingw32-windres
-#                    CC = i686-w64-mingw32-g++
-# 64-bit compilation
-                WRC = x86_64-w64-mingw32-windres
-                CXX = x86_64-w64-mingw32-g++
+#if defined( BUILD_WIN32 )
+                   CC = i686-w64-mingw32-g++
+                  WRC = i686-w64-mingw32-windres
+                  CXX = i686-w64-mingw32-g++
+#endif
+
+#if defined( BUILD_WIN64 )
+                   CC = x86_64-w64-mingw32-g++
+                  WRC = x86_64-w64-mingw32-windres
+                  CXX = x86_64-w64-mingw32-g++
+#endif
+
 /*                CXXLINK = $(CXX) */
              CCLINK = $(CXX)
             INCROOT = .

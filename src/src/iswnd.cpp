@@ -3,9 +3,9 @@
 #include "ywin.h"
 
 
-Window * Window::ToWnd( HWND hWnd, const char * pszFile, unsigned uLine ) {
+ywWindow * ywWindow::ToWnd( HWND hWnd, const char * pszFile, unsigned uLine ) {
 
-    Window * pWnd;
+    ywWindow * pWnd;
 
     if ( ! hWnd ) {
 
@@ -14,7 +14,13 @@ Window * Window::ToWnd( HWND hWnd, const char * pszFile, unsigned uLine ) {
 
     }
 
-    pWnd = reinterpret_cast<Window *>( hWnd );
+    if ( HWND_DESKTOP == hWnd ) {
+
+        hWnd = g.pTopWnd;
+
+    }
+
+    pWnd = reinterpret_cast<ywWindow *>( hWnd );
 
     // Verify signature.
     if ( 0 != pWnd->SigGood() ) {

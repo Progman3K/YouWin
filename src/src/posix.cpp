@@ -21,7 +21,10 @@ HMODULE GetModuleHandle( LPCTSTR lpModuleName ) {
 
 #if defined( ANDROID ) && defined( YOU_WIN_GRAPHICAL )
 void android_main( struct android_app * app ) {
-    const char * pszApp = ""; 
+    LPARAM lParam = reinterpret_cast<LPARAM>( app );
+    int iArgCount = 0;
+    const char * pszApp = "";
+    char ** argv = { 0 };
 #else
 
 #ifdef YOU_WIN_GRAPHICAL
@@ -30,6 +33,7 @@ void android_main( struct android_app * app ) {
 
 extern "C" int iOSMain( iOSApp * app ) {
 
+    LPARAM lParam = reinterpret_cast<LPARAM>( app );
     g.app = app;
     g.iCX = app->cx;
     g.iCY = app->cy;
@@ -39,6 +43,8 @@ extern "C" int iOSMain( iOSApp * app ) {
 #else /* linux/generic gl or Darwin */
 
 int main( int iArgCount, char * argv[] ) {
+
+    LPARAM lParam = 0;
 
 #ifdef UNICODE
 //    TSTRING App;
@@ -52,6 +58,8 @@ int main( int iArgCount, char * argv[] ) {
 
 #else /* TEXT MODE MAIN HERE */
 int main( int iArgCount, char * argv[] ) {
+
+    LPARAM lParam = 0;
 
     char * pszApp = argv[0];
 #endif
@@ -80,24 +88,7 @@ int main( int iArgCount, char * argv[] ) {
 
     }
 
-#ifdef YOU_WIN_TXT
-
-    iRet = TerminalInit();
-
-#else /* YOU_WIN_GRAPHICAL */
-
-
-#ifdef ANDROID
-    iRet = droidInit( app, &pszApp );
-#else
-#if defined( TARGET_OS_MAC ) && TARGET_OS_IPHONE
-    iRet = iOSInit( app );
-#else
-    iRet = GL::glInit( g.iCX, g.iCY, g.Q, iArgCount, argv );
-#endif
-#endif
-
-#endif /* YOU_WIN_GRAPHICAL */
+    iRet = ywDisplay::Init( g.iCX, g.iCY, g.Q, iArgCount, /* reinterpret_cast<const char **>( */ argv /* ) */, lParam );
 
     if ( 0 != iRet ) {
 
@@ -108,6 +99,13 @@ int main( int iArgCount, char * argv[] ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Display layer started" ) );
 
+//    PostRefresh();
+//    RasterUpdate();
+
+    /* Computer platforms use the system window-manager and don't have a YouWin desktop window */
+
+//#if ! defined( YOU_WIN_GRAPHICAL_XWIN )
+
     if ( ( g.pTopWnd = Desktop::Create( 0, TEXT( "DESKTOP" ), TEXT( "" ), WS_VISIBLE, 0, 0, GetSystemMetrics( SM_CXSCREEN ), GetSystemMetrics( SM_CYSCREEN ), NULL, NULL, hYouWinModule, 0 ) ) == NULL ) {
 
         DBG_MSG( DBG_ERROR, TEXT( "FATAL - Error initializing: unable to create desktop window" ) );
@@ -116,6 +114,8 @@ int main( int iArgCount, char * argv[] ) {
     }
 
     RedrawWindow( (HWND)g.pTopWnd, NULL, NULL, RDW_ERASE | RDW_ERASENOW | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
+
+//#endif /* ! YOU_WIN_GRAPHICAL_XWIN */
 
     hInstance = &userresources;
     ResourceList::LoadStaticResources( userresources, USER_RESOURCE_SEGMENT_START, USER_RESOURCE_SEGMENT_SIZE );
@@ -128,14 +128,9 @@ int main( int iArgCount, char * argv[] ) {
 
 Outtahere:
 
-    CloseWindowLib();
+    ywDisplay::Destroy();
 
-#ifdef YOU_WIN_TXT
-    TerminalCleanup();
-#endif
-#if defined( TARGET_OS_MAC ) && TARGET_OS_IPHONE
-    iOSCleanup( app );
-#endif
+    CloseWindowLib();
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "'%s' - Shutdown (%d)" ), lpszApp, iRet );
 

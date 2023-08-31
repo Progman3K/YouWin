@@ -156,6 +156,8 @@
 #define CS_OWNDC                          0x00000020
 #define CS_PARENTDC                       0x00000080
 #define CS_SAVEBITS                       0x00000800
+/* Special class style that indicates a class owned by the system, not the user, can not be passed in by the user */
+#define CS_SYSTEM                         0x10000000
 #define CS_VREDRAW                        0x00000001
 
 #define CSIDL_PERSONAL                    5
@@ -997,6 +999,8 @@
 #define WM_NULL                           0x0000
 
 #define WM_PAINT                          0x000F
+
+#define WM_PARENTNOTIFY                   0x0210
 
 #define WM_POWERBROADCAST                 0x0218
 
@@ -1916,6 +1920,8 @@ UINT GetDlgItemText( HWND hWnd, int iCtrlID, LPTSTR lpString, int nMaxCount );
 UINT GetDoubleClickTime( void );
 
 HWND GetFocus( void );
+
+DWORD GetLastError( void );
 
 int GetMessage( MSG * pMsg, HWND hWnd, UINT ufirst, UINT ulast );
 

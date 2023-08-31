@@ -111,7 +111,7 @@ BOOL DestroyCursor( HCURSOR h ) {
 
     }
 
-    delete reinterpret_cast<Cursor *>( h );
+    delete reinterpret_cast<ywCursor *>( h );
 
     return true;
 

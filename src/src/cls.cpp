@@ -5,7 +5,7 @@
 
 void Cls( HWND hWnd ) {
 
-    IWindow * pWnd = reinterpret_cast<Window *>( hWnd );
+    IWindow * pWnd = reinterpret_cast<IWindow *>( hWnd );
 
     // Check if request to clear the screen.
     if ( ( NULL == hWnd ) || ( HWND_DESKTOP == hWnd ) ) {

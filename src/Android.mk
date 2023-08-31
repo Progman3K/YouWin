@@ -19,6 +19,7 @@ LOCAL_SRC_FILES        := src/ywresource.s \
                           src/com.cpp \
                           src/comboboxwndproc.cpp \
                           src/console.cpp \
+                          src/console_input.cpp \
                           src/dc.cpp \
                           src/defdlgproc.cpp \
                           src/defwndproc.cpp \
@@ -30,9 +31,9 @@ LOCAL_SRC_FILES        := src/ywresource.s \
                           src/enumw.cpp \
                           src/event.cpp \
                           src/eventq.cpp \
+                          src/fillrect.cpp \
                           src/findfile.cpp \
                           src/font.cpp \
-                          src/fillrect.cpp \
                           src/get_topw.cpp \
                           src/getdcex.cpp \
                           src/getmessage.cpp \
@@ -47,11 +48,14 @@ LOCAL_SRC_FILES        := src/ywresource.s \
                           src/is_in.cpp \
                           src/isdialogmsg.cpp \
                           src/iswnd.cpp \
+                          src/ldbitmap.cpp \
                           src/ldcursor.cpp \
                           src/ldicon.cpp \
                           src/ldmenu.cpp \
                           src/ldstring.cpp \
                           src/listboxwndproc.cpp \
+                          src/lxfb.cpp \
+                          src/menu.cpp \
                           src/messagebox.cpp \
                           src/object.cpp \
                           src/open.cpp \
@@ -70,12 +74,14 @@ LOCAL_SRC_FILES        := src/ywresource.s \
                           src/show_win.cpp \
                           src/shgetfolderpath.cpp \
                           src/staticwndproc.cpp \
+                          src/stretchblt.cpp \
                           src/textout.cpp \
                           src/universe.cpp \
                           src/unregisterclass.cpp \
                           src/winapi.cpp \
                           src/windowlong.cpp \
-                          src/wsapi.cpp
+                          src/wsapi.cpp \
+                          src/xwin.cpp
 
 LOCAL_C_INCLUDES       := $(LOCAL_PATH) $(LOCAL_PATH)/include /opt/youwin/include
 

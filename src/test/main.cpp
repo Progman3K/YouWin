@@ -9,13 +9,13 @@
 
 
 int _tWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPTSTR pszCmdLine, int nCmdShow ) {
-#if 0
-    INITCOMMONCONTROLSEX InitCtrlEx;
 
-    InitCtrlEx.dwSize = sizeof( INITCOMMONCONTROLSEX );
-    InitCtrlEx.dwICC  = ICC_PROGRESS_CLASS;
+//    INITCOMMONCONTROLSEX InitCtrlEx;
 
-    InitCommonControlsEx( &InitCtrlEx );
+//    InitCtrlEx.dwSize = sizeof( INITCOMMONCONTROLSEX );
+//    InitCtrlEx.dwICC  = ICC_PROGRESS_CLASS;
+
+//    InitCommonControlsEx( &InitCtrlEx );
 
     LONG lBaseUnits = GetDialogBaseUnits();
 
@@ -26,9 +26,9 @@ int _tWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPTSTR pszCmdLine, int nCmd
         iDlgID = IDD_MAIN_TEXT;
 
     }
-#endif
-    return MessageBox( HWND_DESKTOP, TEXT( "Starting test" ), TEXT( "Test App" ), MB_OK );
-#if 0
+
+//    return MessageBox( HWND_DESKTOP, TEXT( "Starting test" ), TEXT( "Test App" ), MB_OK );
+
     MSG Msg;
 
     Msg.wParam = DialogBoxParam( hInst, MAKEINTRESOURCE( iDlgID ), HWND_DESKTOP, (DLGPROC)CMainWnd::bDlgProc, (LPARAM)0 );
@@ -36,6 +36,6 @@ int _tWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPTSTR pszCmdLine, int nCmd
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Exiting: %d" ), Msg.wParam );
 
     return Msg.wParam;
-#endif
+
 
 }

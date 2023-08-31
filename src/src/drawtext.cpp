@@ -58,7 +58,7 @@ static BOOL txtloop( DC * pDC, POINT & pt, UINT uFlags, UINT uFormat, const RECT
 
                 /* Start a new line */
                 pt.x = pr->left;
-                pt.y += (reinterpret_cast<Font *>(pDC->hFont))->pHdr->uMaxCharHeight;
+                pt.y += (reinterpret_cast<ywFont *>(pDC->hFont))->pHdr->uMaxCharHeight;
                 continue;
 
             }

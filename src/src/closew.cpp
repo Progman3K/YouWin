@@ -10,6 +10,12 @@ HWND WindowFromPoint( POINT pt ) {
 //        return NULL;
 
 //    }
+#if 0
+    for ( auto const x : children ) {
+
+        foo(x);
+
+    }
 
     IWindow * pHighestWindowAboveMe = NULL;
 
@@ -38,13 +44,16 @@ HWND WindowFromPoint( POINT pt ) {
 
     // No visible windows above me obscuring the point.
     return pHighestWindowAboveMe;
+#endif
+
+    return 0;
 
 }
 
 
 unsigned long repaint( RECT & r ) {
 
-    Window * pWnd;
+    ywWindow * pWnd;
     POINT    ptScreen;
     std::unordered_set<HWND> repaint;
 
@@ -58,7 +67,7 @@ unsigned long repaint( RECT & r ) {
 
         for ( ptScreen.x = r.left; ptScreen.x < r.right; ptScreen.x++ ) {
 
-            if ( NULL == ( pWnd = reinterpret_cast<Window *>( WindowFromPoint( ptScreen ) ) ) ) {
+            if ( NULL == ( pWnd = reinterpret_cast<ywWindow *>( WindowFromPoint( ptScreen ) ) ) ) {
 
                 ulMissedPixels++;
                 continue;
@@ -100,7 +109,15 @@ unsigned long repaint( RECT & r ) {
 
 BOOL DestroyWindow( HWND hWnd ) {
 
-    if ( ( NULL == hWnd ) || ( NULL == IsWnd( hWnd ) ) ) {
+    if ( NULL == hWnd ) {
+
+        return false;
+
+    }
+
+    IWindow * pWnd = IsWnd( hWnd );
+
+    if ( NULL == pWnd ) {
 
         return false;
 
@@ -109,6 +126,13 @@ BOOL DestroyWindow( HWND hWnd ) {
     /* Memorize its onscreen placement */
     RECT r;
     GetWindowRect( hWnd, &r );
+
+    /* Reverse-delete child controls first */
+    for ( auto i = pWnd->children.rbegin(); i != pWnd->children.rend(); i++ ) {
+
+        DestroyWindow( *i );
+
+    }
 
     FORWARD_WM_DESTROY( hWnd, SendMessage );
 

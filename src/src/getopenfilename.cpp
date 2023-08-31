@@ -80,8 +80,21 @@ int GetOpenFileNameDlg::SetToFolder( HWND hDlg, LPCTSTR pszFolder ) {
     HWND hEFile     = GetDlgItem( hDlg, IDE_FILENAME );
     HWND hOK        = GetDlgItem( hDlg, IDOK );
 
-    ListBox_ResetContent( hLBFolders );
-    ListBox_ResetContent( hLBFiles );
+    BOOL bRet = ListBox_ResetContent( hLBFolders );
+
+    if ( LB_ERR == bRet ) {
+
+        DBG_MSG( DBG_ERROR, TEXT( "UNABLE TO RESET LISTBOX" ) );
+
+    }
+
+    bRet = ListBox_ResetContent( hLBFiles );
+
+    if ( LB_ERR == bRet ) {
+
+        DBG_MSG( DBG_ERROR, TEXT( "UNABLE TO RESET LISTBOX" ) );
+
+    }
 
     SetWindowText( hEFile, TEXT( "" ) );
 
@@ -153,11 +166,11 @@ int GetOpenFileNameDlg::SetToFolder( HWND hDlg, LPCTSTR pszFolder ) {
 
         if ( S_ISDIR( Stat.st_mode ) ) {
 
-            ListBox_AddString( hLBFolders, pEntry->d_name );
+            iRet = ListBox_AddString( hLBFolders, pEntry->d_name );
 
         } else if ( S_ISREG( Stat.st_mode ) ) {
 
-            ListBox_AddString( hLBFiles, pEntry->d_name );
+            iRet = ListBox_AddString( hLBFiles, pEntry->d_name );
 
         }
 
@@ -288,7 +301,14 @@ void GetOpenFileNameDlg::OnCommand( HWND hDlg, int iID, HWND hCtlWnd, UINT uiNot
 
                 ZeroMemory( szName, sizeof( szName ) );
 
-                ListBox_GetText( hCtlWnd, iIndex, szName );
+                int iLen = ListBox_GetText( hCtlWnd, iIndex, szName );
+
+                if ( ( LB_ERR == iLen ) || ( 0 == iLen ) ) {
+
+                    DBG_MSG( DBG_ERROR, TEXT( "ERROR: COULDN'T RETRIEVE TEXT" ) );
+                    break;
+
+                }
 
                 if ( 0 == _tcscmp( TEXT( ".." ), szName ) ) {
 
@@ -320,18 +340,28 @@ void GetOpenFileNameDlg::OnCommand( HWND hDlg, int iID, HWND hCtlWnd, UINT uiNot
 
                 case LBN_SELCHANGE: {
 
-                    int iIndex = ListBox_GetCurSel( hCtlWnd );
-
                     TCHAR szName[NAME_MAX + 1];
 
                     ZeroMemory( szName, sizeof( szName ) );
 
-                    ListBox_GetText( hCtlWnd, iIndex, szName );
+                    int iIndex = ListBox_GetCurSel( hCtlWnd );
 
-                    SetDlgItemText( hDlg, IDE_FILENAME, szName );
+                    if ( LB_ERR == iIndex ) {
 
-                    Button_Enable( GetDlgItem( hDlg, IDOK ), true );
+                        DBG_MSG( DBG_ERROR, TEXT( "ERROR: COULDN'T GET CURRENT SELECTION" ) );
+                        break;
 
+                    }
+
+                    int iLen = ListBox_GetText( hCtlWnd, iIndex, szName );
+
+                    if ( LB_ERR != iLen ) {
+
+                        SetDlgItemText( hDlg, IDE_FILENAME, szName );
+
+                        Button_Enable( GetDlgItem( hDlg, IDOK ), true );
+
+                    }
                     break;
 
                 }

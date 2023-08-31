@@ -4,9 +4,11 @@
 #define YW_H_GRAPHICAL_H
 
 
+#include <windows.h>
 #include "eventq.h"
 
 
+#if ! defined(  YOU_WIN_TXT )
 #define AVG_CHARACTER_WIDTH     8
 #define AVG_CHARACTER_HEIGHT    16
 
@@ -14,6 +16,8 @@
 #define COLORREF_COLOR_BLUE          RGB(  58, 110, 165 )
 #define COLORREF_COLOR_WHITE         RGB( 255, 255, 255 )
 #define COLORREF_COLOR_GRAY          RGB( 212, 208, 200 )
+#endif
+
 
 #if 0
 #define COLORREF_LIGHTBLUE           RGB(   0, 255, 255 )
@@ -34,45 +38,17 @@
 #endif
 
 
-namespace GL {
+namespace ywDisplay {
 
-#ifndef ANDROID
+    int Init( int cx, int cy, EventQ & Q, int argc, char * argv[], LPARAM lParam );
 
-extern "C" void glutPostRedisplay();
-#ifndef PostRefresh
-#define PostRefresh() GL::glutPostRedisplay()
-#endif
-extern "C" void glutSwapBuffers();
+    void Destroy( void );
 
-#ifdef __DARWIN__
-extern "C" void glutCheckLoop();
-#ifndef RasterUpdate
-#define RasterUpdate() // GL::glutCheckLoop()
-#endif
-#else
-extern "C" void glutMainLoopEvent();
-#ifndef RasterUpdate
-#define RasterUpdate() GL::glutMainLoopEvent()
-#endif
-#endif
-
-int glInit( int cx, int cy, EventQ & Q, int argc, char * argv[] );
-
-void glDestroy( void );
-
-#endif /* ! ANDROID */
-
-void drawscreen( void );
+    void drawscreen( void );
 
 }
 
 
-#ifndef StartPoints
-void StartPoints();
-#endif
-#ifndef EndPoints
-void EndPoints();
-#endif
 
 
 #endif /* YW_H_GRAPHICAL_H */
