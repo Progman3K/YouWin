@@ -1,3 +1,8 @@
+.SUFFIXES: .o .mm
+.mm.o:
+	$(RM) $@
+	$(CXX) -c $(CXXFLAGS) -std=c++17 $(INCLUDES) $(_NOOP_) $*.mm
+
 
 .SUFFIXES: .fnt .tfnt
 .tfnt.fnt:
@@ -16,6 +21,7 @@
 #define IHaveSubdirs
 #define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
 
+            SUBDIRS  += genasm
             SUBDIRS  += fntc
 
 /*                CC  = CplusplusCmd */
@@ -99,7 +105,6 @@
                         src/object.cpp \
                         src/open.cpp \
                         src/openw.cpp \
-                        src/osx.cpp \
                         src/pen.cpp \
                         src/posix.cpp \
                         src/postmessage.cpp \
@@ -121,8 +126,8 @@
                         src/wsapi.cpp \
                         src/xwin.cpp
 
-#if defined( __APPLE_CC__ )
-                SRCS += src/shgetfolderpath.mm
+#ifdef YOU_WIN_GRAPHICAL_OSX
+                SRCS += src/shgetfolderpath.mm src/osx.mm
 #else
                 SRCS += src/shgetfolderpath.cpp
 #endif
@@ -151,7 +156,7 @@ src/ywresource.s: ywresource.res
 
 
 
-            CXXFLAGS += -Wall -std=c++20
+            CXXFLAGS += -Wall -std=c++17
 #ifndef BUILD_WIN32
             /* The compiler warns that all code is relocatable anyway. */
             CXXFLAGS += -fPIC

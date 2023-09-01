@@ -6,7 +6,7 @@
 #include "object.h"
 
 
-class ywRegion : public std::vector<RECT>, public Object {
+class ywRegion : public std::vector<RECT>, public ywObject {
 
 
     public:

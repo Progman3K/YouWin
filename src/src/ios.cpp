@@ -1,10 +1,10 @@
+#if defined( YOU_WIN_GRAPHICAL_OSX )
 
 
+//#include "ywin.h"
 
-#include "ywin.h"
 
-
-#if defined(__APPLE__)
+#include "apple.h"
 
 
 static iOSKeyMouse * pInput = NULL;
@@ -300,4 +300,4 @@ void ywDisplay::Destroy( void ) {
 }
 
 
-#endif /* __APPLE__ */
+#endif /* YOU_WIN_GRAPHICAL_OSX */

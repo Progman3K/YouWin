@@ -1,20 +1,45 @@
 
 
-#include "ywin.h"
+//#include "ywin.h"
 
 
 #if defined( YOU_WIN_GRAPHICAL ) && defined( YOU_WIN_GRAPHICAL_OSX )
 
 
+#include <map>
+#include <string>
+
+
+#include <winuser.h>
+#include <ASCII.h>
+
+
+// THESE DEFINITIONS ARE COPIED FROM WINDOWS.H TEMPORARILY UNTIL I FIGURE OUT HOW TO PREVENT SYMBOL COLLISIONS
+
+#ifdef UNICODE
+#ifndef TEXT
+#define TEXT(string)                      L##string
+#endif
+#else
+#ifndef TEXT
+#define TEXT(string)                      string
+#endif
+#endif
+#define _T(x)                             TEXT(x)
+
+typedef int SOCKET;
+typedef unsigned short WORD;
+
+///////////////////////////////////////////////////////////////////////
+
 #import <Cocoa/Cocoa.h>
 #import <CoreServices/CoreServices.h>
 
-
+#include <DbgTrace.h>
 #include <osxywapp.h>
-
+#include <wsanotif.h>
 
 static osx_ywapp *  pApp = NULL;
-
 
 typedef std::pair <SOCKET, CFSocketRef> SocketRefSelectPair;
 typedef std::map <SOCKET, CFSocketRef> SocketRefSelectList;
@@ -29,7 +54,7 @@ typedef std::map <SOCKET, CFRunLoopSourceRef> RunLoopSourceRefSelectList;
 RunLoopSourceRefSelectList RunLoopSourceRefs;
 
 
-static LPCTSTR FD_EVENTS( WORD wEventCode, LPTSTR lpszEvents ) {
+static const TCHAR * FD_EVENTS( WORD wEventCode, char * lpszEvents ) {
 
     strcpy( lpszEvents, "" );
 
@@ -75,7 +100,7 @@ static LPCTSTR FD_EVENTS( WORD wEventCode, LPTSTR lpszEvents ) {
 }
 
 
-static LPCTSTR NSKeyMak( NSUInteger flags ) {
+static const TCHAR * NSKeyMak( NSUInteger flags ) {
 
     static TCHAR szKeyMask[256];
 
@@ -83,49 +108,49 @@ static LPCTSTR NSKeyMak( NSUInteger flags ) {
 
     if ( flags & NSAlphaShiftKeyMask ) {
 
-        strncat( szKeyMask, " NSAlphaShiftKeyMask", Dim( szKeyMask ) - 1 );
+        strncat( szKeyMask, " NSAlphaShiftKeyMask", ARRAY_SIZE( szKeyMask ) - 1 );
 
     }
 
     if ( flags & NSShiftKeyMask ) {
 
-        strncat( szKeyMask, " NSShiftKeyMask", Dim( szKeyMask ) - 1 );
+        strncat( szKeyMask, " NSShiftKeyMask", ARRAY_SIZE( szKeyMask ) - 1 );
 
     }
 
     if ( flags & NSControlKeyMask ) {
 
-        strncat( szKeyMask, " NSControlKeyMask", Dim( szKeyMask ) - 1 );
+        strncat( szKeyMask, " NSControlKeyMask", ARRAY_SIZE( szKeyMask ) - 1 );
 
     }
 
     if ( flags & NSAlternateKeyMask ) {
 
-        strncat( szKeyMask, " NSAlternateKeyMask", Dim( szKeyMask ) - 1 );
+        strncat( szKeyMask, " NSAlternateKeyMask", ARRAY_SIZE( szKeyMask ) - 1 );
 
     }
 
     if ( flags & NSCommandKeyMask ) {
 
-        strncat( szKeyMask, " NSCommandKeyMask", Dim( szKeyMask ) - 1 );
+        strncat( szKeyMask, " NSCommandKeyMask", ARRAY_SIZE( szKeyMask ) - 1 );
 
     }
 
     if ( flags & NSNumericPadKeyMask ) {
 
-        strncat( szKeyMask, " NSNumericPadKeyMask", Dim( szKeyMask ) - 1 );
+        strncat( szKeyMask, " NSNumericPadKeyMask", ARRAY_SIZE( szKeyMask ) - 1 );
 
     }
 
     if ( flags & NSHelpKeyMask ) {
 
-        strncat( szKeyMask, " NSHelpKeyMask", Dim( szKeyMask ) - 1 );
+        strncat( szKeyMask, " NSHelpKeyMask", ARRAY_SIZE( szKeyMask ) - 1 );
 
     }
 
     if ( flags & NSFunctionKeyMask ) {
 
-        strncat( szKeyMask, " NSFunctionKeyMask", Dim( szKeyMask ) - 1 );
+        strncat( szKeyMask, " NSFunctionKeyMask", ARRAY_SIZE( szKeyMask ) - 1 );
 
     }
 
@@ -140,7 +165,7 @@ static LPCTSTR NSKeyMak( NSUInteger flags ) {
 }
 
 
-static LPCTSTR kCFSocketEvents( CFOptionFlags flags, LPTSTR lpszEvents ) {
+static const TCHAR * kCFSocketEvents( CFOptionFlags flags, TCHAR * lpszEvents ) {
 
     strcpy( lpszEvents, "" );
 
@@ -429,7 +454,7 @@ static void PostKeyMsg( bool bUp, NSEvent * event, EventQ * pQ ) {
         case NSPageUpFunctionKey:     vKey = VK_PRIOR;  break;
         case NSPageDownFunctionKey:   vKey = VK_NEXT;   break;
 
-        case CR:                      vKey = VK_RETURN; break;
+        case CARRIAGERETURN:          vKey = VK_RETURN; break;
         case DEL:                     vKey = VK_BACK;   break;
         case ESC:                     vKey = VK_ESCAPE; break;
         case ' ':                     vKey = VK_SPACE;  break;

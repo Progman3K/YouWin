@@ -176,7 +176,7 @@ class ResIcon : public IBitmap {
 };
 
 
-class Icon : public Object {
+class Icon : public ywObject {
 
     void _create( const ResourceList * pResList, const Resource * pRes );
 

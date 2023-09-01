@@ -5,7 +5,7 @@
 #include "object.h"
 
 
-class CFindFirst : public Object {
+class CFindFirst : public ywObject {
 
     public:
 

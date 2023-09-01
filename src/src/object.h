@@ -50,7 +50,7 @@ typedef enum {
 
     OBJECT_TYPE_RESOURCE
 
-} ObjectType;
+} ywObjectType;
 
 
 class IObject {
@@ -59,33 +59,33 @@ class IObject {
 
         virtual ~IObject() {}
 
-        virtual ObjectType type() = 0;
+        virtual ywObjectType type() = 0;
 
 };
 
 
-class Object : public IObject {
+class ywObject : public IObject {
 
-        ObjectType uType;
+        ywObjectType uType;
 
     public:
 
         unsigned uLockingCount;
 
 
-        Object( void ) {
+        ywObject( void ) {
 
             uLockingCount = 0;
 
         }
 
-        ObjectType type( void ) /* override */ {
+        ywObjectType type( void ) /* override */ {
 
             return uType;
 
         }
 
-        void setType( ObjectType typ ) {
+        void setType( ywObjectType typ ) {
 
             uType = typ;
 

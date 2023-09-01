@@ -8,8 +8,8 @@
 #include "ywnativeapi.h"
 
 
-#define LoadResource YWLoadResource
-#include <windows.h>
+//#define LoadResource YWLoadResource
+//#include <windows.h>
 
 
 typedef struct {

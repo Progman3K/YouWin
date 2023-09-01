@@ -2,12 +2,12 @@
 .SUFFIXES: .o .cpp
 .cpp.o:
 	$(RM) $@
-	$(CXX) -c $(CXXFLAGS) -std=c++20 $(INCLUDES) $(_NOOP_) $*.cpp
+	$(CXX) -c $(CXXFLAGS) -std=c++17 $(INCLUDES) $(_NOOP_) $*.cpp
 
 
-           CFLAGS  = -features=zla -std=c++20
-          CXXFLAGS = -Wall -features=zla -std=c++20
-         LDOPTIONS = -features=zla -std=c++20
+###           CFLAGS  = -features=zla -std=c++20
+          CXXFLAGS = -Wall -features=zla
+         LDOPTIONS = -features=zla
             LDLIBS =
   EXTRA_LOAD_FLAGS =
 
@@ -29,7 +29,7 @@
 
               OBJS = $(SRCS:.cpp=.o)
 
-          CXXFLAGS += -Wall -std=c++20
+          CXXFLAGS += -Wall -std=c++17
 
             /* fix certain linker problems by using the same compiler (c++ hopefully) for everything. */
                 CC = $(CXX) 

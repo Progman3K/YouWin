@@ -8,7 +8,7 @@
 #include "resource.h"
 
 
-class ywCursor : public Object {
+class ywCursor : public ywObject {
 
     public:
 

@@ -1,12 +1,12 @@
 # The following directive works for most assemblers
-.section .rodata
+#.section .text
 
 .global _binary_ywresource_res
 .global _binary_ywresource_res_size
 
 # On OSX, if the directive above fails, comment it.
 # and uncomment the following line
-#.section __DATA, __const
+.section __DATA, __const
 
 #
 .balign 4

@@ -22,13 +22,5 @@ int iOSCleanup( iOSApp * );
 void displayKeyboard( iOSApp *, bool );
 #endif
 
-// TARGET_OS_EMBEDDED TARGET_OS_MAC TARGET_OS_UNIX TARGET_OS_WIN32
-
-#ifdef __DARWIN__
-extern "C" int OSXGetMessage( class EventQ * pQ, struct timeval * ptimeout );
-extern "C" int OSXAddAsyncSelectSocket( SOCKET s, long lEvent );
-extern "C" int OSXRemoveAsyncSelectSocket( SOCKET s );
-#endif
-
 
 #endif /* __H_APPLE_H__ */

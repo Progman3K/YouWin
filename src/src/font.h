@@ -115,7 +115,7 @@ typedef struct PACKED tagFont_Header {
 } Font_Header;
 
 
-class ywFont : public Object {
+class ywFont : public ywObject {
 
     chardef controlchar;
 

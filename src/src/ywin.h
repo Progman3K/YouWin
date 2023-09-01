@@ -60,17 +60,14 @@
 #include <libgen.h>
 
 
-#if defined(YOU_WIN_GRAPHICAL_OSX)
-#include "apple.h"
-#endif
-
 #include "graphical.h"
 
 
-#include "text.h"
-#include "lxfb.h"
-#include "xwin.h"
 #include "gl.h"
+#include "ios.h"
+#include "lxfb.h"
+#include "text.h"
+#include "xwin.h"
 
 
 #ifdef ANDROID

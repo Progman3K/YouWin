@@ -5,7 +5,7 @@
 
 BOOL CloseHandle( HANDLE h ) {
 
-    class Object * p = (class Object *)h;
+    ywObject * p = (ywObject *)h;
 
     switch( p->type() ) {
 

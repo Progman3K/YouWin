@@ -5,7 +5,7 @@
 #include "object.h"
 
 
-class CEvent : public Object {
+class CEvent : public ywObject {
 
     public:
 

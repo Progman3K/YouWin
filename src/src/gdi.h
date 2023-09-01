@@ -5,7 +5,7 @@
 #include "object.h"
 
 
-class GDIObject : public Object {
+class GDIObject : public ywObject {
 
     public:
 

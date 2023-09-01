@@ -47,7 +47,7 @@ typedef struct tagResourceId {
 } ResourceId;
 
 
-class Resource : public Object {
+class Resource : public ywObject {
 
     public:
 
@@ -132,10 +132,10 @@ class ResourceLocator {
     public:
 
         /* The three things that define the resource: */
-        HMODULE     hModule;    // Resource located in.
-        ObjectType  uType;
-        long        lOffset;    // Location inside module.
-        unsigned    uSize;      // Size in bytes of the resource.
+        HMODULE       hModule;    // Resource located in.
+        ywObjectType  uType;
+        long          lOffset;    // Location inside module.
+        unsigned      uSize;      // Size in bytes of the resource.
 
 
 };

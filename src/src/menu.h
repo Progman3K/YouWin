@@ -123,7 +123,7 @@ typedef struct __attribute__ ((__packed__)) {
 
 
 
-class Menu : public Object {
+class Menu : public ywObject {
 
 
     public:

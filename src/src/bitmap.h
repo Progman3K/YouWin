@@ -51,7 +51,7 @@ class bitmap {
 };
 
 
-class IBitmap : public Object {
+class IBitmap : public ywObject {
 
     /* After the bitmap has been created,
      * you can change its size,
