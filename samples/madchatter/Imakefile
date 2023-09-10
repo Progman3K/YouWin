@@ -78,7 +78,7 @@
 
 /*          INCLUDES += -I../include */
 
-          CXXFLAGS += -Wall -std=c++20
+          CXXFLAGS += -Wall -std=c++17
 
 
 #if defined( BUILD_RELEASE )
@@ -124,7 +124,7 @@ $(APPNAME): resource.res /opt/youwin/src/libyouwin.a
 #ifndef BUILD_WIN32
 
             /* Add Windows replacement */
-            LDLIBS += -L/opt/youwin/src -lyouwin -z noexecstack
+            LDLIBS += -L/opt/youwin/src -lyouwin
 
 #ifndef __DARWIN__
             LDLIBS += -static-libgcc

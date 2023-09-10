@@ -2,8 +2,10 @@
 #define YW_H_IPTYPES_H
 
 
-#include <windows.h>
 #include <time.h>
+
+
+#include "wtypes.h"
 
 
 #define MAX_ADAPTER_ADDRESS_LENGTH     8

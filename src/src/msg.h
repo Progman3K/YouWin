@@ -4,7 +4,9 @@
 
 #include <vector>
 #include <ctime>
-#include <windows.h>
+
+
+#include <wtypes.h>
 
 
 class MetaMSG  {

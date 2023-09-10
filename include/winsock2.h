@@ -2,8 +2,8 @@
 #define YOUWIN_WINSOCK_H
 
 
-#include <windows.h>
-#include <iptypes.h>
+#include "wtypes.h"
+#include "iptypes.h"
 
 
 #include <unistd.h>

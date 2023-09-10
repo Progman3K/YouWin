@@ -10,34 +10,27 @@
 #include <string>
 
 
+#include <windef.h>
 #include <winuser.h>
 #include <ASCII.h>
+#include <winsock2.h>
+#include <windowsx.h>
 
 
-// THESE DEFINITIONS ARE COPIED FROM WINDOWS.H TEMPORARILY UNTIL I FIGURE OUT HOW TO PREVENT SYMBOL COLLISIONS
+#include "AsyncSocket.h"
 
-#ifdef UNICODE
-#ifndef TEXT
-#define TEXT(string)                      L##string
-#endif
-#else
-#ifndef TEXT
-#define TEXT(string)                      string
-#endif
-#endif
-#define _T(x)                             TEXT(x)
-
-typedef int SOCKET;
-typedef unsigned short WORD;
-
-///////////////////////////////////////////////////////////////////////
 
 #import <Cocoa/Cocoa.h>
 #import <CoreServices/CoreServices.h>
+#import <CoreFoundation/CoreFoundation.h>
 
 #include <DbgTrace.h>
 #include <osxywapp.h>
 #include <wsanotif.h>
+
+/* BORROWED Win32 API */
+extern "C" int GetSystemMetrics( int nIndex );
+
 
 static osx_ywapp *  pApp = NULL;
 
@@ -697,6 +690,7 @@ extern "C" int OSXGetMessage( EventQ * pQ, struct timeval * ptimeout ) {
 }
 
 
+#if 0
 extern "C" int osxmain( osx_ywapp * app ) {
 
     pApp = app;
@@ -713,7 +707,7 @@ extern "C" int osxmain( osx_ywapp * app ) {
 
     DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "os/x '%s' - Startup" ), pszApp );
 
-    iRet = GL::glInit( pApp->cx, pApp->cy, pApp->argc, pApp->argv );
+    iRet = ywDisplay::Init( pApp->cx, pApp->cy, pApp->argc, pApp->argv, app );
 
     if ( 0 != iRet ) {
 
@@ -766,7 +760,7 @@ Outtahere:
     return iRet;
 
 }
-
+#endif
 
 
 #endif /* YOU_WIN_GRAPHICAL && YOU_WIN_GRAPHICAL_OSX */

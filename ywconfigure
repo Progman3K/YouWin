@@ -50,7 +50,7 @@ then
     #
     echo OSX;
 
-    need_libs="-lpthread -lglut -lGL -lglapi -L/opt/X11/lib"
+    need_libs="-lpthread -framework CoreFoundation -lcoreroutine -lextension -ltk "
     need_defines="-DYOU_WIN_GRAPHICAL_OSX -DYOU_WIN_GRAPHICAL"
 
     imake_cmd=( \
@@ -96,7 +96,7 @@ then
     -DDefaultCDebugFlags="$build_options" \
     -DDefaultCplusplusDebugFlags="$build_options" \
     -DCplusplusExtraDefines="$configurevars" \
-    -DBUILD_YOU_WIN \
+    -DBUILD_YOU_WIN $need_defines \
     -DDEBUG \
     -I/usr/lib64/X11/config \
     -I/usr/lib/X11/config \
@@ -130,7 +130,7 @@ then
     -DDefaultCDebugFlags="$build_options" \
     -DDefaultCplusplusDebugFlags="$build_options" \
     -DCplusplusExtraDefines="$configurevars" \
-    -DBUILD_YOU_WIN \
+    -DBUILD_YOU_WIN $need_defines \
     -DDEBUG \
     -I/usr/lib64/X11/config \
     -I/usr/lib/X11/config \
@@ -162,7 +162,7 @@ then
     -DDefaultCDebugFlags="$build_options" \
     -DDefaultCplusplusDebugFlags="$build_options" \
     -DCplusplusExtraDefines="$configurevars" \
-    -DBUILD_YOU_WIN \
+    -DBUILD_YOU_WIN $need_defines \
     -DDEBUG \
     -I/usr/lib64/X11/config \
     -I/usr/lib/X11/config \
@@ -194,7 +194,7 @@ then
     -DDefaultCDebugFlags="$build_options" \
     -DDefaultCplusplusDebugFlags="$build_options" \
     -DCplusplusExtraDefines="$configurevars" \
-    -DBUILD_YOU_WIN \
+    -DBUILD_YOU_WIN $need_defines \
     -DDEBUG \
     -I/usr/lib64/X11/config \
     -I/usr/lib/X11/config \

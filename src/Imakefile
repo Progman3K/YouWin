@@ -1,7 +1,10 @@
 .SUFFIXES: .o .mm
+
 .mm.o:
 	$(RM) $@
-	$(CXX) -c $(CXXFLAGS) -std=c++17 $(INCLUDES) $(_NOOP_) $*.mm
+	$(CXX) -c $(CXXFLAGS) -std=c++17 $(INCLUDES) $(_NOOP_) $*.mm -o src/$(basename $(notdir $<)).o
+
+
 
 
 .SUFFIXES: .fnt .tfnt

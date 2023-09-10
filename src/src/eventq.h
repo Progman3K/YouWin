@@ -35,6 +35,7 @@ class EventQ {
         }
 
 
+        /* Using forward declaration of MSG structure to prevent inclusion of API header */
         int Read( MSG * pMsg );
 
 

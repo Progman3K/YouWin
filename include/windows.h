@@ -9,6 +9,8 @@
 #include "basetsd.h"
 
 #include "windef.h"
+
+#include "wtypes.h"
 #include "gdi.h"
 #include "winuser.h"
 
@@ -293,16 +295,6 @@ typedef struct tagDELETEITEMSTRUCT {
   ULONG_PTR itemData;
 
 } DELETEITEMSTRUCT, * PDELETEITEMSTRUCT;
-
-
-typedef struct {
-
-    HWND    hwnd;
-    LPARAM  lParam;
-    WPARAM  wParam;
-    UINT    message;
-
-} MSG;
 
 
 typedef struct tagWNDCLASS {
