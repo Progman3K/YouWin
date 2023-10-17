@@ -376,7 +376,7 @@ extern "C" void DBGTRACE_API DBG_TRACE_DUMP_BINARY_BUFFER( unsigned uLineNo, con
 
         }
 
-        dbgtrace( 0, 0, dwDebugChannelsBitmap, ( hexbytes + binarybytes ).c_str() );
+        dbgtraceplain( dwDebugChannelsBitmap, ( hexbytes + binarybytes ).c_str() );
 
     }
 

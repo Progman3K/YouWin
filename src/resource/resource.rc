@@ -12,20 +12,5 @@
 #include "dialogs.rc"
 #include "strings.rc"
 #include "version.rc"
-
-
-#ifndef YOU_WIN_TXT
-// Fonts
-IDF_SYSTEM_FONT RESTYP_FONT resource/fonts/System.fnt
-              2 RESTYP_FONT resource/fonts/Courier.fnt
-              3 RESTYP_FONT resource/fonts/Fixedsys.fnt
-              4 RESTYP_FONT resource/fonts/MS_Sans_Serif.fnt
-              5 RESTYP_FONT resource/fonts/Small_Fonts.fnt
-#endif /* YOU_WIN_GRAPHICAL */
-
-
-/* alloresource unnamedtype resource/block.bin */
-
-/* 70 unnamedtype resource/block.bin */
-
-/* allofont RESTYP_FONT resource/fonts/Tahoma.fnt */
+#include "fonts.rc"
+#include "icons.rc"

@@ -7,7 +7,7 @@
 #define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
 
 #ifndef BUILD_WIN32
-            SUBDIRS += /opt/youwin/src
+            SUBDIRS += ../../src
 #endif
 
 #if defined( BUILD_ANDROID ) || ( defined( YOU_WIN_GRAPHICAL ) && defined( __APPLE_CC__ ) )
@@ -116,7 +116,7 @@ cleandir::
 $(APPNAME): src/resource/resource.res
 #endif
 #if defined( BUILD_YOU_WIN )
-$(APPNAME): resource.res /opt/youwin/src/libyouwin.a
+$(APPNAME): resource.res
 #endif
 
 
@@ -124,7 +124,7 @@ $(APPNAME): resource.res /opt/youwin/src/libyouwin.a
 #ifndef BUILD_WIN32
 
             /* Add Windows replacement */
-            LDLIBS += -L/opt/youwin/src -lyouwin
+            LDLIBS += -lyouwin
 
 #ifndef __DARWIN__
             LDLIBS += -static-libgcc
@@ -145,7 +145,7 @@ DependSubdirs($(SUBDIRS))
 
 
 #if defined( BUILD_ANDROID ) && defined( YOU_WIN_GRAPHICAL )
-            REQUIREDLIBS += -L/opt/youwin/src -lyouwin
+            REQUIREDLIBS += -lyouwin
 libmadchat.$(SHLIBFILTYP).: resource/resource.res
 #include <Library.tmpl>
 #else

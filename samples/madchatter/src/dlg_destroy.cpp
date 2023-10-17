@@ -9,7 +9,7 @@ void CChatterMainWnd::OnDestroy( HWND hDlg ) {
 
         for( int i = ListBox_GetCount( hUserListWnd ); 0 < i; i-- ) {
 
-            ListBox_DeleteString( hUserListWnd, i - 1 );
+            (void)ListBox_DeleteString( hUserListWnd, i - 1 );
 
         }
 

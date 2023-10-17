@@ -111,7 +111,7 @@ CWho * CChatterMainWnd::GetYou( Entity entity, sockaddr_in sin, int * piListBoxI
 
     if ( LB_ERR == ListBox_SetItemData( hUserListWnd, i, pYou ) ) {
 
-        ListBox_DeleteString( hUserListWnd, i );
+        (void)ListBox_DeleteString( hUserListWnd, i );
 
         delete pYou;
         return NULL;

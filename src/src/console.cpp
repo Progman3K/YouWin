@@ -193,15 +193,7 @@ static void SignalHandler( int sig ) {
 
                 DBG_MSG( DBG_CONSOLE, TEXT( "Teminal window size changed" ) );
 
-                if ( 0 != g.pTopWnd ) {
-
-                    FORWARD_WM_DISPLAYCHANGE( g.pTopWnd, 24, ws.ws_col, ws.ws_row, PostMessage );
-
-                } else {
-
-                    DBG_MSG( DBG_ERROR, TEXT( "Desktop size-change notification lost" ) );
-
-                }
+                ywDisplay::resize( ws.ws_col, ws.ws_row );
 
             }
             break;

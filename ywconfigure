@@ -7,6 +7,21 @@ then
     exit 1
 fi
 
+#SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+#echo script dir is $SCRIPT_DIR
+#echo try to resolve true path for script:
+
+RP=$( realpath $0 )
+#echo GOT $RP for path
+SCRIPT_DIR=$( dirname $RP )
+#echo so final result is: $SCRIPT_DIR
+
+#exit
+
+YW_INCLUDEPATH=${SCRIPT_DIR}/include
+YW_LIBPATH=${SCRIPT_DIR}/src
+
 variant=$1
 bldtype=$2
 
@@ -55,10 +70,11 @@ then
 
     imake_cmd=( \
     imake -v \
+    -DYWSrc="$YW_LIBPATH" \
     -DYWDefines="$need_defines" \
-    -DYWLibs="$need_libs" \
-    -DStandardIncludes=-I/opt/youwin/include \
-    -DIncRoot="/opt/X11/include -I/opt/youwin/include" \
+    -DYWLibs="$need_libs -L $YW_LIBPATH" \
+    -DStandardIncludes=-I$YW_INCLUDEPATH \
+    -DIncRoot="/opt/X11/include -I$YW_INCLUDEPATH" \
     -DUseInstalled \
     -DCcCmd=CplusplusCmd \
     -DUsrLibDirPath=/opt/youwin/src \
@@ -86,10 +102,11 @@ then
 
     imake_cmd=( \
     imake -v \
+    -DYWSrc="$YW_LIBPATH" \
     -DYWDefines="$need_defines" \
-    -DYWLibs="$need_libs" \
-    -DStandardIncludes=-I/opt/youwin/include \
-    -DIncRoot="/opt/X11/include -I/opt/youwin/include" \
+    -DYWLibs="$need_libs -L $YW_LIBPATH" \
+    -DStandardIncludes=-I$YW_INCLUDEPATH \
+    -DIncRoot="/opt/X11/include -I$YW_INCLUDEPATH" \
     -DUseInstalled \
     -DCcCmd=CplusplusCmd \
     -DUsrLibDirPath=/opt/youwin/src \
@@ -119,10 +136,11 @@ then
 
    imake_cmd=( \
     imake -v \
+    -DYWSrc="$YW_LIBPATH" \
     -DYWDefines="$need_defines" \
     -DYWLibs="$need_libs" \
-    -DExtraLibraries="$need_libs" \
-    -DStandardIncludes=-I/opt/youwin/include \
+    -DExtraLibraries="$need_libs -L $YW_LIBPATH" \
+    -DStandardIncludes=-I$YW_INCLUDEPATH \
     -DIncRoot=/opt/youwin/include \
     -DUseInstalled \
     -DCcCmd=CplusplusCmd \
@@ -151,11 +169,12 @@ then
 
    imake_cmd=( \
     imake -v \
+    -DYWSrc="$YW_LIBPATH" \
     -DYWDefines="$need_defines" \
     -DYWLibs="$need_libs" \
-    -DExtraLibraries="$need_libs" \
-    -DStandardIncludes=-I/opt/youwin/include \
-    -DIncRoot="/opt/local/include -I/opt/youwin/include" \
+    -DExtraLibraries="$need_libs -L $YW_LIBPATH" \
+    -DStandardIncludes=-I$YW_INCLUDEPATH \
+    -DIncRoot="/opt/local/include -I$YW_INCLUDEPATH" \
     -DUseInstalled \
     -DCcCmd=CplusplusCmd \
     -DUsrLibDirPath=/opt/youwin/src \
@@ -183,11 +202,12 @@ then
 
    imake_cmd=( \
     imake -v \
+    -DYWSrc="$YW_LIBPATH" \
     -DYWDefines="$need_defines" \
     -DYWLibs="$need_libs" \
-    -DExtraLibraries="$need_libs" \
-    -DStandardIncludes=-I/opt/youwin/include \
-    -DIncRoot="/opt/local/include -I/opt/youwin/include" \
+    -DExtraLibraries="$need_libs -L $YW_LIBPATH" \
+    -DStandardIncludes=-I$YW_INCLUDEPATH \
+    -DIncRoot="/opt/local/include -I$YW_INCLUDEPATH" \
     -DUseInstalled \
     -DCcCmd=CplusplusCmd \
     -DUsrLibDirPath=/opt/youwin/src \

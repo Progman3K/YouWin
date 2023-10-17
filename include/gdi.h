@@ -9,6 +9,12 @@
 #define BI_BITFIELDS     3
 
 
+#define GetRValue(c)                      ((BYTE)(c))
+#define GetGValue(c)                      ((BYTE)(((WORD)(c))>>8))
+#define GetBValue(c)                      ((BYTE)((c)>>16))
+#define GetAValue(c)                      ((BYTE)((c)>>24))
+
+
 #define RGB(r,g,b)       ((COLORREF)((BYTE)(r)|((BYTE)(g) << 8)|((BYTE)(b) << 16)))
 #define RGBA(r,g,b,a)    ((COLORREF)( (((DWORD)(BYTE)(a))<<24) | RGB(r,g,b) ))
 

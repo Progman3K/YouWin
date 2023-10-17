@@ -17,6 +17,8 @@
 #define LONIBBLE(b) (b & 0x0F)
 #define HINIBBLE(b) (b & 0xF0)
 
+#define IDST_ICON 0x14
+
 
 typedef struct tagMsgBoxParams {
 
@@ -42,6 +44,7 @@ class MessageBoxDlg : public DlgWnd<MessageBoxDlg> {
     HWND hYesButtonWnd;
     HWND hNoButtonWnd;
     HWND hCancelButtonWnd;
+    HWND hIconWnd;
 
     public:
 
@@ -52,10 +55,15 @@ class MessageBoxDlg : public DlgWnd<MessageBoxDlg> {
             hYesButtonWnd    = NULL;
             hNoButtonWnd     = NULL;
             hCancelButtonWnd = NULL;
+            hIconWnd         = NULL;
+
+            Icon.cy = 0;
+            Icon.cy = 0;
 
             iButtonCY = 0;
             lButtonMaxLabelCX = 0;
             iMaxCXLine = 0;
+
             r.bottom = 0;
             r.left = 0;
             r.right = 0;
@@ -86,7 +94,10 @@ class MessageBoxDlg : public DlgWnd<MessageBoxDlg> {
         utf16string     Yes;
         utf16string     No;
 
+        SIZE            Icon;
+
         int             iButtonCY;
+
         LONG            lButtonMaxLabelCX;
         LONG            iMaxCXLine;
         RECT            r;

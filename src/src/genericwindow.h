@@ -54,7 +54,7 @@ class ywWindow : public IWindow {
 
             }
 
-            DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "%lX '%s' control %d, instance %lX, style %lX, extstyle %lX, x,y(%d,%d) cx,cy(%d,%d) '%s', %04X" ), this, pClass->GetClassName(), hMenu, hInst, dwStyle, dwExStyle, x, y, cx, cy, NULL != pWindowName ? pWindowName : TEXT( "" ), pParam ? (unsigned int)(*(const WORD *)pParam) : 0 );
+            DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "%lX '%s' control %d, instance %lX, style %lX, extstyle %lX, x,y(%d,%d) cx,cy(%d,%d) '%s', pParam: %0lX" ), this, pClass->GetClassName(), hMenu, hInst, dwStyle, dwExStyle, x, y, cx, cy, NULL != pWindowName ? pWindowName : TEXT( "" ), pParam );
 
             CalculateRegions();
 
@@ -125,6 +125,8 @@ class ywWindow : public IWindow {
         UINT OnNCHitTest( HWND hWnd, int x, int y );
         void OnNCPaint( HWND hWnd, HRGN hRgn );
         void OnParentNotify( HWND hWnd, UINT uiMsg, HWND hChildWnd, int iChildID );
+
+        void OnSetfocus( HWND hWnd, HWND hOldfocuswnd );
 
         void OnSetRedraw( HWND hWnd, BOOL bRedraw );
 

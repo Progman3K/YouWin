@@ -12,39 +12,43 @@ Supported: OS/X, iOS, Android, Linux, additional platforms.
 
 
 
-### Prerequisites
+## Build-time prerequisites
 
 * bash - Attention OSX users, you must upgrade bash v3.x to v5.x
 * gnu make
 * imake
-* makedepend (optional)
+* makedepend
+* gccmakedep
+
 * windres (part of binutils and also MinGW)
+	- LLVM's windres can be used instead, but clang **must** be present in this case
+
 * MinGW (optional)
-* a c++20 compiler
+* a c++17 compiler
 
-Target dependencies
+###Target dependencies
 
-Android
+####Android
 
 	* android-ndk
 
-iOS
+####iOS
 
 	* iOS Frameworks (xcode)
 
-OpenGL
+####OpenGL
 
 	* Freeglut/glapi
 
-X11
+####X11
 
 	* libX11
 
-Linux Framebuffer
+####Linux Framebuffer
 
 	* no dependancies
 
-Text
+####Text
 
 	* a 24 bit colour capable VT100 terminal program
 
@@ -64,22 +68,21 @@ Text
 ---
 ***
 
-Recommended development strategy:
+###Recommended development strategy:
 
 
-go to whichever folder you wish to work in (home is used here), retrieve the repository, and link it to /opt/youwin
+Go to whichever folder you wish to work in (home is used here), retrieve the repository, and link it to /opt/youwin
 
 ```
 cd ~
 git get youwin
-sudo ln -s ~/youwin /opt/youwin
 cd youwin/samples/madchatter
 ../../ywconfigure android|ios|opengl|text|xwin|lxfb [debug/release]
 make depend (optional)
 make
 ```
 
-It is preferable to add the youwin folder to the path, but it is not necessary
+It is preferable to either add the youwin folder to the path or put a symlink to the ywconfigure command in a folder included in the path, but it is not necessary
 
 Tools:
 
@@ -90,6 +93,8 @@ Tools:
 	- A graphical application that displays the udptracer debug log information.
 
 * **fontnab**
+
+    This tool permits grabbing (nabbing) any font from Windows.
 
     The situation with fonts:
 

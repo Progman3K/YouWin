@@ -337,7 +337,7 @@ class UserBitmap : public IBitmap /* , public Object */ {
 
             }
 
-            DBG_MSG( DBG_DATA_DUMPS, TEXT( 
+            DBG_MSG( DBG_DATA_DUMPS, TEXT(
                      "Windows bitmap %s loaded:\n"
                      "Size of header: in code %u, on disk: %u\n"
                      "Dimensions: %ux%u\n"

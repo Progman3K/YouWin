@@ -60,7 +60,6 @@ LOCAL_SRC_FILES        := src/ywresource.s \
                           src/object.cpp \
                           src/open.cpp \
                           src/openw.cpp \
-                          src/osx.cpp \
                           src/pen.cpp \
                           src/posix.cpp \
                           src/postmessage.cpp \

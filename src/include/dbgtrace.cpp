@@ -126,4 +126,43 @@ extern "C" inline void DBGTRACE_API DBG_TRACE( unsigned uLineNo, const char * ps
 }
 
 
+extern "C" inline void DBGTRACE_API DBG_TRACE_PLAIN( unsigned long dwDebugChannelsBitmap, const TCHAR * pszFormat, ... ) {
+
+    size_t  Len;
+    va_list args;
+
+    TCHAR   szTemp[32768];
+
+//    if ( ! ( dwDebugChannelsBitmap & g_dwDebugBitmap ) && ( ALL_DEBUG_CHANNELS != dwDebugChannelsBitmap ) ) {
+
+//        return;
+
+//    }
+
+    memset( szTemp, 0, sizeof( szTemp ) );
+
+    va_start( args, pszFormat );
+
+#ifdef _WIN32
+    Len = _vsntprintf_s( szTemp, ( sizeof( szTemp ) / sizeof( szTemp[0] ) ), ( sizeof( szTemp ) / sizeof( szTemp[0] ) ) - 1, pszFormat, args );
+
+#else
+    Len = _vsntprintf( szTemp, ( sizeof( szTemp ) / sizeof( szTemp[0] ) ), pszFormat, args );
+#endif
+
+    va_end( args );
+
+    if ( Len ) {
+
+#if defined( _WIN32 ) || defined( WIN32 )
+        OutputDebugStringA( szTemp );
+#else
+        fprintf( stderr, "%s\r\n", szTemp );
+#endif
+
+    }
+
+}
+
+
 #endif /* DEBUG */

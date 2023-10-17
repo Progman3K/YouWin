@@ -3,15 +3,22 @@
 
 
 #include "gdi.h"
-
 #include "bitmap.h"
 
 
 class Pen : public GDIObject {
 
+    LOGPEN lp;
+
     public:
 
         Pen() : GDIObject( pen, true ) {}
+
+        void set( const LOGPEN * plp ) {
+
+            lp = *plp;
+
+        }
 
         virtual ~Pen() override {}
 

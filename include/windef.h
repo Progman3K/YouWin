@@ -309,11 +309,6 @@
 
 #define GDI_ERROR                         0xFFFFFFFF
 
-#define GetRValue(c)                      ((BYTE)(c))
-#define GetGValue(c)                      ((BYTE)(((WORD)(c))>>8))
-#define GetBValue(c)                      ((BYTE)((c)>>16))
-#define GetAValue(c)                      ((BYTE)((c)>>24))
-
 #define GetTextExtentPoint                GetTextExtentPoint32
 
 #define GRADIENT_FILL_RECT_H              0x00
@@ -367,6 +362,14 @@
 #define ID( i )                           ((const TCHAR *)(DWORD_PTR)i)
 
 #define IDC_ARROW                         MAKEINTRESOURCE(32512)
+
+//#define IDI_APPLICATION                   32512
+#define IDI_HAND                          32513
+#define IDI_QUESTION                      32514
+#define IDI_EXCLAMATION                   32515
+#define IDI_ASTERISK                      32516
+//#define IDI_WINLOGO                       32517
+//#define IDI_SHIELD                        32518
 
 #define IDABORT                           3
 #define IDCANCEL                          2

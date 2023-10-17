@@ -256,6 +256,8 @@ static struct the_X : public Handler {
                     case ResizeRequest:
 
                         DBG_MSG( DBG_GRAPHICAL, TEXT( "HOST RESIZING width %d, height %d" ), event.xresizerequest.width, event.xresizerequest.height );
+//                        XResizeWindow( x.display, x.window, event.xresizerequest.width, event.xresizerequest.height );
+                        ywDisplay::resize( event.xresizerequest.width, event.xresizerequest.height );
                         break;
 
                     default:

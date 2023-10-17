@@ -38,7 +38,7 @@ void MessageBoxDlg::OnCommand( HWND hDlg, int iID, HWND hCtlWnd, UINT uiNotifyCo
 }
 
 
-static HWND makecontrol( HWND hParentWnd, utf16string * pText, unsigned short uCtlType, unsigned short uID, int iStringID, unsigned uFlags, LPCTSTR lpszText ) {
+static HWND makecontrol( HWND hParentWnd, int x, int y, utf16string * pText, unsigned short uCtlType, unsigned short uID, int iStringID, unsigned uFlags, LPCTSTR lpszText, const TCHAR * pParam ) {
 
     if ( pText ) {
 
@@ -48,7 +48,7 @@ static HWND makecontrol( HWND hParentWnd, utf16string * pText, unsigned short uC
 
     }
 
-    HWND hWnd = CreateWindowEx( 0, MAKEINTRESOURCE( uCtlType ), lpszText, WS_CHILD | WS_VISIBLE | uFlags, 0, 0, 0, 0, hParentWnd, (HMENU)MAKEINTRESOURCE( uID ), GetWindowInstance( hParentWnd ), 0 );
+    HWND hWnd = CreateWindowEx( 0, MAKEINTRESOURCE( uCtlType ), lpszText, WS_CHILD | WS_VISIBLE | uFlags, x, y, 0, 0, hParentWnd, (HMENU)MAKEINTRESOURCE( uID ), hYouWinModule /* GetWindowInstance( hParentWnd ) */, (LPVOID)pParam );
 
     return hWnd;
 
@@ -67,37 +67,81 @@ void MessageBoxDlg::init( HWND hWnd, HDC hDC, MsgBoxParams & UserParams ) {
 
     DrawText( hDC, Text.c_str(), Text.size(), &r, DT_LEFT | DT_CALCRECT );
 
-    hMessageWnd = makecontrol( hWnd, NULL, ATOM_STATIC, (unsigned short)-1, 0, 0, UserParams.lpszText );
+    hMessageWnd = makecontrol( hWnd, 0, 0, NULL, ATOM_STATIC, (unsigned short)-1, 0, 0, UserParams.lpszText, 0 );
 
     switch( LONIBBLE( LOBYTE( LOWORD( UserParams.uType ) ) ) ) {
 
         case MB_OK:
 
-            hOKButtonWnd = makecontrol( hWnd, &OK, ATOM_BUTTON, IDOK, IDS_OK, BS_DEFPUSHBUTTON | WS_TABSTOP, NULL );
+            hOKButtonWnd = makecontrol( hWnd, 0, 0, &OK, ATOM_BUTTON, IDOK, IDS_OK, BS_DEFPUSHBUTTON | WS_TABSTOP, NULL, 0 );
             break;
 
         case MB_OKCANCEL:
 
-            hOKButtonWnd     = makecontrol( hWnd, &OK,     ATOM_BUTTON, IDOK,     IDS_OK,     BS_DEFPUSHBUTTON | WS_TABSTOP, NULL );
-            hCancelButtonWnd = makecontrol( hWnd, &Cancel, ATOM_BUTTON, IDCANCEL, IDS_CANCEL, WS_TABSTOP,                    NULL );
+            hOKButtonWnd     = makecontrol( hWnd, 0, 0, &OK,     ATOM_BUTTON, IDOK,     IDS_OK,     BS_DEFPUSHBUTTON | WS_TABSTOP, NULL, 0 );
+            hCancelButtonWnd = makecontrol( hWnd, 0, 0, &Cancel, ATOM_BUTTON, IDCANCEL, IDS_CANCEL, WS_TABSTOP,                    NULL, 0 );
             break;
 
         case MB_YESNO:
 
-            hYesButtonWnd = makecontrol( hWnd, &Yes, ATOM_BUTTON, IDYES, IDS_YES, WS_TABSTOP, NULL );
-            hNoButtonWnd  = makecontrol( hWnd, &No,  ATOM_BUTTON, IDNO,  IDS_NO,  WS_TABSTOP, NULL );
+            hYesButtonWnd = makecontrol( hWnd, 0, 0, &Yes, ATOM_BUTTON, IDYES, IDS_YES, WS_TABSTOP, NULL, 0 );
+            hNoButtonWnd  = makecontrol( hWnd, 0, 0, &No,  ATOM_BUTTON, IDNO,  IDS_NO,  WS_TABSTOP, NULL, 0 );
             break;
 
         case MB_YESNOCANCEL:
 
-            hYesButtonWnd    = makecontrol( hWnd, &Yes,    ATOM_BUTTON, IDYES,    IDS_YES,    WS_TABSTOP, NULL );
-            hNoButtonWnd     = makecontrol( hWnd, &No,     ATOM_BUTTON, IDNO,     IDS_NO,     WS_TABSTOP, NULL );
-            hCancelButtonWnd = makecontrol( hWnd, &Cancel, ATOM_BUTTON, IDCANCEL, IDS_CANCEL, WS_TABSTOP, NULL );
+            hYesButtonWnd    = makecontrol( hWnd, 0, 0, &Yes,    ATOM_BUTTON, IDYES,    IDS_YES,    WS_TABSTOP, NULL, 0 );
+            hNoButtonWnd     = makecontrol( hWnd, 0, 0, &No,     ATOM_BUTTON, IDNO,     IDS_NO,     WS_TABSTOP, NULL, 0 );
+            hCancelButtonWnd = makecontrol( hWnd, 0, 0, &Cancel, ATOM_BUTTON, IDCANCEL, IDS_CANCEL, WS_TABSTOP, NULL, 0 );
             break;
 
         default:
 
             break;
+
+    }
+
+    hIconWnd = 0;
+
+    int x = GetSystemMetrics( SM_CXEDGE );
+    int y = GetSystemMetrics( SM_CYEDGE );
+
+    switch( HINIBBLE( LOBYTE( LOWORD( UserParams.uType ) ) ) ) {
+
+        case MB_ICONHAND /* aka MB_ICONERROR, MB_ICONSTOP */:
+
+            hIconWnd = makecontrol( hWnd, x, y, NULL, ATOM_STATIC, IDST_ICON, 0, SS_ICON, NULL, MAKEINTRESOURCE( IDI_HAND ) );
+            break;
+
+        case MB_ICONQUESTION:
+
+            hIconWnd = makecontrol( hWnd, x, y, NULL, ATOM_STATIC, IDST_ICON, 0, SS_ICON, NULL, MAKEINTRESOURCE( IDI_QUESTION ) );
+            break;
+
+        case MB_ICONEXCLAMATION /* aka MB_ICONWARNING */:
+
+            hIconWnd = makecontrol( hWnd, x, y, NULL, ATOM_STATIC, IDST_ICON, 0, SS_ICON, NULL, MAKEINTRESOURCE( IDI_EXCLAMATION ) );
+            break;
+
+        case MB_ICONASTERISK /* aka MB_ICONINFORMATION */:
+
+            hIconWnd = makecontrol( hWnd, x, y, NULL, ATOM_STATIC, IDST_ICON, 0, SS_ICON, NULL, MAKEINTRESOURCE( IDI_ASTERISK ) );
+            break;
+
+        default:
+
+            break;
+
+    }
+
+    if ( hIconWnd ) {
+
+        RECT r = {0};
+
+        GetClientRect( hIconWnd, &r );
+
+        Icon.cx = r.right;
+        Icon.cy = r.bottom;
 
     }
 
@@ -170,8 +214,16 @@ void MessageBoxDlg::Layout( HWND hWnd, HDC hDC ) {
 
     iMaxCXLine = std::min( iMaxCXLine, (LONG)GetSystemMetrics( SM_CXSCREEN ) - ( (LONG)GetSystemMetrics( SM_CXFIXEDFRAME ) * 2 ) );
 
-    int iDlgCX = iMaxCXLine + ( GetSystemMetrics( SM_CXFIXEDFRAME ) * 2 ) /* + ( sSPC.cx * 2 ) */;
-    int iDlgCY = r.bottom + GetSystemMetrics( SM_CYCAPTION ) + ( GetSystemMetrics( SM_CYFIXEDFRAME ) * 2 ) + ( GetSystemMetrics( SM_CYBORDER ) * 2 ) + ( sTitleSize.cy * 3 ) /* + ( sSPC.cy * 2 ) */;
+    RECT rIcon = {0};
+
+    if ( hIconWnd ) {
+
+        GetClientRect( hIconWnd, &rIcon );
+
+    }
+
+    int iDlgCX = rIcon.right + iMaxCXLine + ( GetSystemMetrics( SM_CXFIXEDFRAME ) * 2 ) /* + ( sSPC.cx * 2 ) */;
+    int iDlgCY = rIcon.bottom + r.bottom + GetSystemMetrics( SM_CYCAPTION ) + ( GetSystemMetrics( SM_CYFIXEDFRAME ) * 2 ) + ( GetSystemMetrics( SM_CYBORDER ) * 2 ) + ( sTitleSize.cy * 3 ) /* + ( sSPC.cy * 2 ) */;
 
     LONG lPadDlgCX = 0;
     LONG lPadDlgCY = 0;
@@ -197,7 +249,7 @@ void MessageBoxDlg::Layout( HWND hWnd, HDC hDC ) {
                 lPadDlgCY,
                 iDlgCX,
                 iDlgCY,
-                false ); /* No redraw necessary */
+                true );
 
     RECT rClient;
 
@@ -207,14 +259,15 @@ void MessageBoxDlg::Layout( HWND hWnd, HDC hDC ) {
 
     if ( r.right < rClient.right ) {
 
-        lPad = rClient.right - r.right;
+        lPad += rClient.right - r.right;
         lPad /= 2;
+        lPad += ( rIcon.right / 4 );
 
     }
 
-    MoveWindow( hMessageWnd, 0 + lPad, 0 + ( sSPC.cy / 4 ), r.right, r.bottom, false );
+    MoveWindow( hMessageWnd, 0 + lPad, 0 + ( sSPC.cy / 4 ) + ( rIcon.bottom / 4 ), r.right, r.bottom, false );
 
-    int iButtonYpos = r.bottom + GetSystemMetrics( SM_CYFIXEDFRAME ) + ( sSPC.cy / 2 );
+    int iButtonYpos = r.bottom + GetSystemMetrics( SM_CYFIXEDFRAME ) + ( sSPC.cy / 2 ) + ( rIcon.bottom / 2 );
 //    int iButtonYpos = rClient.bottom - ( ( TitleSize.cy * 2 ) + ( GetSystemMetrics( SM_CYBORDER ) * 2 ) );
 
     switch( LONIBBLE( LOBYTE( LOWORD( Params.uType ) ) ) ) {

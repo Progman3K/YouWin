@@ -1,0 +1,10 @@
+
+#ifndef YOU_WIN_TXT
+
+// Icons
+IDI_HAND        ICON resource/icons/hand.ico
+IDI_QUESTION    ICON resource/icons/question.ico
+IDI_EXCLAMATION ICON resource/icons/exclamation.ico
+IDI_ASTERISK    ICON resource/icons/asterisk.ico
+
+#endif /* YOU_WIN_GRAPHICAL */

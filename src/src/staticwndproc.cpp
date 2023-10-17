@@ -139,7 +139,7 @@ void Static::OnPaint( HWND hWnd, PAINTSTRUCT * pPS ) {
 }
 
 
-HICON Static::OnSetIcon( HWND hWnd, unsigned uType, HICON hNewIcon ) {
+HICON Static::OnSetIcon( HWND hWnd, unsigned /* uType */, HICON hNewIcon ) {
 
     HICON hOldIcon = hIcon;
 
@@ -238,8 +238,6 @@ Static::Static( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hPar
 
     }
 
-    DBG_DMP( DBG_GENERAL_INFORMATION, pParam, sizeof( UTF_16 ) );
-
     if ( ! (  SS_ICON & Style ) ) {
 
         return;
@@ -260,10 +258,17 @@ Static::Static( class WindowClass * pWindowClass, LPCTSTR pWindowName, HWND hPar
 
     }
 
-    /* Load icon by ordinal */
-    const UTF_16 * pIconID = (const UTF_16 *)pParam;
+    if ( 0 == HIWORD( pParam ) ) {
 
-    hIcon = LoadIcon( hInst, MAKEINTRESOURCE( I386PE_INT16_TO_HOST( pIconID ) ) );
+        /* Load icon by ordinal */
+        hIcon = LoadIcon( hInst, MAKEINTRESOURCE( LOWORD( pParam ) ) );
+
+    } else {
+
+        /* Load icon by dialog template reference */
+        hIcon = LoadIcon( hInst, MAKEINTRESOURCE( I386PE_INT16_TO_HOST( pParam ) ) );
+
+    }
 
     if ( NULL != hIcon ) {
 

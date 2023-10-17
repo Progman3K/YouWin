@@ -46,6 +46,18 @@ namespace ywDisplay {
 
     void drawscreen( void );
 
+    inline void resize( int cx, int cy ) {
+
+        HWND hWnd = GetDesktopWindow();
+
+        if ( hWnd ) {
+
+            FORWARD_WM_DISPLAYCHANGE( hWnd, 24, cx, cy, SendMessage );
+
+        }
+
+    }
+
 }
 
 

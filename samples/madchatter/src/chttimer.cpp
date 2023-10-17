@@ -111,7 +111,7 @@ void CChatterMainWnd::CheckAbsents( HWND hWnd ) {
         if ( ( pYou->GetTimeLastSeen() + HEARD_PEER_MAX_LIMIT_SECONDS ) < now() ) {
 
             /* Peer has gone away */
-            ListBox_DeleteString( hUserListWnd, i - 1 );
+            (void)ListBox_DeleteString( hUserListWnd, i - 1 );
             uPeersGoneAwayCount++;
 
         }

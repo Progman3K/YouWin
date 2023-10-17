@@ -134,6 +134,8 @@ int GetSystemMetrics( int nIndex ) {
 
         case SM_CXDOUBLECLK:  return uiCXDoubleClk;
 
+        case SM_CXEDGE:       return 2;
+
         case SM_CXFIXEDFRAME: return 3; // SM_CXDLGFRAME:
 
         case SM_CXHSCROLL:    return 16;
@@ -155,6 +157,8 @@ int GetSystemMetrics( int nIndex ) {
         case SM_CYCAPTION:    return 19;
 
         case SM_CYDOUBLECLK:  return uiCYDoubleClk;
+
+        case SM_CYEDGE:       return 2;
 
         case SM_CYFIXEDFRAME: return 3; // SM_CYDLGFRAME:
 

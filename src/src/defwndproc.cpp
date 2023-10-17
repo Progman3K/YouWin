@@ -564,18 +564,18 @@ bool ywWindow::OnEraseBackground( HWND hWnd, HDC hDC ) {
 }
 
 
-#ifdef YOU_WIN_TXT
-static void OnSetfocus( HWND hWnd, HWND hOldfocuswnd ) {
+void ywWindow::OnSetfocus( HWND hWnd, HWND hOldfocuswnd ) {
 
+#ifdef YOU_WIN_TXT
     ywWindow * pWnd = reinterpret_cast<LPWindow>( hWnd );
 
     /* Hack to temporarily SEE the focus change */
     POINT pt = pWnd->GetParentOffset();
 
     gotoxy( pt.x + 1, pt.y + 1 );
+#endif
 
 }
-#endif
 
 
 void ywWindow::OnSetRedraw( HWND hWnd, BOOL bRedraw ) {
@@ -741,12 +741,10 @@ LRESULT ywWindow::DefWndProc( HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lPara
 
             return OnPaint( hWnd );
 
-#ifdef YOU_WIN_TXT
         case WM_SETFOCUS:
 
             HANDLE_WM_SETFOCUS( hWnd, wParam, lParam, OnSetfocus );
             break;
-#endif
 
         case WM_SETREDRAW:
 

@@ -285,20 +285,16 @@ static void reshape( int cx, int cy ) {
 
     } else {
 
-        FORWARD_WM_DISPLAYCHANGE( hWnd, 24, cx, cy, SendMessage );
+        ywDisplay::resize( cx, cy );
 
     }
 
 }
 
 
-static void PrepGL( int cx, int cy ) {
+static void SetGLParameters( int cx, int cy ) {
 
-    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "OpenGL initialization begins" ) );
-
-    glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGB /* | GLUT_DEPTH */ );
-
-    glDisable( GL_DEPTH_TEST );
+    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "OpenGL set parameters begin" ) );
 
     glViewport( 0, 0, cx, cy );
 
@@ -319,16 +315,16 @@ static void PrepGL( int cx, int cy ) {
 
     glLoadIdentity();
 
-    reshape( cx, cy );
-
-    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "OpenGL initialization ends" ) );
+    DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "OpenGL set parameters ends" ) );
 
 }
 
 
 void PostRefresh( void ) {
 
+
     glutPostRedisplay();
+
 
 }
 

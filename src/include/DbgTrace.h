@@ -47,11 +47,13 @@ extern "C" {            /* Assume C declarations for C++ */
 
 #ifdef _WIN32
 #define DBG_TRACE               dbgtrace
+#define DBG_TRACE_PLAIN         dbgtraceplain
 #else
 #ifndef DEBUG
 inline void dbgtrace(...){}
 #endif
 #define DBG_TRACE               dbgtrace
+#define DBG_TRACE_PLAIN         dbgtraceplain
 #endif
 
 
@@ -90,6 +92,7 @@ void DBGTRACE_API traceMSG( unsigned long dwDebugChannelsBitmap, unsigned uLineN
 void DBGTRACE_API SetTraceLevel( unsigned long dwDebugBitmap );
 void DBGTRACE_API SetTraceOutput( printfunc TraceFunc );
 void DBGTRACE_API DBG_TRACE( unsigned uLineNo, const char * pszFile, unsigned long dwDebugChannelsBitmap, const TCHAR * lpszFormat, ... );
+void DBGTRACE_API DBG_TRACE_PLAIN( unsigned long dwDebugChannelsBitmap, const TCHAR * lpszFormat, ... );
 void DBGTRACE_API DBG_TRACE_DUMP_BUFFER( unsigned uLineNo, const char * pszFile, unsigned long dwDebugChannelsBitmap, void const * lpBuffer, unsigned long uBufferLen );
 void DBGTRACE_API DBG_TRACE_DUMP_BINARY_BUFFER( unsigned uLineNo, const char * pszFile, unsigned long dwDebugChannelsBitmap, unsigned uBytesPerLine, void const * lpBuffer, unsigned long uBufferLen );
 void DBGTRACE_API DBG_TRACE_LOGITEMS( unsigned long dwDebugLogItemsBitmap );
