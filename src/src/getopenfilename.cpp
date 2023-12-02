@@ -166,11 +166,11 @@ int GetOpenFileNameDlg::SetToFolder( HWND hDlg, LPCTSTR pszFolder ) {
 
         if ( S_ISDIR( Stat.st_mode ) ) {
 
-            iRet = ListBox_AddString( hLBFolders, pEntry->d_name );
+            (void)ListBox_AddString( hLBFolders, pEntry->d_name );
 
         } else if ( S_ISREG( Stat.st_mode ) ) {
 
-            iRet = ListBox_AddString( hLBFiles, pEntry->d_name );
+            (void)ListBox_AddString( hLBFiles, pEntry->d_name );
 
         }
 

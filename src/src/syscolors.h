@@ -40,8 +40,8 @@ class SysColor : public SolidBrush {
 
 };
 
-typedef std::pair <int, SysColor *> SysColorPair;
-typedef std::map  <int, SysColor *> SysColorList;
+using SysColorPair = std::pair<int, SysColor *>;
+using SysColorList = std::map<int, SysColor *>;
 
 #ifdef DEBUG
 #define DECLARE_SYSTEM_COLOR( VarName, ID, cr, text ) SysColor VarName( ID, cr, true, text )

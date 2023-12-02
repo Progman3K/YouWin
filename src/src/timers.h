@@ -8,7 +8,7 @@
 #include "msg.h"
 
 
-typedef struct tag_timer_key {
+using timer_key = struct tag_timer_key {
 
     HWND     hWnd;
     UINT_PTR uID;
@@ -25,20 +25,20 @@ typedef struct tag_timer_key {
 
     }
 
-} timer_key;
+};
 
 
 class TimerList : public std::map<timer_key,MetaMSG> {
 
-    typedef std::pair<timer_key,MetaMSG> item;
+    using item = std::pair<timer_key,MetaMSG>;
 
     UINT_PTR uAutoTimerID;
 
-    typedef enum {
+    using Constants = enum {
 
         MAX_ANONYMOUS_TIMER_ID = 0x7FFF
 
-    } Constants;
+    };
 
     public:
 

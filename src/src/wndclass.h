@@ -92,7 +92,7 @@ class WindowClass {
 };
 
 
-typedef std::pair <TSTRING, class WindowClass *> ClassPair;
+using ClassPair = std::pair <TSTRING, class WindowClass *>;
 
 class ClassList : public std::map <TSTRING, class WindowClass *> {
 

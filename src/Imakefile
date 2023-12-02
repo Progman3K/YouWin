@@ -45,13 +45,13 @@
 
               VERSION = 1
 
-            INCLUDES += -I/opt/youwin/include -Isrc -Iinclude
+            INCLUDES += -I../include -Isrc -Iinclude
 
-         DEPENDFLAGS += -I/opt/youwin/include
+         DEPENDFLAGS += -I../include
 
              DEFINES += YWDefines
 
-              DESTDIR = /opt/youwin
+              DESTDIR = ../
 
                  SRCS = src/ywresource.s \
                         src/addtext.cpp \

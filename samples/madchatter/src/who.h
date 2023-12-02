@@ -136,6 +136,12 @@ class CWho {
 
         long sendmsg( sockaddr_in YourSin, MsgType type, const char * pBuffer, size_t Len ) {
 
+            if ( 0 == pBuffer ) {
+
+                return -1;
+
+            }
+
             union {
 
                 sockaddr    sa;

@@ -4,9 +4,11 @@
 #include "messagebox.h"
 #include "defines.h"
 
+
 extern HMODULE hYouWinModule;
 
-void MessageBoxDlg::OnCommand( HWND hDlg, int iID, HWND hCtlWnd, UINT uiNotifyCode ) {
+
+void MessageBoxDlg::OnCommand( HWND hDlg, int iID, HWND /* hCtlWnd */, UINT /* uiNotifyCode */ ) {
 
     switch( iID ) {
 
@@ -40,17 +42,52 @@ void MessageBoxDlg::OnCommand( HWND hDlg, int iID, HWND hCtlWnd, UINT uiNotifyCo
 
 static HWND makecontrol( HWND hParentWnd, int x, int y, utf16string * pText, unsigned short uCtlType, unsigned short uID, int iStringID, unsigned uFlags, LPCTSTR lpszText, const TCHAR * pParam ) {
 
+    utf16string text;
+
     if ( pText ) {
 
         pText->LoadString( hYouWinModule, iStringID );
 
         lpszText = pText->tcharz_str();
 
+    } else if ( iStringID ) {
+
+        text.LoadString( hYouWinModule, iStringID );
+        lpszText = text.tcharz_str();
+
     }
 
     HWND hWnd = CreateWindowEx( 0, MAKEINTRESOURCE( uCtlType ), lpszText, WS_CHILD | WS_VISIBLE | uFlags, x, y, 0, 0, hParentWnd, (HMENU)MAKEINTRESOURCE( uID ), hYouWinModule /* GetWindowInstance( hParentWnd ) */, (LPVOID)pParam );
 
     return hWnd;
+
+}
+
+
+HWND MessageBoxDlg::makebutton( HWND hParentWnd, unsigned short uCtlType, unsigned short uID, int iStringID, unsigned uFlags, LPCTSTR lpszText, const TCHAR * pParam ) {
+
+    HWND hButtonWnd = makecontrol( hParentWnd, 0, 0, NULL, uCtlType, uID, iStringID, uFlags, lpszText, pParam );
+
+    if ( hButtonWnd ) {
+
+        buttons.push_back( hButtonWnd );
+
+    }
+
+    return hButtonWnd;
+
+}
+
+
+void MessageBoxDlg::buttonselect( unsigned uButtonIndex ) {
+
+    if ( uButtonIndex >= buttons.size() ) {
+
+        return;
+
+    }
+
+    SetFocus( buttons.at( uButtonIndex ) );
 
 }
 
@@ -73,26 +110,60 @@ void MessageBoxDlg::init( HWND hWnd, HDC hDC, MsgBoxParams & UserParams ) {
 
         case MB_OK:
 
-            hOKButtonWnd = makecontrol( hWnd, 0, 0, &OK, ATOM_BUTTON, IDOK, IDS_OK, BS_DEFPUSHBUTTON | WS_TABSTOP, NULL, 0 );
+            makebuttons( {
+                button_def( hWnd, ATOM_BUTTON, IDOK,       IDS_OK, WS_TABSTOP, NULL, 0 )
+            } );
             break;
 
         case MB_OKCANCEL:
 
-            hOKButtonWnd     = makecontrol( hWnd, 0, 0, &OK,     ATOM_BUTTON, IDOK,     IDS_OK,     BS_DEFPUSHBUTTON | WS_TABSTOP, NULL, 0 );
-            hCancelButtonWnd = makecontrol( hWnd, 0, 0, &Cancel, ATOM_BUTTON, IDCANCEL, IDS_CANCEL, WS_TABSTOP,                    NULL, 0 );
+            makebuttons( {
+                button_def( hWnd, ATOM_BUTTON, IDOK,       IDS_OK,     WS_TABSTOP, NULL, 0 ),
+                button_def( hWnd, ATOM_BUTTON, IDCANCEL,   IDS_CANCEL, WS_TABSTOP, NULL, 0 )
+            } );
             break;
 
-        case MB_YESNO:
+        case MB_ABORTRETRYIGNORE:
 
-            hYesButtonWnd = makecontrol( hWnd, 0, 0, &Yes, ATOM_BUTTON, IDYES, IDS_YES, WS_TABSTOP, NULL, 0 );
-            hNoButtonWnd  = makecontrol( hWnd, 0, 0, &No,  ATOM_BUTTON, IDNO,  IDS_NO,  WS_TABSTOP, NULL, 0 );
+            makebuttons( {
+                button_def( hWnd, ATOM_BUTTON, IDABORT,    IDS_ABORT,  WS_TABSTOP, NULL, 0 ),
+                button_def( hWnd, ATOM_BUTTON, IDRETRY,    IDS_RETRY,  WS_TABSTOP, NULL, 0 ),
+                button_def( hWnd, ATOM_BUTTON, IDIGNORE,   IDS_IGNORE, WS_TABSTOP, NULL, 0 )
+            } );
             break;
 
         case MB_YESNOCANCEL:
 
-            hYesButtonWnd    = makecontrol( hWnd, 0, 0, &Yes,    ATOM_BUTTON, IDYES,    IDS_YES,    WS_TABSTOP, NULL, 0 );
-            hNoButtonWnd     = makecontrol( hWnd, 0, 0, &No,     ATOM_BUTTON, IDNO,     IDS_NO,     WS_TABSTOP, NULL, 0 );
-            hCancelButtonWnd = makecontrol( hWnd, 0, 0, &Cancel, ATOM_BUTTON, IDCANCEL, IDS_CANCEL, WS_TABSTOP, NULL, 0 );
+            makebuttons( {
+                button_def( hWnd, ATOM_BUTTON, IDYES,      IDS_YES,    WS_TABSTOP, NULL, 0 ),
+                button_def( hWnd, ATOM_BUTTON, IDNO,       IDS_NO,     WS_TABSTOP, NULL, 0 ),
+                button_def( hWnd, ATOM_BUTTON, IDCANCEL,   IDS_CANCEL, WS_TABSTOP, NULL, 0 )
+            } );
+            break;
+
+        case MB_YESNO:
+
+            makebuttons( {
+                button_def( hWnd, ATOM_BUTTON, IDYES,      IDS_YES, WS_TABSTOP, NULL, 0 ),
+                button_def( hWnd, ATOM_BUTTON, IDNO,       IDS_NO,  WS_TABSTOP, NULL, 0 )
+            } );
+            break;
+
+        case MB_RETRYCANCEL:
+
+            makebuttons( {
+                button_def( hWnd, ATOM_BUTTON, IDRETRY,    IDS_RETRY,  WS_TABSTOP, NULL, 0 ),
+                button_def( hWnd, ATOM_BUTTON, IDCANCEL,   IDS_CANCEL, WS_TABSTOP, NULL, 0 )
+            } );
+            break;
+
+        case MB_CANCELTRYCONTINUE:
+
+            makebuttons( {
+                button_def( hWnd, ATOM_BUTTON, IDCANCEL,   IDS_CANCEL,   WS_TABSTOP, NULL, 0 ),
+                button_def( hWnd, ATOM_BUTTON, IDTRYAGAIN, IDS_TRYAGAIN, WS_TABSTOP, NULL, 0 ),
+                button_def( hWnd, ATOM_BUTTON, IDCONTINUE, IDS_CONTINUE, WS_TABSTOP, NULL, 0 )
+            } );
             break;
 
         default:
@@ -145,6 +216,70 @@ void MessageBoxDlg::init( HWND hWnd, HDC hDC, MsgBoxParams & UserParams ) {
 
     }
 
+    u_int16_t uButtonSelection = LOWORD( Params.uType ) & 0xFF00;
+
+    switch( uButtonSelection ) {
+
+        case MB_DEFBUTTON2:
+
+            buttonselect( 1 );
+            break;
+
+        case MB_DEFBUTTON3:
+
+            buttonselect( 2 );
+            break;
+
+        case MB_DEFBUTTON4:
+
+            buttonselect( 3 );
+            break;
+
+        case MB_DEFBUTTON1:
+        default:
+
+            buttonselect( 0 );
+            break;
+
+    }
+
+}
+
+
+SIZE GetWidestButton( HDC hDC, std::vector<HWND> & buttons ) {
+
+    SIZE s = {};
+
+    for( auto button : buttons ) {
+
+        auto Len = GetWindowTextLength( button );
+
+        if ( ! Len ) {
+
+            continue;
+
+        }
+
+        TCHAR windowtext[128] = {};
+
+        auto LenRead = GetWindowText( button, windowtext, ( sizeof( windowtext ) / sizeof( windowtext[0] ) ) - 1 );
+
+        if ( ! LenRead ) {
+
+            continue;
+
+        }
+
+        SIZE b = {};
+
+        GetTextExtentPoint32( hDC, windowtext, LenRead, &b );
+
+        s.cx = std::max( s.cx, b.cx );
+
+    }
+
+    return s;
+
 }
 
 
@@ -155,17 +290,7 @@ void MessageBoxDlg::Layout( HWND hWnd, HDC hDC ) {
 
     iButtonCY   = ( sTitleSize.cy * 2 ) + ( GetSystemMetrics( SM_CYBORDER ) * 2 );
 
-    SIZE sOK = {0,0};
-    GetTextExtentPoint32( hDC, OK.tcharz_str(), OK.tcharz.size(), &sOK );
-
-    SIZE sCancel = {0,0};
-    GetTextExtentPoint32( hDC, Cancel.tcharz_str(), Cancel.tcharz.size(), &sCancel );
-
-    SIZE sYes = {0,0};
-    GetTextExtentPoint32( hDC, Yes.tcharz_str(), Yes.tcharz.size(), &sYes );
-
-    SIZE sNo = {0,0};
-    GetTextExtentPoint32( hDC, No.tcharz_str(), No.tcharz.size(), &sNo );
+    lButtonMaxLabelCX = GetWidestButton( hDC, buttons ).cx;
 
     SIZE sSPC = {0,0};
 
@@ -173,44 +298,11 @@ void MessageBoxDlg::Layout( HWND hWnd, HDC hDC ) {
 
     GetTextExtentPoint32( hDC, SPC.c_str(), SPC.size(), &sSPC );
 
-    lButtonMaxLabelCX = std::max( sOK.cx, sCancel.cx );
-
-    lButtonMaxLabelCX = std::max( lButtonMaxLabelCX, sYes.cx );
-
-    lButtonMaxLabelCX = std::max( lButtonMaxLabelCX, sNo.cx );
-
     lButtonMaxLabelCX += ( sSPC.cx * 2 ) + ( GetSystemMetrics( SM_CXBORDER ) * 2 );
 
     iMaxCXLine = std::max( sTitleSize.cx, r.right + ( sSPC.cx * 2 ) );
 
-    switch( LONIBBLE( LOBYTE( LOWORD( Params.uType ) ) ) ) {
-
-        case MB_OK:
-
-            iMaxCXLine = std::max( iMaxCXLine, sSPC.cx + lButtonMaxLabelCX + sSPC.cx );
-            break;
-
-        case MB_OKCANCEL:
-
-            iMaxCXLine = std::max( iMaxCXLine, sSPC.cx + lButtonMaxLabelCX + sSPC.cx + lButtonMaxLabelCX + sSPC.cx );
-            break;
-
-        case MB_YESNO:
-
-            iMaxCXLine = std::max( iMaxCXLine, sSPC.cx + lButtonMaxLabelCX + sSPC.cx + lButtonMaxLabelCX + sSPC.cx );
-            break;
-
-        case MB_YESNOCANCEL:
-
-            iMaxCXLine = std::max( iMaxCXLine, sSPC.cx + lButtonMaxLabelCX + sSPC.cx + lButtonMaxLabelCX + sSPC.cx + lButtonMaxLabelCX + sSPC.cx );
-            break;
-
-        default:
-
-            /* INCORRECT FLAGS */
-            break;
-
-    }
+    iMaxCXLine = std::max( iMaxCXLine, (LONG)( ( buttons.size() * ( sSPC.cx * 2 ) ) + ( buttons.size() * lButtonMaxLabelCX ) ) );
 
     iMaxCXLine = std::min( iMaxCXLine, (LONG)GetSystemMetrics( SM_CXSCREEN ) - ( (LONG)GetSystemMetrics( SM_CXFIXEDFRAME ) * 2 ) );
 
@@ -268,83 +360,34 @@ void MessageBoxDlg::Layout( HWND hWnd, HDC hDC ) {
     MoveWindow( hMessageWnd, 0 + lPad, 0 + ( sSPC.cy / 4 ) + ( rIcon.bottom / 4 ), r.right, r.bottom, false );
 
     int iButtonYpos = r.bottom + GetSystemMetrics( SM_CYFIXEDFRAME ) + ( sSPC.cy / 2 ) + ( rIcon.bottom / 2 );
-//    int iButtonYpos = rClient.bottom - ( ( TitleSize.cy * 2 ) + ( GetSystemMetrics( SM_CYBORDER ) * 2 ) );
 
-    switch( LONIBBLE( LOBYTE( LOWORD( Params.uType ) ) ) ) {
+    if ( ! buttons.size() ) {
 
-        case MB_OK:
+        return;
 
-            MoveWindow( hOKButtonWnd, ( rClient.right / 2 ) - ( lButtonMaxLabelCX / 2 ), iButtonYpos, lButtonMaxLabelCX, iButtonCY,false );
-            break;
+    }
 
-        case MB_OKCANCEL: {
+    LONG lSegment = rClient.right / buttons.size();
 
-                LONG lSegment = rClient.right / 2;
+    lPad = 0;
 
-                lPad = 0;
+    if ( lSegment > lButtonMaxLabelCX ) {
 
-                if ( lSegment > lButtonMaxLabelCX ) {
+        lPad = lSegment - lButtonMaxLabelCX;
+        lPad /= 2;
 
-                    lPad = lSegment - lButtonMaxLabelCX;
-                    lPad /= 2;
+    }
 
-                }
+    for( unsigned u = 0; u < buttons.size(); u++ ) {
 
-                MoveWindow( hOKButtonWnd, lPad, iButtonYpos, lButtonMaxLabelCX, iButtonCY, false );
-                MoveWindow( hCancelButtonWnd, lSegment + lPad, iButtonYpos, lButtonMaxLabelCX,  iButtonCY, false );
-
-            }
-            break;
-
-        case MB_YESNO: {
-
-                LONG lSegment = rClient.right / 2;
-
-                lPad = 0;
-
-                if ( lSegment > lButtonMaxLabelCX ) {
-
-                    lPad = lSegment - lButtonMaxLabelCX;
-                    lPad /= 2;
-
-                }
-
-                MoveWindow( hYesButtonWnd, lPad, iButtonYpos, lButtonMaxLabelCX, iButtonCY, false );
-                MoveWindow( hNoButtonWnd, lSegment + lPad, iButtonYpos, lButtonMaxLabelCX,  iButtonCY, false );
-
-            }
-            break;
-
-        case MB_YESNOCANCEL: {
-
-                LONG lSegment = rClient.right / 3;
-
-                lPad = 0;
-
-                if ( lSegment > lButtonMaxLabelCX ) {
-
-                    lPad = lSegment - lButtonMaxLabelCX;
-                    lPad /= 2;
-
-                }
-
-                MoveWindow( hYesButtonWnd, lPad, iButtonYpos, lButtonMaxLabelCX, iButtonCY, false );
-                MoveWindow( hNoButtonWnd, lSegment + lPad, iButtonYpos, lButtonMaxLabelCX,  iButtonCY, false );
-                MoveWindow( hCancelButtonWnd, ( lSegment * 2 ) + lPad, iButtonYpos, lButtonMaxLabelCX,  iButtonCY, false );
-
-            }
-            break;
-
-        default:
-
-            break;
+        MoveWindow( buttons.at( u ), ( lSegment * u ) + lPad, iButtonYpos, lButtonMaxLabelCX,  iButtonCY, false );
 
     }
 
 }
 
 
-BOOL MessageBoxDlg::OnInit( HWND hWnd, HWND hFocusWnd, LPARAM lParam ) {
+BOOL MessageBoxDlg::OnInit( HWND hWnd, HWND /* hFocusWnd */, LPARAM lParam ) {
 
     Params = *( (MsgBoxParams *)lParam );
 
@@ -358,7 +401,8 @@ BOOL MessageBoxDlg::OnInit( HWND hWnd, HWND hFocusWnd, LPARAM lParam ) {
 
     ReleaseDC( hWnd, hDC );
 
-    return true;
+    /* Focus was set manually */
+    return false;
 
 }
 

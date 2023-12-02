@@ -2,10 +2,14 @@
 
 STRINGTABLE {
 
-    IDS_OK,     "OK"
-    IDS_YES,    "Yes"
-    IDS_NO,     "No"
-    IDS_CANCEL, "Cancel"
-    IDS_ABORT,  "Abort"
+    IDS_OK       "OK"
+    IDS_YES      "Yes"
+    IDS_NO       "No"
+    IDS_CANCEL   "Cancel"
+    IDS_ABORT    "Abort"
+    IDS_RETRY    "Retry"
+    IDS_TRYAGAIN "Try Again"
+    IDS_CONTINUE "Continue"
+    IDS_IGNORE   "Ignore"
 
 }

@@ -7,6 +7,7 @@
 #endif /* _DEFAULT_SOURCE */
 
 
+#include <vector>
 #include <classatoms.h>
 #include <DlgWnd.h>
 #include <tstring.h>
@@ -40,22 +41,16 @@ typedef struct tagMsgBoxParams {
 class MessageBoxDlg : public DlgWnd<MessageBoxDlg> {
 
     HWND hMessageWnd;
-    HWND hOKButtonWnd;
-    HWND hYesButtonWnd;
-    HWND hNoButtonWnd;
-    HWND hCancelButtonWnd;
     HWND hIconWnd;
+
+    std::vector<HWND> buttons;
 
     public:
 
         MessageBoxDlg() {
 
-            hMessageWnd      = NULL;
-            hOKButtonWnd     = NULL;
-            hYesButtonWnd    = NULL;
-            hNoButtonWnd     = NULL;
-            hCancelButtonWnd = NULL;
-            hIconWnd         = NULL;
+            hMessageWnd        = NULL;
+            hIconWnd           = NULL;
 
             Icon.cy = 0;
             Icon.cy = 0;
@@ -74,11 +69,8 @@ class MessageBoxDlg : public DlgWnd<MessageBoxDlg> {
 
         virtual ~MessageBoxDlg() {
 
-            hMessageWnd      = NULL;
-            hOKButtonWnd     = NULL;
-            hYesButtonWnd    = NULL;
-            hNoButtonWnd     = NULL;
-            hCancelButtonWnd = NULL;
+            hMessageWnd        = NULL;
+            hIconWnd           = NULL;
 
         }
 
@@ -88,11 +80,6 @@ class MessageBoxDlg : public DlgWnd<MessageBoxDlg> {
 
         TSTRING         Title;
         TSTRING         Text;
-
-        utf16string     OK;
-        utf16string     Cancel;
-        utf16string     Yes;
-        utf16string     No;
 
         SIZE            Icon;
 
@@ -106,12 +93,55 @@ class MessageBoxDlg : public DlgWnd<MessageBoxDlg> {
 
         /* stuff that only needs to be calculated once */
         void            init( HWND hWnd, HDC hDC, MsgBoxParams & Params );
+        HWND            makebutton( HWND hParentWnd, unsigned short uCtlType, unsigned short uID, int iStringID, unsigned uFlags, LPCTSTR lpszText, const TCHAR * pParam );
+        void            buttonselect( unsigned );
 
+        /* Whenever screen-geometry changes */
         void            Layout( HWND hWnd, HDC hDC );
 
         void            OnCommand( HWND hDlg, int iID, HWND hCtlWnd, UINT uiNotifyCode );
         void            OnDisplayChange( HWND hWnd, UINT, UINT, UINT );
         BOOL            OnInit( HWND hDlg, HWND hFocusWnd, LPARAM lParam );
+
+        typedef struct tagbutton_def {
+
+            HWND           hParentWnd;
+            unsigned short uCtlType;
+            unsigned short uID;
+            int            iStringID;
+            unsigned       uFlags;
+            LPCTSTR        lpszText;
+            LPCTSTR        pParam;
+
+            tagbutton_def( HWND hWnd, unsigned short uType, unsigned short ID, int iSID, unsigned uF, LPCTSTR pszText, LPCTSTR Param ) {
+
+                hParentWnd = hWnd;
+                uCtlType   = uType;
+                uID        = ID;
+                iStringID  = iSID;
+                uFlags     = uF;
+                lpszText   = pszText;
+                pParam     = Param;
+
+            }
+
+        } button_def;
+
+        template <class button_def> bool makebuttons( std::initializer_list<button_def> list ) {
+
+            for( auto btn : list ) {
+
+                if ( ! makebutton( btn.hParentWnd, btn.uCtlType, btn.uID, btn.iStringID, btn.uFlags, btn.lpszText, btn.pParam ) ) {
+
+                    return false;
+
+                }
+
+            }
+
+            return true;
+
+        }
 
 };
 

@@ -3,7 +3,7 @@
 #include "chatter.h"
 
 
-BOOL AreYouSure( HINSTANCE hInst, HWND hFocusWnd, LPCTSTR lpszMessageTitle, LPCTSTR lpszExtra ) {
+BOOL AreYouSure( HINSTANCE hInst, HWND hFocusWnd, LPCTSTR lpszMessageTitle, LPCTSTR lpszExtra, UINT uDefButton ) {
 
     TCHAR	szString[1024];
     TCHAR	szMessage[1024];
@@ -30,17 +30,17 @@ BOOL AreYouSure( HINSTANCE hInst, HWND hFocusWnd, LPCTSTR lpszMessageTitle, LPCT
         if ( LoadString( hInst, LOWORD( (uintptr_t)lpszExtra ), szString, Dim( szString ) - 1 ) ) {
 
             /* User wants us to access parameter from string table.	*/
-            return MessageBox( IsWindow( hFocusWnd ) ? hFocusWnd : 0, szString, szMessage, MB_YESNO | MB_ICONQUESTION | MB_APPLMODAL | MB_SETFOREGROUND ) == IDYES;
+            return MessageBox( IsWindow( hFocusWnd ) ? hFocusWnd : 0, szString, szMessage, MB_YESNO | uDefButton | MB_ICONQUESTION | MB_APPLMODAL | MB_SETFOREGROUND ) == IDYES;
 
         } else {
 
-            return MessageBox( IsWindow( hFocusWnd ) ? hFocusWnd : 0, TEXT( "" ), szMessage, MB_YESNO | MB_ICONQUESTION | MB_APPLMODAL | MB_SETFOREGROUND ) == IDYES;
+            return MessageBox( IsWindow( hFocusWnd ) ? hFocusWnd : 0, TEXT( "" ), szMessage, MB_YESNO | uDefButton | MB_ICONQUESTION | MB_APPLMODAL | MB_SETFOREGROUND ) == IDYES;
 
         }
 
     }
 
-    return MessageBox( IsWindow( hFocusWnd ) ? hFocusWnd : 0, lpszExtra, szMessage, MB_YESNO | MB_ICONQUESTION | MB_APPLMODAL | MB_SETFOREGROUND ) == IDYES;
+    return MessageBox( IsWindow( hFocusWnd ) ? hFocusWnd : 0, lpszExtra, szMessage, MB_YESNO | uDefButton | MB_ICONQUESTION | MB_APPLMODAL | MB_SETFOREGROUND ) == IDYES;
 
 }
 
@@ -170,7 +170,7 @@ BOOL CChatterMainWnd::SendChat( HWND hDlg, HINSTANCE hInst, const char * pBuffer
 
 void CChatterMainWnd::OnClose( HWND hDlg ) {
 
-    if ( ! AreYouSure( GetWindowInstance( hDlg ), hDlg, MAKEINTRESOURCE( IDS_PROGRAM_TITLE ), MAKEINTRESOURCE( IDS_EXIT ) ) ) {
+    if ( ! AreYouSure( GetWindowInstance( hDlg ), hDlg, MAKEINTRESOURCE( IDS_PROGRAM_TITLE ), MAKEINTRESOURCE( IDS_EXIT ), MB_DEFBUTTON2 ) ) {
 
         return;
 
@@ -212,6 +212,12 @@ BOOL GetFileName( HWND hDlg, LPTSTR lpstrFile, DWORD nMaxFile ) {
 
 
 void CChatterMainWnd::PrepareSendFile( HWND hWnd, LPCTSTR lpszSendFile, CWho * pYou, unsigned short usFlags, unsigned int uiParam ) {
+
+    if ( 0 == pYou ) {
+
+        return;
+
+    }
 
     HNATIVEFILE hFile = NativeFile::Open( lpszSendFile, NativeFile::FOR_READING );
 

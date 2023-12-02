@@ -1150,7 +1150,7 @@ int MulDiv( int nNumber, int nNumerator, int nDenominator ) {
 
 HWND SetFocus( HWND hWnd ) {
 
-    if ( g.pFocusWnd == reinterpret_cast<LPWindow>( hWnd ) ) {
+    if ( g.pFocusWnd == reinterpret_cast<ywWindow *>( hWnd ) ) {
 
         return hWnd;
 
@@ -1193,7 +1193,9 @@ HWND SetFocus( HWND hWnd ) {
 
         }
 
-        DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Old focus %lX ---> SetFocus( %lX ) - %s, ID - %lu" ), hOldFocusWnd, hWnd, ( reinterpret_cast<LPWindow>( hWnd ) )->pClass->GetClassName(), (unsigned long)( reinterpret_cast<LPWindow>( hWnd ) )->hMenu );
+        DBG_MSG( DBG_GENERAL_INFORMATION, TEXT( "Old focus %lX ---> SetFocus( %lX ) - %s, ID - %lu" ), hOldFocusWnd, hWnd, ( reinterpret_cast<ywWindow *>( hWnd ) )->pClass->GetClassName(), (unsigned long)( reinterpret_cast<ywWindow *>( hWnd ) )->hMenu );
+
+//        RedrawWindow( hWnd, NULL, NULL, RDW_ERASE | RDW_ERASENOW | RDW_FRAME | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW );
 
     }
 
@@ -1350,5 +1352,38 @@ HIMAGELIST ImageList_Create( int cx, int cy, UINT flags, int cInitial, int cGrow
 BOOL GdiGradientFill( HDC hDC, PTRIVERTEX pVertex, ULONG nVertex, PVOID pMesh, ULONG nMesh, ULONG ulMode ) {
 
     return false;
+
+}
+
+
+void WindowInfo( IWindow * pIWnd ) {
+
+    ywWindow * pWnd = (ywWindow *)pIWnd;
+
+    DBG_MSG( DBG_GENERAL_INFORMATION,
+        TEXT(
+        "POPUP found: "
+        "%8s"
+        " %8X"
+        " %5d"
+        " (%4d,%4d)"
+        "%s%s%s%s%s%s%s%s%s%s%s%s%s caption '%s'"
+        ),
+    pWnd->pClass->GetClassName(), pWnd, (unsigned long)( pWnd->hMenu ), pWnd->cx, pWnd->cy,
+    ( WS_BORDER      & pWnd->dwStyle ) ? " WS_BORDER"      : "",
+    ( WS_CAPTION     & pWnd->dwStyle ) ? " WS_CAPTION"     : "",
+    ( WS_CHILD       & pWnd->dwStyle ) ? " WS_CHILD"       : "",
+    ( WS_DISABLED    & pWnd->dwStyle ) ? " WS_DISABLED"    : "",
+    ( WS_GROUP       & pWnd->dwStyle ) ? " WS_GROUP"       : "",
+    ( WS_MINIMIZEBOX & pWnd->dwStyle ) ? " WS_MINIMIZEBOX" : "",
+    ( WS_OVERLAPPED  & pWnd->dwStyle ) ? " WS_OVERLAPPED"  : "",
+    ( WS_SYSMENU     & pWnd->dwStyle ) ? " WS_SYSMENU"     : "",
+    ( WS_TABSTOP     & pWnd->dwStyle ) ? " WS_TABSTOP"     : "",
+    ( WS_THICKFRAME  & pWnd->dwStyle ) ? " WS_THICKFRAME"  : "",
+    ( WS_VISIBLE     & pWnd->dwStyle ) ? " WS_VISIBLE"     : "",
+    ( WS_VSCROLL     & pWnd->dwStyle ) ? " WS_VSCROLL"     : "",
+    pWnd->bNoRedraw ? " no-redraw"     : " allow redraw",
+    pWnd->Text.c_str()
+    );
 
 }

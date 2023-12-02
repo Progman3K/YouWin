@@ -56,7 +56,7 @@ class Combobox : public ywWindow {
 
         };
 
-        typedef std::vector<ComboboxItem *> ItemList;
+        using ItemList = std::vector<ComboboxItem *>;
 
         ItemList    items; /* This can be either a list of const string pointers, or a list of writeable combobox items depending on the CBS_HASSTRINGS bit */
 

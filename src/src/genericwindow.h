@@ -136,10 +136,8 @@ class ywWindow : public IWindow {
 
 };
 
-typedef ywWindow * PWindow;
-typedef ywWindow * LPWindow;
 
-typedef std::vector<ywWindow *> WindowList;
+using WindowList = std::vector<ywWindow *>;
 
 
 #endif /* YW_H_GENERIC_WINDOW_H */

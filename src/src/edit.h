@@ -16,11 +16,11 @@ class Edit : public ywWindow {
 
     Caret caret;  // All data concerning the cursor, insertion point.
 
-    typedef enum {
+    using Constants = enum {
 
         IDT_CARET = 1
 
-    } Constants;
+    };
 
     void   OnChar( HWND, TCHAR c, int cRepeat );
     void   OnClear( HWND );

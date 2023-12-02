@@ -25,9 +25,9 @@ class atomdescriptor {
 };
 
 
-typedef std::pair<atomdescriptor,ATOM> nucleusString;
-typedef std::pair<ATOM,const TCHAR *> nucleusID;
-typedef std::map<ATOM,const TCHAR *> idmap;
+using nucleusString = std::pair<atomdescriptor,ATOM>;
+using nucleusID = std::pair<ATOM,const TCHAR *>;
+using idmap = std::map<ATOM,const TCHAR *>;
 
 
 struct cmpatomdescriptorstring {
@@ -41,7 +41,7 @@ struct cmpatomdescriptorstring {
 };
 
 
-typedef std::map<atomdescriptor,ATOM,cmpatomdescriptorstring> atom;
+using atom = std::map<atomdescriptor,ATOM,cmpatomdescriptorstring>;
 
 
 class AtomTable : public atom {

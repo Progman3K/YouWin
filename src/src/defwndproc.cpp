@@ -567,13 +567,21 @@ bool ywWindow::OnEraseBackground( HWND hWnd, HDC hDC ) {
 void ywWindow::OnSetfocus( HWND hWnd, HWND hOldfocuswnd ) {
 
 #ifdef YOU_WIN_TXT
-    ywWindow * pWnd = reinterpret_cast<LPWindow>( hWnd );
+    ywWindow * pWnd = reinterpret_cast<ywWindow *>( hWnd );
 
     /* Hack to temporarily SEE the focus change */
     POINT pt = pWnd->GetParentOffset();
 
     gotoxy( pt.x + 1, pt.y + 1 );
 #endif
+
+    RedrawWindow( hWnd, NULL, NULL, RDW_ALLCHILDREN | RDW_ERASE | RDW_FRAME | RDW_UPDATENOW | RDW_INVALIDATE );
+
+    if ( 0 != hOldfocuswnd ) {
+
+        RedrawWindow( hOldfocuswnd, NULL, NULL, RDW_ALLCHILDREN | RDW_ERASE | RDW_FRAME | RDW_UPDATENOW | RDW_INVALIDATE );
+
+    }
 
 }
 

@@ -245,7 +245,7 @@ int ywDisplay::Init( int cx, int cy, EventQ & Q, int argc, char * argv[], LPARAM
 
     /* Enable mouse reporting */
 
-#define IDSZ_MOUSE_REPORTING    "\e[?9h"
+#define IDSZ_MOUSE_REPORTING    "\e[?9h\e[?1015h"
     g.pTerminal = Terminal;
 
     g.pTerminal( g.lClientData, IDSZ_MOUSE_REPORTING, strlen( IDSZ_MOUSE_REPORTING ) );

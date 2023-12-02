@@ -33,11 +33,15 @@
 #define IDSZ_SYSTEM                             "System"
 
 /* String IDs */
-#define IDS_OK     1
-#define IDS_YES    2
-#define IDS_NO     3
-#define IDS_CANCEL 4
-#define IDS_ABORT  5
+#define IDS_OK        1
+#define IDS_YES       2
+#define IDS_NO        3
+#define IDS_CANCEL    4
+#define IDS_ABORT     5
+#define IDS_RETRY     6
+#define IDS_TRYAGAIN  7
+#define IDS_CONTINUE  8
+#define IDS_IGNORE    9
 
 
 #endif /* YWDEFINES_H */

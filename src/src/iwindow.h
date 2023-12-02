@@ -47,6 +47,9 @@ class WindowArea : public protoBitmap<COLORREF> {
 };
 
 
+void WindowInfo( class IWindow * );
+
+
 class IWindow {
 
 
@@ -166,32 +169,7 @@ class IWindow {
 
             }
 
-            #if 0
-            DBG_MSG( DBG_GENERAL_INFORMATION,
-                TEXT(
-                "POPUP found: "
-                "%8s"
-                " %8X"
-                " %5d"
-                " (%4d,%4d)"
-                "%s%s%s%s%s%s%s%s%s%s%s%s%s"
-                ),
-            pWnd->pClass->GetClassName(), pWnd, (unsigned long)( pWnd->hMenu ), pWnd->cx, pWnd->cy,
-            ( WS_BORDER      & pWnd->dwStyle ) ? " WS_BORDER"      : "",
-            ( WS_CAPTION     & pWnd->dwStyle ) ? " WS_CAPTION"     : "",
-            ( WS_CHILD       & pWnd->dwStyle ) ? " WS_CHILD"       : "",
-            ( WS_DISABLED    & pWnd->dwStyle ) ? " WS_DISABLED"    : "",
-            ( WS_GROUP       & pWnd->dwStyle ) ? " WS_GROUP"       : "",
-            ( WS_MINIMIZEBOX & pWnd->dwStyle ) ? " WS_MINIMIZEBOX" : "",
-            ( WS_OVERLAPPED  & pWnd->dwStyle ) ? " WS_OVERLAPPED"  : "",
-            ( WS_SYSMENU     & pWnd->dwStyle ) ? " WS_SYSMENU"     : "",
-            ( WS_TABSTOP     & pWnd->dwStyle ) ? " WS_TABSTOP"     : "",
-            ( WS_THICKFRAME  & pWnd->dwStyle ) ? " WS_THICKFRAME"  : "",
-            ( WS_VISIBLE     & pWnd->dwStyle ) ? " WS_VISIBLE"     : "",
-            ( WS_VSCROLL     & pWnd->dwStyle ) ? " WS_VSCROLL"     : "",
-            pWnd->bNoRedraw ? " no-redraw"     : " redraw"
-            );
-            #endif
+            WindowInfo( pWnd );
 
             return pWnd;
 

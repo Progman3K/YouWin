@@ -150,6 +150,8 @@ bool readconsoleinput( SOCKET s, EventQ * pQ ) {
 
     iRet = read( s, &c, sizeof( c ) );
 
+    DBG_MSG( DBG_CONSOLE, TEXT( "Console input, length %u" ), (unsigned)iInQ );
+
     if ( sizeof( c ) != iRet ) {
 
         DBG_MSG( DBG_ERROR, TEXT( "Error %d reading stdin" ), iRet );

@@ -141,7 +141,7 @@ then
     -DYWLibs="$need_libs" \
     -DExtraLibraries="$need_libs -L $YW_LIBPATH" \
     -DStandardIncludes=-I$YW_INCLUDEPATH \
-    -DIncRoot=/opt/youwin/include \
+    -DIncRoot=$YW_INCLUDEPATH \
     -DUseInstalled \
     -DCcCmd=CplusplusCmd \
     -DUsrLibDirPath=/opt/youwin/src \

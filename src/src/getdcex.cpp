@@ -105,6 +105,12 @@ extern "C" HDC GetDCEx( HWND hWnd, HRGN hRgn, DWORD flags ) {
 
     }
 
+    if ( 0 == pDC ) {
+
+        return NULL;
+
+    }
+
     if ( DCX_INTERSECTRGN & flags ) {
 
         pDC->AddIntersection( pRgn );

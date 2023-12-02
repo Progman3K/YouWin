@@ -53,8 +53,8 @@ void Dialog::OnKeydown( HWND hDlg, UINT vk, BOOL fDown, int cRepeat, UINT flags 
 
             if (
 
-            ( NULL != ( hCtlWnd = (HWND)GetNextTabstop( reinterpret_cast<LPWindow>( hDlg ), g.pFocusWnd, VK_TAB == vk ) ) ) ||
-            ( NULL != ( hCtlWnd = (HWND)GetTabstop( reinterpret_cast<LPWindow>( hDlg ), VK_TAB == vk ) ) )
+            ( NULL != ( hCtlWnd = (HWND)GetNextTabstop( reinterpret_cast<ywWindow *>( hDlg ), g.pFocusWnd, VK_TAB == vk ) ) ) ||
+            ( NULL != ( hCtlWnd = (HWND)GetTabstop( reinterpret_cast<ywWindow *>( hDlg ), VK_TAB == vk ) ) )
 
             ) {
 
