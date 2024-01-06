@@ -8,14 +8,7 @@
 #define WM_WSAASYNCTCPXFER WM_USER + 100
 
 
-int _tWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPTSTR pszCmdLine, int nCmdShow ) {
-
-//    INITCOMMONCONTROLSEX InitCtrlEx;
-
-//    InitCtrlEx.dwSize = sizeof( INITCOMMONCONTROLSEX );
-//    InitCtrlEx.dwICC  = ICC_PROGRESS_CLASS;
-
-//    InitCommonControlsEx( &InitCtrlEx );
+int testDialog( HINSTANCE hInst ) {
 
     LONG lBaseUnits = GetDialogBaseUnits();
 
@@ -27,8 +20,6 @@ int _tWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPTSTR pszCmdLine, int nCmd
 
     }
 
-//    return MessageBox( HWND_DESKTOP, TEXT( "Starting test" ), TEXT( "Test App" ), MB_OK );
-
     MSG Msg;
 
     Msg.wParam = DialogBoxParam( hInst, MAKEINTRESOURCE( iDlgID ), HWND_DESKTOP, (DLGPROC)CMainWnd::bDlgProc, (LPARAM)0 );
@@ -37,5 +28,20 @@ int _tWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPTSTR pszCmdLine, int nCmd
 
     return Msg.wParam;
 
+}
+
+
+int _tWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPTSTR pszCmdLine, int nCmdShow ) {
+
+//    INITCOMMONCONTROLSEX InitCtrlEx;
+
+//    InitCtrlEx.dwSize = sizeof( INITCOMMONCONTROLSEX );
+//    InitCtrlEx.dwICC  = ICC_PROGRESS_CLASS;
+
+//    InitCommonControlsEx( &InitCtrlEx );
+
+//    return MessageBox( HWND_DESKTOP, TEXT( "Starting test" ), TEXT( "Test App" ), MB_OK | MB_ICONINFORMATION );
+
+    return testDialog( hInst );
 
 }

@@ -15,7 +15,8 @@
 
 #include "strings.rc"
 
-IDI_TEST    ICON    test.ico
+IDI_TEST    ICON    test.32x32x24.ico
+//IDI_TEST    ICON    coffee.ico
 
 
 IDD_MAIN DIALOG 0, 0, 256, 256
@@ -34,7 +35,7 @@ CAPTION "Test"
 //CONTROL "",               IDLB_TEST,        "LISTBOX",           LBS_STANDARD | /* LBS_HASSTRINGS | */ WS_CHILD | WS_VISIBLE | WS_TABSTOP, 0, 0, 100, 100
 //CONTROL IDI_TEST,         IDST_ICON,        "STATIC",            SS_ICON | WS_CHILD | WS_VISIBLE,                       40,  15,  18,  20
 
-ICON      IDI_TEST,         IDST_ICON,        20, 20, 0, 0,        SS_ICON | WS_CHILD | WS_VISIBLE
+//ICON      IDI_TEST,         IDST_ICON,        0, 0, 0, 0,          SS_ICON | WS_CHILD | WS_VISIBLE
 
 //CONTROL "",               IDE_TEST,         "EDIT",              ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | WS_CHILD | WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_VISIBLE | WS_TABSTOP, 2, 2, 150, 60
 
@@ -42,7 +43,7 @@ ICON      IDI_TEST,         IDST_ICON,        20, 20, 0, 0,        SS_ICON | WS_
 //CONTROL "E&xit",          IDCANCEL,         "BUTTON",            BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP,    10,  50,  50, 14
 
 //CONTROL "",               IDST_TEST,        "Static",            SS_BLACKRECT, 1, 1, 5, 5
-//CONTROL "&Test",          IDB_TEST,         "BUTTON",            BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 20,  60,  50, 14
+CONTROL "&Test",          IDB_TEST,         "BUTTON",            BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 20,  60,  50, 14
 //CONTROL  "Send To:",       IDST_TEST,         "BUTTON",            BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 20,  20, 50, 36
 
 }

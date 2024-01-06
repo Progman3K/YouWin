@@ -54,6 +54,10 @@ class CMainWnd : public DlgWnd<CMainWnd> {
 
         void OnCommand( HWND hWnd, int iID, HWND hCtlWnd, UINT uiNotifyCode ) {
 
+            const static COLORREF testcolors[] = { RGBA( 0, 0, 0, 0 ), RGBA( 255, 255, 255, 0 ), RGBA( 255, 0, 0, 0 ), RGBA( 0, 255, 0, 0 ), RGBA( 0, 0, 255, 0 ) };
+
+            static unsigned testcolor = 0;
+
             switch( iID ) {
 
                 case IDCANCEL:
@@ -79,7 +83,13 @@ class CMainWnd : public DlgWnd<CMainWnd> {
 
                         hDC = GetDC( hWnd );
 
-                        filledcircle( 30, 30, 20, hDC );
+                        if ( ! ( testcolor < Dim( testcolors ) ) ) {
+
+                            testcolor = 0;
+
+                        }
+
+                        filledcircle( 30, 30, 20, hDC, testcolors[testcolor] );
 
 //                        DrawCircle( 0, 0, 20, hDC );
 //                        DrawCircle( 10, 10, 20, hDC );
@@ -88,6 +98,8 @@ class CMainWnd : public DlgWnd<CMainWnd> {
 //                        DrawFrameControl( hDC, &r, DFC_BUTTON, DFCS_BUTTONRADIO ); 
 
                         ReleaseDC( hWnd, hDC );
+
+                        testcolor++;
 
 //                        dlginfo.MoveTo( hWnd, r.left, r.top );
 
@@ -218,7 +230,7 @@ class CMainWnd : public DlgWnd<CMainWnd> {
 
         }
 
-        void filledcircle( int oldx, int oldy, int r, HDC hDC ) {
+        void filledcircle( int oldx, int oldy, int r, HDC hDC, COLORREF c ) {
 
             int x, y;
             int rx = 0;
@@ -227,7 +239,7 @@ class CMainWnd : public DlgWnd<CMainWnd> {
             for( x = rx - r; x <= rx + r; x++ )
                 for( y = ry - r; y <= ry + r; y++ )
                     if ( ( ( x * x ) + ( y * y ) ) < ( r * r ) )
-                        SetPixel( hDC, oldx + x, oldy + y, 0 );
+                        SetPixel( hDC, oldx + x, oldy + y, c );
 
         }
 
@@ -248,7 +260,12 @@ class CMainWnd : public DlgWnd<CMainWnd> {
 
                 case WM_CLOSE:
 
-                    // EndDialog( hDlg, 0 );
+                    if (! ( IDYES == MessageBox( hWnd, TEXT( "Quit?" ), TEXT( "Tests" ), MB_YESNO | MB_ICONQUESTION ) ) ) {
+
+                        break;
+
+                    }
+                    EndDialog( hWnd, 0 );
                     PostQuitMessage( 0 );
                     return true;
 

@@ -25,7 +25,7 @@
 #include <DbgTrace.h>
 
 
-#include <font.h>
+#include "../src/font.h"
 
 
 extern int ReadFontData( FILE * pFile, Font_Header * & pHdr, unsigned & uSize );

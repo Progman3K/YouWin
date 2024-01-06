@@ -6,7 +6,7 @@ LD_LIBRARY_PATH=..:$LD_LIBRARY_PATH ./test
 
 */
 
-         DEPENDFLAGS = -I/opt/youwin/include
+         DEPENDFLAGS = -I../include
 
 #ifdef BUILD_YOU_WIN
 

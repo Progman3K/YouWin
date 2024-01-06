@@ -26,29 +26,29 @@ Supported: OS/X, iOS, Android, Linux, additional platforms.
 * MinGW (optional)
 * a c++17 compiler
 
-###Target dependencies
+### Target dependencies
 
-####Android
+#### Android
 
 	* android-ndk
 
-####iOS
+#### iOS
 
 	* iOS Frameworks (xcode)
 
-####OpenGL
+#### OpenGL
 
 	* Freeglut/glapi
 
-####X11
+#### X11
 
 	* libX11
 
-####Linux Framebuffer
+#### Linux Framebuffer
 
 	* no dependancies
 
-####Text
+#### Text
 
 	* a 24 bit colour capable VT100 terminal program
 
@@ -68,7 +68,7 @@ Supported: OS/X, iOS, Android, Linux, additional platforms.
 ---
 ***
 
-###Recommended development strategy:
+### Recommended development strategy:
 
 
 Go to whichever folder you wish to work in (home is used here), retrieve the repository, and link it to /opt/youwin

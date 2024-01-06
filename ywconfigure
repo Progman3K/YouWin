@@ -45,6 +45,8 @@ fi
 echo ndk debug set to $ndk_debug_enable
 echo config variables set to $configurevars
 
+need_libs=" -z noexecstack "
+
 if [[ "$variant" == "android" ]]
 then
     echo android $bldtype;
@@ -65,7 +67,7 @@ then
     #
     echo OSX;
 
-    need_libs="-lpthread -framework CoreFoundation -lcoreroutine -lextension -ltk "
+    need_libs+="-lpthread -framework CoreFoundation -lcoreroutine -lextension -ltk "
     need_defines="-DYOU_WIN_GRAPHICAL_OSX -DYOU_WIN_GRAPHICAL"
 
     imake_cmd=( \
@@ -97,7 +99,7 @@ then
 
     echo opengl;
 
-    need_libs="-lpthread -lglut -lGL -lglapi -L/opt/X11/lib"
+    need_libs+="-lpthread -lglut -lGL -lglapi -L/opt/X11/lib"
     need_defines="-DYOU_WIN_GRAPHICAL_OPENGL -DYOU_WIN_GRAPHICAL"
 
     imake_cmd=( \
@@ -131,7 +133,7 @@ then
 
     echo text;
 
-    need_libs=-lpthread
+    need_libs+=-lpthread
     need_defines=-DYOU_WIN_TXT
 
    imake_cmd=( \
@@ -164,7 +166,7 @@ then
 
     echo xwin;
 
-    need_libs=-lpthread\ -lX11
+    need_libs+="-lpthread -lX11"
     need_defines="-DYOU_WIN_GRAPHICAL_XWIN -DYOU_WIN_GRAPHICAL"
 
    imake_cmd=( \
@@ -197,7 +199,7 @@ then
 
     echo lxfb;
 
-    need_libs=-lpthread
+    need_libs+=-lpthread
     need_defines="-DYOU_WIN_GRAPHICAL_LXFB -DYOU_WIN_GRAPHICAL"
 
    imake_cmd=( \
